@@ -882,24 +882,35 @@ function analyserTexteLocal(texte, normeId) {
         return count;
     }
 
-    // Fonction pour détecter contradictions dans le contexte autour du mot-clé
+    // Fonction pour détecter contradictions DANS LA MÊME PHRASE que le mot-clé
     function detecterContradiction(regleMotsCles) {
-        // Trouver la position du premier mot-clé trouvé
-        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
-            const i = texteLower.indexOf(mot.toLowerCase());
-            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
-        }, -1);
+        // Découper le texte en phrases (séparées par . ! ?)
+        const phrases = texte.split(/[.!?]+/);
 
-        // Si aucun mot-clé trouvé, pas de contradiction possible
-        if (motCleIndex === -1) return false;
+        // Trouver la phrase qui contient le mot-clé
+        let phraseAvecMotCle = null;
+        for (const phrase of phrases) {
+            const phraseLower = phrase.toLowerCase();
+            const found = regleMotsCles.some(mot =>
+                phraseLower.includes(mot.toLowerCase())
+            );
+            if (found) {
+                phraseAvecMotCle = phraseLower;
+                break;
+            }
+        }
 
-        // Extraire le contexte de 150 caractères avant et après le mot-clé
-        const debut = Math.max(0, motCleIndex - 150);
-        const fin = Math.min(texteLower.length, motCleIndex + 150);
-        const contexte = texteLower.substring(debut, fin);
+        // Si aucune phrase ne contient le mot-clé, pas de contradiction possible
+        if (!phraseAvecMotCle) return false;
 
-        const hasPositif = MOTS_POSITIFS.some(mot => contexte.includes(mot));
-        const hasNegatif = MOTS_NEGATIFS.some(mot => contexte.includes(mot));
+        // Vérifier contradiction DANS LA MÊME PHRASE uniquement
+        const hasPositif = MOTS_POSITIFS.some(mot =>
+            phraseAvecMotCle.includes(mot)
+        );
+        const hasNegatif = MOTS_NEGATIFS.some(mot =>
+            phraseAvecMotCle.includes(mot)
+        );
+
         return hasPositif && hasNegatif;
     }
 
