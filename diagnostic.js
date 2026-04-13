@@ -1455,13 +1455,27 @@ function displayResults(result) {
     // Afficher les résultats
     document.getElementById('results').classList.add('active');
 
+    // Récupérer le texte saisi par l'utilisateur
+    const situation = document.getElementById('situation').value;
+
     // Déterminer le nom de la norme
     const normeNom = NORMES[selectedNorm]?.nom || 'QSE';
 
-    // Générer et afficher le résumé exécutif en haut des résultats
+    // Générer et afficher l'encadré "Situation analysée" AVANT le résumé exécutif
     const resumeContainer = document.getElementById('resumeExecutifContainer');
     if (resumeContainer) {
-        resumeContainer.innerHTML = genererResumeExecutif(result, normeNom);
+        // Créer l'encadré Situation analysée
+        const situationHTML = `
+        <div id="situationAnalysee" style="background: white; border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
+            <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.75rem; font-size: 1.05rem;">
+                📝 Situation analysée
+            </div>
+            <div style="font-style: italic; color: #555; background: #f8f9fa; padding: 1rem; border-radius: 6px; line-height: 1.6; font-size: 0.95rem;">
+                "${situation}"
+            </div>
+        </div>
+        `;
+        resumeContainer.innerHTML = situationHTML + genererResumeExecutif(result, normeNom);
         resumeContainer.style.display = 'block';
     }
 
