@@ -1,0 +1,49 @@
+[build]
+  publish = "."
+
+# Redirects pour URLs propres
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/about"
+  to = "/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/home"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/checklist"
+  to = "/checklist.html"
+  status = 200
+
+[[redirects]]
+  from = "/glossaire"
+  to = "/glossaire.html"
+  status = 200
+
+[[redirects]]
+  from = "/diagnostic"
+  to = "/diagnostic.html"
+  status = 200
+
+# SPA fallback - toutes les routes inconnues vers index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers de sécurité pour toutes les pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://auditaxis-backend-4g3g.onrender.com; img-src 'self' data:; font-src 'self'"

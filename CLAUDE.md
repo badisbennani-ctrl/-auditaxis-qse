@@ -222,16 +222,21 @@ All pages include complete meta tags:
 </form>
 ```
 
-**Redirects** (`_redirects`):
-```
-/contact    /contact.html   200
-/about      /about.html     200
-/home       /index.html     200
-/checklist  /checklist.html 200
-/glossaire  /glossaire.html 200
-/diagnostic /diagnostic.html 200
-/*          /404.html       404
-```
+**Security Headers** (`netlify.toml`):
+- `X-Frame-Options: DENY` - Clickjacking protection
+- `X-Content-Type-Options: nosniff` - MIME sniffing prevention
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+- `Content-Security-Policy`: Restricts sources to self, backend API, and data: for images
+
+**Redirects** (configured in `netlify.toml`):
+- `/contact` → `/contact.html`
+- `/about` → `/about.html`
+- `/home` → `/index.html`
+- `/checklist` → `/checklist.html`
+- `/glossaire` → `/glossaire.html`
+- `/diagnostic` → `/diagnostic.html`
+- `/*` → `/index.html` (SPA fallback)
 
 ## Common Tasks
 
@@ -272,7 +277,7 @@ curl https://auditaxis-backend.onrender.com/api/health
 | `style.css` | ~650 | All styling, animations, hamburger menu, accessibility |
 | `header.js` | ~90 | Dynamic header injection, navigation active state, hamburger menu |
 | `checklist.html` | ~450 | Interactive checklists with localStorage persistence |
-| `backend/server.js` | ~150 | Express server, CORS, rate limiting |
+| `backend/server.js` | ~200 | Express server, CORS, rate limiting, Helmet security |
 | `backend/services/gemini.js` | ~110 | Gemini API integration with prompt engineering |
 | `backend/routes/diagnostic.js` | ~85 | POST /api/diagnostic with validation |
 | `backend/routes/checklist.js` | ~90 | In-memory checklist storage with Map |
@@ -280,11 +285,13 @@ curl https://auditaxis-backend.onrender.com/api/health
 
 ## Backend CORS Configuration
 
-The backend is configured to accept requests from:
-- `https://auditaxisqse.netlify.app` (production)
-- `http://localhost:8000` and `http://127.0.0.1:8000` (development)
+The backend accepts requests from:
+- `https://auditaxis-qse.netlify.app` (default production)
+- `https://auditaxisqse.netlify.app` (legacy Netlify URL)
+- `http://localhost:5500`, `http://127.0.0.1:5500` (VS Code Live Server)
+- `http://localhost:8000`, `http://127.0.0.1:8000` (Python/npx serve)
 
-When testing locally, ensure frontend is served on port 8000, or update `corsOptions.origin` in `backend/server.js`.
+**Environment Variable**: Set `CORS_ORIGIN` in `.env` to add a custom production URL. The server uses a whitelist approach with dynamic origin validation.
 
 ## Git Structure
 
