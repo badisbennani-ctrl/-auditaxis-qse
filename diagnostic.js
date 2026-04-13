@@ -1,6 +1,8 @@
 // ============================================
 // DIAGNOSTIC IA - AUDITAXIS QSE
 // Analyse via API backend (Gemini)
+// DiagnosticIA v2.5 - fix detecterContradiction phrase-by-phrase
+// Build: 2026-04-13
 // ============================================
 
 // Configuration API
