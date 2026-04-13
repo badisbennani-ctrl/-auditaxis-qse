@@ -1453,7 +1453,8 @@ function displayResults(result) {
     document.getElementById('loader').classList.remove('active');
 
     // Afficher les résultats
-    document.getElementById('results').classList.add('active');
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.classList.add('active');
 
     // Récupérer le texte saisi par l'utilisateur
     const situation = document.getElementById('situation').value;
@@ -1461,23 +1462,46 @@ function displayResults(result) {
     // Déterminer le nom de la norme
     const normeNom = NORMES[selectedNorm]?.nom || 'QSE';
 
-    // Générer et afficher l'encadré "Situation analysée" AVANT le résumé exécutif
-    const resumeContainer = document.getElementById('resumeExecutifContainer');
-    if (resumeContainer) {
-        // Créer l'encadré Situation analysée
-        const situationHTML = `
-        <div id="situationAnalysee" style="background: white; border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
-            <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.75rem; font-size: 1.05rem;">
-                📝 Situation analysée
-            </div>
-            <div style="font-style: italic; color: #555; background: #f8f9fa; padding: 1rem; border-radius: 6px; line-height: 1.6; font-size: 0.95rem;">
-                "${situation}"
-            </div>
-        </div>
-        `;
-        resumeContainer.innerHTML = situationHTML + genererResumeExecutif(result, normeNom);
-        resumeContainer.style.display = 'block';
+    // Vérifier si resumeExecutifContainer existe, sinon le créer et l'insérer en premier
+    let resumeContainer = document.getElementById('resumeExecutifContainer');
+    if (!resumeContainer) {
+        resumeContainer = document.createElement('div');
+        resumeContainer.id = 'resumeExecutifContainer';
+        // Insérer en premier enfant de resultsContainer
+        if (resultsContainer.firstChild) {
+            resultsContainer.insertBefore(resumeContainer, resultsContainer.firstChild);
+        } else {
+            resultsContainer.appendChild(resumeContainer);
+        }
     }
+
+    // Créer l'encadré "Situation analysée"
+    const situationHTML = `
+    <div id="situationAnalysee" style="background: white; border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
+        <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.75rem; font-size: 1.05rem;">
+            📝 Situation analysée
+        </div>
+        <div style="font-style: italic; color: #555; background: #f8f9fa; padding: 1rem; border-radius: 6px; line-height: 1.6; font-size: 0.95rem;">
+            "${situation}"
+        </div>
+    </div>
+    `;
+
+    // Insérer situationAnalysee AVANT resumeExecutifContainer s'il n'existe pas déjà
+    let situationEl = document.getElementById('situationAnalysee');
+    if (!situationEl) {
+        situationEl = document.createElement('div');
+        situationEl.innerHTML = situationHTML;
+        // Insérer juste avant resumeContainer
+        resultsContainer.insertBefore(situationEl.firstChild, resumeContainer);
+    } else {
+        // Mettre à jour le contenu si existe déjà
+        situationEl.innerHTML = situationHTML;
+    }
+
+    // Générer et afficher le résumé exécutif
+    resumeContainer.innerHTML = genererResumeExecutif(result, normeNom);
+    resumeContainer.style.display = 'block';
 
     // Mettre à jour le score avec animation
     animateScore(result.score, result.appreciation);
