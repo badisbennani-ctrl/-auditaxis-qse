@@ -820,9 +820,17 @@ function analyserTexteLocal(texte, normeId) {
                 const contexteAvant = texteLower.substring(debut, index);
 
                 // Vérifier si une négation est présente dans ce contexte
-                const negationDetectee = NEGATIONS.some(negation =>
-                    contexteAvant.includes(negation)
-                );
+                // Utiliser des regex avec word boundary pour éviter les faux positifs
+                // (ex: "pas" dans "étapes" ou "compas")
+                const negationDetectee = NEGATIONS.some(negation => {
+                    // Pour les négations courtes (1-3 lettres), utiliser word boundary
+                    if (negation.length <= 3) {
+                        const regex = new RegExp(`\\b${negation}\\b`, 'i');
+                        return regex.test(contexteAvant);
+                    }
+                    // Pour les négations longues, match exact suffit
+                    return contexteAvant.includes(negation);
+                });
 
                 if (negationDetectee) {
                     return true; // Terme de preuve nié détecté
@@ -1462,21 +1470,18 @@ function displayResults(result) {
     // Déterminer le nom de la norme
     const normeNom = NORMES[selectedNorm]?.nom || 'QSE';
 
-    // Vérifier si resumeExecutifContainer existe, sinon le créer et l'insérer en premier
-    let resumeContainer = document.getElementById('resumeExecutifContainer');
-    if (!resumeContainer) {
-        resumeContainer = document.createElement('div');
-        resumeContainer.id = 'resumeExecutifContainer';
-        // Insérer en premier enfant de resultsContainer
-        if (resultsContainer.firstChild) {
-            resultsContainer.insertBefore(resumeContainer, resultsContainer.firstChild);
-        } else {
-            resultsContainer.appendChild(resumeContainer);
-        }
-    }
+    // Supprimer d'éventuels éléments existants (pour éviter doublons si relance)
+    const existingSituation = document.getElementById('situationAnalysee');
+    const existingResume = document.getElementById('resumeExecutifContainer');
+    if (existingSituation) existingSituation.remove();
+    if (existingResume) existingResume.remove();
 
-    // Créer l'encadré "Situation analysée"
-    const situationHTML = `
+    // Créer un conteneur pour la situation analysée et le résumé exécutif
+    const topContainer = document.createElement('div');
+    topContainer.style.cssText = 'margin-bottom: 2rem;';
+
+    // HTML pour "Situation analysée" + Résumé exécutif
+    topContainer.innerHTML = `
     <div id="situationAnalysee" style="background: white; border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
         <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.75rem; font-size: 1.05rem;">
             📝 Situation analysée
@@ -1485,23 +1490,15 @@ function displayResults(result) {
             "${situation}"
         </div>
     </div>
+    ${genererResumeExecutif(result, normeNom)}
     `;
 
-    // Insérer situationAnalysee AVANT resumeExecutifContainer s'il n'existe pas déjà
-    let situationEl = document.getElementById('situationAnalysee');
-    if (!situationEl) {
-        situationEl = document.createElement('div');
-        situationEl.innerHTML = situationHTML;
-        // Insérer juste avant resumeContainer
-        resultsContainer.insertBefore(situationEl.firstChild, resumeContainer);
+    // Insérer en tout premier dans resultsContainer
+    if (resultsContainer.firstChild) {
+        resultsContainer.insertBefore(topContainer, resultsContainer.firstChild);
     } else {
-        // Mettre à jour le contenu si existe déjà
-        situationEl.innerHTML = situationHTML;
+        resultsContainer.appendChild(topContainer);
     }
-
-    // Générer et afficher le résumé exécutif
-    resumeContainer.innerHTML = genererResumeExecutif(result, normeNom);
-    resumeContainer.style.display = 'block';
 
     // Mettre à jour le score avec animation
     animateScore(result.score, result.appreciation);
