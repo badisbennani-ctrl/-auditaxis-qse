@@ -842,6 +842,8 @@ function analyserTexteLocal(texte, normeId) {
 
     // Compteur de mots-clés détectés pour le score de confiance
     let totalMotsClesDetectes = 0;
+    let reglesAvecMotCleDetecte = 0;
+    let recommandationsAbsenceMessage = false;
 
     // ÉTAPE 2 : Analyser chaque règle pour détecter conformités et absences
     norme.regles.forEach((regle) => {
@@ -852,6 +854,7 @@ function analyserTexteLocal(texte, normeId) {
 
         if (motCleTrouve) {
             totalMotsClesDetectes += regle.motsCles.filter(mot => texteLower.includes(mot.toLowerCase())).length;
+            reglesAvecMotCleDetecte++;
         }
 
         // Détection de contradiction pour cette règle
@@ -908,28 +911,60 @@ function analyserTexteLocal(texte, normeId) {
                     action_corrective: `Formaliser et documenter : ${regle.conformite}`
                 });
             }
-        } else {
-            // NIVEAU 3 — NON CONFORME
-            // Mot-clé totalement absent
-            const gravite = determinerGravite(regle.article, texteLower);
-            const explicationDetaillee = regle.explication || `Selon ${regle.article} de la norme ${norme.nom}, cet élément est requis pour la conformité.`;
-
-            nonConformites.push({
-                article: regle.article,
-                titre: `Non-conformité ${gravite} - ${regle.titre}`,
-                probleme: `Absence totale de l'élément requis : ${regle.conformite}`,
-                explication: `${explicationDetaillee} Le manque de documentation ou de mise en œuvre de cet élément constitue une non-conformité ${gravite}.`,
-                gravite: gravite,
-                action_corrective: `Mettre en place et documenter : ${regle.conformite}. Établir un plan d'action avec échéancier.`
-            });
-            // totalPoints += 0 (déjà 0 par défaut)
         }
     });
+
+    // NIVEAU 3 — NON CONFORME PAR ABSENCE
+    // Ne créer des NC d'absence que si le texte est suffisamment long et détaillé
+    const texteLongueur = texte.trim().length;
+    const pourcentageReglesDetectees = (reglesAvecMotCleDetecte / norme.regles.length) * 100;
+    const texteSuffisammentLong = texteLongueur > 200;
+    const texteSuffisammentDetaille = pourcentageReglesDetectees >= 30;
+
+    if (!texteSuffisammentLong || !texteSuffisammentDetaille) {
+        // Texte trop court ou peu détaillé - ne pas créer de NC d'absence
+        // Ajouter un message d'avertissement dans les recommandations
+        recommandationsAbsenceMessage = true;
+    } else {
+        // Texte suffisamment long et détaillé - créer des NC d'absence (limité à 5)
+        const ncAbsence = [];
+
+        norme.regles.forEach((regle) => {
+            const motCleTrouve = regle.motsCles.some(mot =>
+                texteLower.includes(mot.toLowerCase())
+            );
+
+            if (!motCleTrouve) {
+                const gravite = determinerGravite(regle.article, texteLower);
+                const explicationDetaillee = regle.explication || `Selon ${regle.article} de la norme ${norme.nom}, cet élément est requis pour la conformité.`;
+
+                ncAbsence.push({
+                    article: regle.article,
+                    titre: `Non-conformité ${gravite} - ${regle.titre}`,
+                    probleme: `Absence totale de l'élément requis : ${regle.conformite}`,
+                    explication: `${explicationDetaillee} Le manque de documentation ou de mise en œuvre de cet élément constitue une non-conformité ${gravite}.`,
+                    gravite: gravite,
+                    action_corrective: `Mettre en place et documenter : ${regle.conformite}. Établir un plan d'action avec échéancier.`,
+                    _scoreGravite: gravite === 'majeure' ? 2 : 1 // Pour tri
+                });
+            }
+        });
+
+        // Trier par gravité décroissante et garder les 5 plus critiques
+        ncAbsence.sort((a, b) => b._scoreGravite - a._scoreGravite);
+        const ncAbsenceLimitees = ncAbsence.slice(0, 5);
+
+        // Supprimer le champ de tri temporaire
+        ncAbsenceLimitees.forEach(nc => delete nc._scoreGravite);
+
+        // Ajouter à la FIN de la liste des NC (après les NC partielles/contradictions)
+        nonConformites = [...nonConformites, ...ncAbsenceLimitees];
+    }
 
     // Calcul du score de confiance
     const scoreConfiance = calculerScoreConfiance(totalMotsClesDetectes, texte);
 
-    // ÉTAPE 3 : Ajouter les NC citées EN PREMIER dans la liste
+    // ÉTAPE 3 : Ajouter les NC citées EN PREMIER dans la liste (avant tout le reste)
     if (ncCitees.length > 0) {
         nonConformites = [...ncCitees, ...nonConformites];
     }
@@ -950,6 +985,16 @@ function analyserTexteLocal(texte, normeId) {
     // Générer les recommandations contextualisées
     const recommandations = [];
     const isSecteurRisque = secteurDetecte && SECTEURS[secteurDetecte]?.risque === 'eleve';
+
+    // Ajouter message d'avertissement si texte insuffisant
+    if (recommandationsAbsenceMessage) {
+        recommandations.push({
+            priorite: 'urgent',
+            action: '⚠️ Texte insuffisant pour une analyse complète. Décrivez votre situation en détail pour obtenir une analyse exhaustive.',
+            benefice: 'Une description détaillée permettra d\'identifier toutes les non-conformités potentielles',
+            delai: 'Immédiat - Fournir plus de détails'
+        });
+    }
 
     nonConformites.forEach((nc, i) => {
         let priorite;
