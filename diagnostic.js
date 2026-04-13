@@ -800,6 +800,38 @@ function analyserTexteLocal(texte, normeId) {
         return termes.some(terme => texteLower.includes(terme.toLowerCase()));
     }
 
+    // NÉGATIONS - Liste des mots indiquant une négation
+    const NEGATIONS = [
+        "pas", "non", "ne sont pas", "pas toutes", "pas encore",
+        "jamais", "aucun", "sans", "ne pas", "n'est pas", "n'ont pas",
+        "pas de", "aucune", "ni", "absence de", "manque de",
+        "insuffisant", "incomplet", "ne sont plus"
+    ];
+
+    // Fonction pour détecter si un terme de preuve est précédé d'une négation
+    function termeDePreuveAvecNegation(texteLower, termesPreuve) {
+        for (const terme of termesPreuve) {
+            const termeLower = terme.toLowerCase();
+            const index = texteLower.indexOf(termeLower);
+
+            if (index !== -1) {
+                // Extraire une fenêtre de 80 caractères AVANT le terme
+                const debut = Math.max(0, index - 80);
+                const contexteAvant = texteLower.substring(debut, index);
+
+                // Vérifier si une négation est présente dans ce contexte
+                const negationDetectee = NEGATIONS.some(negation =>
+                    contexteAvant.includes(negation)
+                );
+
+                if (negationDetectee) {
+                    return true; // Terme de preuve nié détecté
+                }
+            }
+        }
+        return false; // Aucune négation détectée
+    }
+
     // Fonction pour compter les occurrences de mots-clés
     function compterMotsCles(motsCles) {
         let count = 0;
@@ -867,15 +899,29 @@ function analyserTexteLocal(texte, normeId) {
             const hasCritique = MOTS_CRITIQUES.some(mot => texteLower.includes(mot));
             const hasAbsence = MOTS_ABSENCE.some(mot => texteLower.includes(mot));
 
-            if (hasTermesPreuve && !hasTermesPartiel && !contradiction) {
+            // Vérifier si un terme de preuve est précédé d'une négation
+            const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve);
+
+            if (hasTermesPreuve && !preuveNiee && !hasTermesPartiel && !contradiction) {
                 // NIVEAU 1 — CONFORME
-                // Mot-clé trouvé + termes de preuve présents + pas de termes partiels + pas de contradiction
+                // Mot-clé trouvé + termes de preuve présents + pas de négation + pas de termes partiels + pas de contradiction
                 conformites.push({
                     article: regle.article,
                     description: regle.conformite,
                     statut: "conforme"
                 });
                 totalPoints += 1;
+            } else if (preuveNiee) {
+                // PREUVE NIÉE — NON CONFORME (ex: "pas documenté", "non réalisé")
+                const gravite = determinerGravite(regle.article, texteLower);
+                nonConformites.push({
+                    article: regle.article,
+                    titre: `Non-conformité ${gravite} - ${regle.titre}`,
+                    probleme: "Élément mentionné mais explicitement nié ou non réalisé",
+                    explication: regle.explication || `Selon ${regle.article}, cet élément doit être pleinement mis en œuvre et effectif.`,
+                    gravite: gravite,
+                    action_corrective: `Mettre en œuvre effectivement : ${regle.conformite}. Vérifier l'application sur le terrain.`
+                });
             } else if (contradiction || (hasTermesPreuve && hasAbsence)) {
                 // CONTRADICTION DÉTECTÉE — NON CONFORME MAJEURE
                 // Ex: "nous avons une politique qualité mais elle n'est jamais appliquée"
