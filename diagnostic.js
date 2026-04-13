@@ -746,19 +746,37 @@ function analyserTexteLocal(texte, normeId) {
     // ÉTAPE 1 : Analyser les NC citées explicitement par l'utilisateur
     const ncCitees = analyserNonConformitesCitees(texte, normeId);
 
-    // Termes indiquant une conformité complète
+    // Termes indiquant une conformité complète (avec variations de genre/nombre)
     const termesPreuve = [
-        "documenté", "établi", "à jour", "validé", "signé",
-        "affiché", "enregistré", "formalisé", "approuvé",
-        "mis en œuvre", "réalisé", "effectué", "certifié",
-        "vérifié", "archivé", "disponible", "communiqué"
+        "documenté", "documentée", "documentés", "documentées",
+        "établi", "établie", "établis", "établies",
+        "à jour",
+        "validé", "validée", "validés", "validées",
+        "signé", "signée", "signés", "signées",
+        "affiché", "affichée", "affichés", "affichées",
+        "enregistré", "enregistrée", "enregistrés", "enregistrées",
+        "formalisé", "formalisée", "formalisés", "formalisées",
+        "approuvé", "approuvée", "approuvés", "approuvées",
+        "mis en œuvre", "mise en œuvre", "mis en oeuvre", "mise en oeuvre",
+        "réalisé", "réalisée", "réalisés", "réalisées",
+        "effectué", "effectuée", "effectués", "effectuées",
+        "certifié", "certifiée", "certifiés", "certifiées",
+        "vérifié", "vérifiée", "vérifiés", "vérifiées",
+        "archivé", "archivée", "archivés", "archivées",
+        "disponible", "disponibles",
+        "communiqué", "communiquée", "communiqués", "communiquées"
     ];
 
-    // Termes indiquant une conformité partielle
+    // Termes indiquant une conformité partielle (avec variations)
     const termesPartiel = [
-        "pas encore", "en cours", "prévu", "à faire", "manque",
-        "absent", "non réalisé", "insuffisant", "partiel",
-        "incomplet", "ébauche", "projet", "envisagé", "parfois"
+        "pas encore", "en cours", "prévu", "prévue", "prévus", "prévues",
+        "à faire", "manque", "manquent",
+        "absent", "absente", "absents", "absentes",
+        "non réalisé", "non réalisée", "non réalisés", "non réalisées",
+        "insuffisant", "insuffisante", "insuffisants", "insuffisantes",
+        "partiel", "partielle", "partiels", "partielles",
+        "incomplet", "incomplète", "incomplets", "incomplètes",
+        "ébauche", "projet", "envisagé", "envisagée", "parfois"
     ];
 
     // Fonction pour déterminer la gravité en fonction du numéro d'article et du contexte
@@ -809,35 +827,48 @@ function analyserTexteLocal(texte, normeId) {
     ];
 
     // Fonction pour détecter si un terme de preuve est précédé d'une négation
-    function termeDePreuveAvecNegation(texteLower, termesPreuve) {
+    // Version améliorée : vérifie dans le contexte de CHAQUE mot-clé de la règle, pas globalement
+    function termeDePreuveAvecNegation(texteLower, termesPreuve, regleMotsCles) {
+        // Trouver la position du mot-clé de la règle pour contextualiser
+        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+            const i = texteLower.indexOf(mot.toLowerCase());
+            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+        }, -1);
+
+        // Si pas de mot-clé trouvé, on ne peut pas contextualiser → retourne false
+        if (motCleIndex === -1) return false;
+
+        // Définir une fenêtre autour du mot-clé (100 chars avant et après)
+        const fenetreDebut = Math.max(0, motCleIndex - 100);
+        const fenetreFin = Math.min(texteLower.length, motCleIndex + 100);
+        const fenetreContexte = texteLower.substring(fenetreDebut, fenetreFin);
+
+        // Chercher les termes de preuve DANS cette fenêtre
         for (const terme of termesPreuve) {
             const termeLower = terme.toLowerCase();
-            const index = texteLower.indexOf(termeLower);
+            const indexDansFenetre = fenetreContexte.indexOf(termeLower);
 
-            if (index !== -1) {
-                // Extraire une fenêtre de 80 caractères AVANT le terme
-                const debut = Math.max(0, index - 80);
-                const contexteAvant = texteLower.substring(debut, index);
+            if (indexDansFenetre !== -1) {
+                // Terme de preuve trouvé dans la fenêtre du mot-clé
+                // Extraire 80 caractères AVANT ce terme (dans la fenêtre)
+                const debutContexteAvant = Math.max(0, indexDansFenetre - 80);
+                const contexteAvant = fenetreContexte.substring(debutContexteAvant, indexDansFenetre);
 
-                // Vérifier si une négation est présente dans ce contexte
-                // Utiliser des regex avec word boundary pour éviter les faux positifs
-                // (ex: "pas" dans "étapes" ou "compas")
+                // Vérifier les négations avec word boundary pour les termes courts
                 const negationDetectee = NEGATIONS.some(negation => {
-                    // Pour les négations courtes (1-3 lettres), utiliser word boundary
                     if (negation.length <= 3) {
                         const regex = new RegExp(`\\b${negation}\\b`, 'i');
                         return regex.test(contexteAvant);
                     }
-                    // Pour les négations longues, match exact suffit
                     return contexteAvant.includes(negation);
                 });
 
                 if (negationDetectee) {
-                    return true; // Terme de preuve nié détecté
+                    return true; // Terme de preuve nié détecté dans le contexte de la règle
                 }
             }
         }
-        return false; // Aucune négation détectée
+        return false; // Aucune négation détectée dans le contexte de la règle
     }
 
     // Fonction pour compter les occurrences de mots-clés
@@ -907,8 +938,8 @@ function analyserTexteLocal(texte, normeId) {
             const hasCritique = MOTS_CRITIQUES.some(mot => texteLower.includes(mot));
             const hasAbsence = MOTS_ABSENCE.some(mot => texteLower.includes(mot));
 
-            // Vérifier si un terme de preuve est précédé d'une négation
-            const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve);
+            // Vérifier si un terme de preuve est précédé d'une négation (dans le contexte de la règle)
+            const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve, regle.motsCles);
 
             if (hasTermesPreuve && !preuveNiee && !hasTermesPartiel && !contradiction) {
                 // NIVEAU 1 — CONFORME
@@ -999,6 +1030,7 @@ function analyserTexteLocal(texte, normeId) {
                     explication: `${explicationDetaillee} Le manque de documentation ou de mise en œuvre de cet élément constitue une non-conformité ${gravite}.`,
                     gravite: gravite,
                     action_corrective: `Mettre en place et documenter : ${regle.conformite}. Établir un plan d'action avec échéancier.`,
+                    _type: 'absence',
                     _scoreGravite: gravite === 'majeure' ? 2 : 1 // Pour tri
                 });
             }
@@ -1008,18 +1040,50 @@ function analyserTexteLocal(texte, normeId) {
         ncAbsence.sort((a, b) => b._scoreGravite - a._scoreGravite);
         const ncAbsenceLimitees = ncAbsence.slice(0, 5);
 
-        // Supprimer le champ de tri temporaire
-        ncAbsenceLimitees.forEach(nc => delete nc._scoreGravite);
+        // Supprimer les champs temporaires
+        ncAbsenceLimitees.forEach(nc => {
+            delete nc._scoreGravite;
+            delete nc._type;
+        });
 
         // Ajouter à la FIN de la liste des NC (après les NC partielles/contradictions)
         nonConformites = [...nonConformites, ...ncAbsenceLimitees];
     }
 
+    // LIMITER LE NOMBRE TOTAL DE NC (avant d'ajouter ncCitees)
+    // Séparer les NC par type pour préserver les plus importantes
+    const ncCiteesInternes = nonConformites.filter(nc => nc.estNCCitee);
+    const ncContradictions = nonConformites.filter(nc => nc.titre.includes("Contradiction"));
+    const ncPreuveNiee = nonConformites.filter(nc => nc.titre.includes("explicitement nié"));
+    const ncPartielles = nonConformites.filter(nc => nc.titre.startsWith("Conformité partielle"));
+    const ncAbsenceRestantes = nonConformites.filter(nc =>
+        !nc.estNCCitee &&
+        !nc.titre.includes("Contradiction") &&
+        !nc.titre.includes("explicitement nié") &&
+        !nc.titre.startsWith("Conformité partielle")
+    );
+
+    // Trier les NC non-citées par gravité décroissante
+    const ncAutres = [...ncPreuveNiee, ...ncPartielles, ...ncAbsenceRestantes];
+    ncAutres.sort((a, b) => {
+        const graviteA = a.gravite === 'majeure' ? 2 : 1;
+        const graviteB = b.gravite === 'majeure' ? 2 : 1;
+        return graviteB - graviteA;
+    });
+
+    // Limiter à 8 NC non-citées maximum (contradictions + autres)
+    const ncAutresLimitees = ncAutres.slice(0, 8);
+
+    // Reconstruire la liste : NC citées en premier, puis autres limités
+    nonConformites = [...ncCiteesInternes, ...ncContradictions, ...ncAutresLimitees];
+
     // Calcul du score de confiance
     const scoreConfiance = calculerScoreConfiance(totalMotsClesDetectes, texte);
 
-    // ÉTAPE 3 : Ajouter les NC citées EN PREMIER dans la liste (avant tout le reste)
-    if (ncCitees.length > 0) {
+    // ÉTAPE 3 : Les NC citées sont DÉJÀ en tête (déjà fusionnées ci-dessus)
+    // Cette section est conservée pour compatibilité mais ncCitees est déjà inclus
+    if (ncCitees.length > 0 && ncCiteesInternes.length === 0) {
+        // Cas où ncCitees vient de analyserNonConformitesCitees et n'est pas encore dans nonConformites
         nonConformites = [...ncCitees, ...nonConformites];
     }
 
