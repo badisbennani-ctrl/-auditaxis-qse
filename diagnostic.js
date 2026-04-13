@@ -687,8 +687,48 @@ function analyserNonConformitesCitees(texte, normeId) {
 }
 
 // ============================================
-// FONCTION D'ANALYSE LOCALE - RAISONNEMENT À 3 NIVEAUX
+// FONCTION D'ANALYSE LOCALE - RAISONNEMENT À 3 NIVEAUX AVEC IA CONTEXTUELLE
 // ============================================
+
+// Configuration des secteurs d'activité
+const SECTEURS = {
+    industrie: {
+        motsCles: ["usine", "production", "machine", "atelier", "industriel", "fabrication", "ligne production", "assemblage"],
+        risque: "eleve",
+        label: "Industrie"
+    },
+    service: {
+        motsCles: ["relation client", "service client", "prestation", "bureau", "administratif", "conseil", "tertiaire"],
+        risque: "faible",
+        label: "Service"
+    },
+    btp: {
+        motsCles: ["chantier", "travaux", "site", "construction", "bâtiment", "ouvrage", "maçonnerie", "tp"],
+        risque: "eleve",
+        label: "BTP"
+    },
+    sante: {
+        motsCles: ["hôpital", "patient", "médical", "clinique", "santé", "soin", "établissement santé", "ehpad"],
+        risque: "eleve",
+        label: "Santé"
+    }
+};
+
+// Mots critiques pour la sévérité
+const MOTS_CRITIQUES = ["accident", "blessure", "incident", "danger", "urgence", "risque grave", "sinistre", "exposition", "contamination"];
+
+// Mots de planification (downgrade)
+const MOTS_PLANIFICATION = ["en cours", "prévu", "planifié", "programmé", "envisagé", "bientôt", "prochainement"];
+
+// Mots d'absence totale
+const MOTS_ABSENCE = ["jamais", "aucun", "inexistant", "absent", "rien", "pas de", "sans", "néant"];
+
+// Mots positifs pour détection contradictions
+const MOTS_POSITIFS = ["bon", "excellent", "satisfaisant", "conforme", "maîtrisé", "efficace", "opérationnel", "validé", "documenté"];
+
+// Mots négatifs pour détection contradictions
+const MOTS_NEGATIFS = ["mauvais", "insuffisant", "défaillant", "absent", "nul", "critique", "problème", "échec", "non conforme"];
+
 function analyserTexteLocal(texte, normeId) {
     const norme = NORMES[normeId];
     if (!norme) {
@@ -699,6 +739,9 @@ function analyserTexteLocal(texte, normeId) {
     const conformites = [];
     let nonConformites = [];
     let totalPoints = 0;
+
+    // ÉTAPE 0 : Détection du secteur d'activité
+    const secteurDetecte = detecterSecteur(texteLower);
 
     // ÉTAPE 1 : Analyser les NC citées explicitement par l'utilisateur
     const ncCitees = analyserNonConformitesCitees(texte, normeId);
@@ -718,28 +761,87 @@ function analyserTexteLocal(texte, normeId) {
         "incomplet", "ébauche", "projet", "envisagé", "parfois"
     ];
 
-    // Fonction pour déterminer la gravité en fonction du numéro d'article
-    function determinerGravite(article) {
-        // Extraire le numéro d'article (ex: "Art. 4.1" → 4)
+    // Fonction pour déterminer la gravité en fonction du numéro d'article et du contexte
+    function determinerGravite(article, contexteTexte) {
         const match = article.match(/Art\.\s*(\d+)/);
         if (!match) return 'mineure';
 
         const numArticle = parseInt(match[1], 10);
 
-        // Articles 4, 5, 6, 7 → MAJEURE
-        // Articles 8, 9, 10 → MINEURE
+        // Vérifier présence de mots critiques
+        const hasCritique = MOTS_CRITIQUES.some(mot => contexteTexte.includes(mot));
+        const hasAbsence = MOTS_ABSENCE.some(mot => contexteTexte.includes(mot));
+        const hasPlanification = MOTS_PLANIFICATION.some(mot => contexteTexte.includes(mot));
+
+        // Gravité de base selon article
+        let graviteBase;
         if (numArticle >= 4 && numArticle <= 7) {
-            return 'majeure';
+            graviteBase = 'majeure';
         } else if (numArticle >= 8 && numArticle <= 10) {
-            return 'mineure';
+            graviteBase = 'mineure';
+        } else {
+            graviteBase = 'mineure';
         }
-        return 'mineure'; // Par défaut
+
+        // Ajustement selon contexte
+        if (hasCritique || hasAbsence) {
+            return 'majeure'; // Forcer MAJEURE pour mots critiques ou absence totale
+        }
+
+        if (hasPlanification && graviteBase === 'majeure') {
+            return 'mineure'; // Downgrade si élément en cours/planifié
+        }
+
+        return graviteBase;
     }
 
     // Fonction pour vérifier si un terme est présent dans le texte
     function contientTerme(termes) {
         return termes.some(terme => texteLower.includes(terme.toLowerCase()));
     }
+
+    // Fonction pour compter les occurrences de mots-clés
+    function compterMotsCles(motsCles) {
+        let count = 0;
+        motsCles.forEach(mot => {
+            const regex = new RegExp(mot.toLowerCase(), 'g');
+            const matches = texteLower.match(regex);
+            if (matches) count += matches.length;
+        });
+        return count;
+    }
+
+    // Fonction pour détecter contradictions dans le contexte autour du mot-clé
+    function detecterContradiction(regleMotsCles) {
+        // Trouver la position du premier mot-clé trouvé
+        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+            const i = texteLower.indexOf(mot.toLowerCase());
+            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+        }, -1);
+
+        // Si aucun mot-clé trouvé, pas de contradiction possible
+        if (motCleIndex === -1) return false;
+
+        // Extraire le contexte de 150 caractères avant et après le mot-clé
+        const debut = Math.max(0, motCleIndex - 150);
+        const fin = Math.min(texteLower.length, motCleIndex + 150);
+        const contexte = texteLower.substring(debut, fin);
+
+        const hasPositif = MOTS_POSITIFS.some(mot => contexte.includes(mot));
+        const hasNegatif = MOTS_NEGATIFS.some(mot => contexte.includes(mot));
+        return hasPositif && hasNegatif;
+    }
+
+    // Fonction pour calculer le score de confiance
+    function calculerScoreConfiance(nombreMotsClesDetectes, texte) {
+        if (nombreMotsClesDetectes > 3) return { score: 85, niveau: 'élevée' };
+        if (nombreMotsClesDetectes >= 1) return { score: 55, niveau: 'moyenne' };
+        if (texte.trim().length < 100) return { score: 30, niveau: 'faible', raison: 'texte trop court' };
+        return { score: 35, niveau: 'faible', raison: 'peu de mots-clés détectés' };
+    }
+
+    // Compteur de mots-clés détectés pour le score de confiance
+    let totalMotsClesDetectes = 0;
 
     // ÉTAPE 2 : Analyser chaque règle pour détecter conformités et absences
     norme.regles.forEach((regle) => {
@@ -749,19 +851,40 @@ function analyserTexteLocal(texte, normeId) {
         );
 
         if (motCleTrouve) {
+            totalMotsClesDetectes += regle.motsCles.filter(mot => texteLower.includes(mot.toLowerCase())).length;
+        }
+
+        // Détection de contradiction pour cette règle
+        const contradiction = detecterContradiction(regle.motsCles);
+
+        if (motCleTrouve) {
             // Le mot-clé est trouvé → vérifier les termes de preuve
             const hasTermesPreuve = contientTerme(termesPreuve);
             const hasTermesPartiel = contientTerme(termesPartiel);
+            const hasCritique = MOTS_CRITIQUES.some(mot => texteLower.includes(mot));
+            const hasAbsence = MOTS_ABSENCE.some(mot => texteLower.includes(mot));
 
-            if (hasTermesPreuve && !hasTermesPartiel) {
+            if (hasTermesPreuve && !hasTermesPartiel && !contradiction) {
                 // NIVEAU 1 — CONFORME
-                // Mot-clé trouvé + termes de preuve présents + pas de termes partiels
+                // Mot-clé trouvé + termes de preuve présents + pas de termes partiels + pas de contradiction
                 conformites.push({
                     article: regle.article,
                     description: regle.conformite,
                     statut: "conforme"
                 });
                 totalPoints += 1;
+            } else if (contradiction || (hasTermesPreuve && hasAbsence)) {
+                // CONTRADICTION DÉTECTÉE — NON CONFORME MAJEURE
+                // Ex: "nous avons une politique qualité mais elle n'est jamais appliquée"
+                const gravite = 'majeure';
+                nonConformites.push({
+                    article: regle.article,
+                    titre: `Non-conformité majeure - ${regle.titre}`,
+                    probleme: "Contradiction détectée dans la description : élément mentionné mais non appliqué",
+                    explication: regle.explication || `Selon ${regle.article}, cet élément doit être pleinement mis en œuvre et effectif.`,
+                    gravite: gravite,
+                    action_corrective: `Mettre en œuvre effectivement : ${regle.conformite}. Vérifier l'application sur le terrain.`
+                });
             } else {
                 // NIVEAU 2 — PARTIELLEMENT CONFORME
                 // Mot-clé trouvé mais sans termes de preuve OU avec termes partiels
@@ -772,20 +895,23 @@ function analyserTexteLocal(texte, normeId) {
                 });
                 totalPoints += 0.5;
 
-                // Ajouter aussi une non-conformité mineure
+                // Gravité ajustée selon contexte
+                const gravite = determinerGravite(regle.article, texteLower);
+
+                // Ajouter aussi une non-conformité
                 nonConformites.push({
                     article: regle.article,
                     titre: `Conformité partielle — ${regle.titre}`,
                     probleme: "Élément mentionné mais non formalisé ou incomplet",
                     explication: regle.explication || `Selon ${regle.article}, cet élément doit être documenté et formalisé.`,
-                    gravite: "mineure",
+                    gravite: gravite,
                     action_corrective: `Formaliser et documenter : ${regle.conformite}`
                 });
             }
         } else {
             // NIVEAU 3 — NON CONFORME
             // Mot-clé totalement absent
-            const gravite = determinerGravite(regle.article);
+            const gravite = determinerGravite(regle.article, texteLower);
             const explicationDetaillee = regle.explication || `Selon ${regle.article} de la norme ${norme.nom}, cet élément est requis pour la conformité.`;
 
             nonConformites.push({
@@ -799,6 +925,9 @@ function analyserTexteLocal(texte, normeId) {
             // totalPoints += 0 (déjà 0 par défaut)
         }
     });
+
+    // Calcul du score de confiance
+    const scoreConfiance = calculerScoreConfiance(totalMotsClesDetectes, texte);
 
     // ÉTAPE 3 : Ajouter les NC citées EN PREMIER dans la liste
     if (ncCitees.length > 0) {
@@ -814,26 +943,44 @@ function analyserTexteLocal(texte, normeId) {
     else if (score >= 50) appreciation = "Bon";
     else if (score >= 25) appreciation = "Moyen";
 
-    // Générer les recommandations
-    const recommandations = [];
+    // Compter les NC majeures et mineures
+    const nbMajeures = nonConformites.filter(nc => nc.gravite === 'majeure').length;
+    const nbMineures = nonConformites.filter(nc => nc.gravite === 'mineure').length;
 
-    // Ajouter les recommandations pour les non-conformités
+    // Générer les recommandations contextualisées
+    const recommandations = [];
+    const isSecteurRisque = secteurDetecte && SECTEURS[secteurDetecte]?.risque === 'eleve';
+
     nonConformites.forEach((nc, i) => {
+        let priorite;
+        let delai;
+
         if (nc.titre.startsWith("Conformité partielle")) {
             // Recommandation spécifique pour les éléments partiels
-            recommandations.push({
-                priorite: 'moyen_terme',
-                action: `Formaliser et documenter l'élément existant pour atteindre la conformité complète : ${nc.article}`,
-                benefice: `Conformité complète à ${nc.article} de la norme ${norme.nom} et réduction des risques associés`
-            });
+            priorite = 'moyen_terme';
+            delai = "À planifier sous 90 jours";
         } else {
-            // Recommandation standard pour les non-conformités totales
-            recommandations.push({
-                priorite: i < 2 ? 'urgent' : i < 4 ? 'moyen_terme' : 'long_terme',
-                action: nc.action_corrective,
-                benefice: `Conformité à ${nc.article} de la norme ${norme.nom} et réduction des risques associés`
-            });
+            // Priorité basée sur gravité ET secteur
+            if (nc.gravite === 'majeure') {
+                if (isSecteurRisque) {
+                    priorite = 'urgent';
+                    delai = "À corriger sous 30 jours";
+                } else {
+                    priorite = 'moyen_terme';
+                    delai = "À planifier sous 90 jours";
+                }
+            } else {
+                priorite = i < 2 ? 'moyen_terme' : 'long_terme';
+                delai = priorite === 'moyen_terme' ? "À planifier sous 90 jours" : "À intégrer au prochain cycle d'audit";
+            }
         }
+
+        recommandations.push({
+            priorite: priorite,
+            action: nc.action_corrective,
+            benefice: `Conformité à ${nc.article} de la norme ${norme.nom} et réduction des risques associés`,
+            delai: delai
+        });
     });
 
     return {
@@ -841,8 +988,101 @@ function analyserTexteLocal(texte, normeId) {
         appreciation: appreciation,
         conformites: conformites,
         nonConformites: nonConformites,
-        recommandations: recommandations
+        recommandations: recommandations,
+        scoreConfiance: scoreConfiance.score,
+        niveauConfiance: scoreConfiance.niveau,
+        secteurDetecte: secteurDetecte,
+        nbMajeures: nbMajeures,
+        nbMineures: nbMineures
     };
+}
+
+// ============================================
+// DÉTECTION DU SECTEUR D'ACTIVITÉ
+// ============================================
+function detecterSecteur(texteLower) {
+    let meilleurSecteur = null;
+    let meilleurScore = 0;
+
+    for (const [secteurId, secteurConfig] of Object.entries(SECTEURS)) {
+        let score = 0;
+        secteurConfig.motsCles.forEach(mot => {
+            const regex = new RegExp(mot.toLowerCase(), 'g');
+            const matches = texteLower.match(regex);
+            if (matches) score += matches.length;
+        });
+
+        if (score > meilleurScore) {
+            meilleurScore = score;
+            meilleurSecteur = secteurId;
+        }
+    }
+
+    return meilleurSecteur;
+}
+
+// ============================================
+// GÉNÉRATION DU RÉSUMÉ EXÉCUTIF
+// ============================================
+function genererResumeExecutif(resultat, normeNom) {
+    const { score, appreciation, nbMajeures, nbMineures, secteurDetecte, niveauConfiance } = resultat;
+
+    const secteurLabel = secteurDetecte ? SECTEURS[secteurDetecte]?.label : 'Secteur non détecté';
+    const confianceText = `Analyse avec un niveau de confiance ${niveauConfiance.toLowerCase()}`;
+
+    // Générer le top 3 des actions prioritaires
+    const actionsPrioritaires = resultat.recommandations
+        .filter(r => r.priorite === 'urgent')
+        .slice(0, 3)
+        .map((r, i) => `${i + 1}. ${r.action}`)
+        .join('\n');
+
+    let appreciationDetail;
+    if (score >= 75) appreciationDetail = "Très bon niveau de conformité globale";
+    else if (score >= 50) appreciationDetail = "Niveau de conformité satisfaisant avec des axes d'amélioration";
+    else if (score >= 25) appreciationDetail = "Des améliorations significatives sont nécessaires";
+    else appreciationDetail = "Un plan d'action correctif est fortement recommandé";
+
+    return `
+<div class="resume-executif" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
+    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">📋 Résumé Exécutif - ${normeNom}</h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+        <div style="background: white; padding: 1rem; border-radius: 6px;">
+            <div style="font-size: 0.85rem; color: #666;">Score Global</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">${score}%</div>
+            <div style="font-size: 0.85rem; color: #666;">${appreciation}</div>
+        </div>
+        <div style="background: white; padding: 1rem; border-radius: 6px;">
+            <div style="font-size: 0.85rem; color: #666;">Non-Conformités</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-red);">${nbMajeures}</div>
+            <div style="font-size: 0.85rem; color: #666;">majeures</div>
+        </div>
+        <div style="background: white; padding: 1rem; border-radius: 6px;">
+            <div style="font-size: 0.85rem; color: #666;">Non-Conformités</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">${nbMineures}</div>
+            <div style="font-size: 0.85rem; color: #666;">mineures</div>
+        </div>
+        <div style="background: white; padding: 1rem; border-radius: 6px;">
+            <div style="font-size: 0.85rem; color: #666;">Secteur Détecté</div>
+            <div style="font-size: 1rem; font-weight: bold; color: var(--secondary);">${secteurLabel}</div>
+            <div style="font-size: 0.85rem; color: #666;">Confiance: ${niveauConfiance}</div>
+        </div>
+    </div>
+
+    <p style="color: #333; line-height: 1.6; margin-bottom: 1rem;">
+        ${appreciationDetail}. ${confianceText}.
+        ${nbMajeures > 0 ? `<strong style="color: var(--accent-red);">Attention : ${nbMajeures} non-conformité(s) majeure(s) détectée(s)</strong> nécessitant une action corrective rapide.` : ''}
+    </p>
+
+    ${actionsPrioritaires ? `
+    <div style="background: #fef3c7; border-left: 3px solid var(--accent); padding: 1rem; border-radius: 4px;">
+        <div style="font-weight: bold; color: #92400e; margin-bottom: 0.5rem;">⚡ Top Actions Prioritaires (URGENT)</div>
+        <div style="font-size: 0.9rem; color: #78350f;">${actionsPrioritaires}</div>
+    </div>
+    ` : ''}
+</div>
+`;
 }
 
 // ============================================
@@ -1123,6 +1363,16 @@ function displayResults(result) {
 
     // Afficher les résultats
     document.getElementById('results').classList.add('active');
+
+    // Déterminer le nom de la norme
+    const normeNom = NORMES[selectedNorm]?.nom || 'QSE';
+
+    // Générer et afficher le résumé exécutif en haut des résultats
+    const resumeContainer = document.getElementById('resumeExecutifContainer');
+    if (resumeContainer) {
+        resumeContainer.innerHTML = genererResumeExecutif(result, normeNom);
+        resumeContainer.style.display = 'block';
+    }
 
     // Mettre à jour le score avec animation
     animateScore(result.score, result.appreciation);
