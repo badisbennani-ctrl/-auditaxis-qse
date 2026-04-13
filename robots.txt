@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://auditaxis-qse.com/sitemap.xml

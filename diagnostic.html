@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Diagnostic IA QSE gratuit - Analysez la conformité ISO 9001, ISO 14001, ISO 45001 de votre entreprise avec l'intelligence artificielle.">
+    <meta name="author" content="AuditAxis QSE">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Diagnostic IA ISO 9001 14001 45001 Gratuit | AuditAxis QSE">
+    <meta property="og:description" content="Analysez la conformité de votre entreprise aux normes ISO 9001, 14001, 45001 avec notre diagnostic IA.">
+    <meta property="og:url" content="https://auditaxis-qse.com/diagnostic">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://auditaxis-qse.com/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Diagnostic IA ISO 9001 14001 45001 | AuditAxis QSE">
+    <meta name="twitter:description" content="Analysez votre conformité ISO avec l'IA. Résultats instantanés.">
+
+    <title>Diagnostic IA ISO 9001 14001 45001 Gratuit | AuditAxis QSE</title>
+    <link rel="canonical" href="https://auditaxis-qse.com/diagnostic">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        /* Diagnostic Page Specific Styles */
+        .diagnostic-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .step-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .step-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Norm Selection Buttons */
+        .norm-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .norm-btn {
+            background: var(--white);
+            border: 3px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .norm-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .norm-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(30, 95, 140, 0.05), rgba(46, 139, 87, 0.05));
+        }
+
+        .norm-btn.active::after {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .norm-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .norm-code {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .norm-name {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Text Area */
+        .description-area {
+            margin-top: 1.5rem;
+        }
+
+        .description-area label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+        }
+
+        .description-area textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .description-area textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .char-counter {
+            text-align: right;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .char-counter.valid {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .char-counter.invalid {
+            color: var(--accent-red);
+        }
+
+        /* Launch Button */
+        .launch-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .launch-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 95, 140, 0.4);
+        }
+
+        .launch-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .launch-btn.animate {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(30, 95, 140, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(30, 95, 140, 0); }
+        }
+
+        /* Loader */
+        .loader-container {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loader-container.active {
+            display: block;
+        }
+
+        .loader-ai {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .loader-ai::before {
+            content: "🤖";
+            font-size: 3rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: robot-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes robot-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--gray-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .loader-dots::after {
+            content: "";
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75% { content: "..."; }
+        }
+
+        /* Results Section */
+        .results-container {
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        /* Score Gauge */
+        .score-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .score-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .circular-progress {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .circular-progress svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 10;
+        }
+
+        .progress-circle {
+            fill: none;
+            stroke: white;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .score-percent {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .appreciation {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            padding: 0.5rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .appreciation.faible { background: rgba(231, 76, 60, 0.3); }
+        .appreciation.moyen { background: rgba(243, 156, 18, 0.3); }
+        .appreciation.bon { background: rgba(46, 139, 87, 0.3); }
+        .appreciation.excellent { background: rgba(60, 179, 113, 0.4); }
+
+        /* Result Cards */
+        .result-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .result-section-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid;
+        }
+
+        .result-section.non-conformites .result-section-title {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .result-section.conformites .result-section-title {
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .result-section.recommandations .result-section-title {
+            color: #3498db;
+            border-color: #3498db;
+        }
+
+        .result-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-item.majeure {
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+
+        .result-item.mineure {
+            background: #fff8f0;
+            border-left-color: #f39c12;
+        }
+
+        .result-item.conforme {
+            background: #f0fdf4;
+            border-left-color: #27ae60;
+        }
+
+        .result-item.recommandation {
+            background: #f0f9ff;
+            border-left-color: #3498db;
+        }
+
+        .result-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .result-item-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .result-item.majeure .result-item-title { color: #c0392b; }
+        .result-item.mineure .result-item-title { color: #d68910; }
+        .result-item.conforme .result-item-title { color: #1e8449; }
+        .result-item.recommandation .result-item-title { color: #2874a6; }
+
+        .gravite-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .gravite-badge.majeure {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .gravite-badge.mineure {
+            background: #f39c12;
+            color: white;
+        }
+
+        .priorite-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priorite-badge.urgent {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .priorite-badge.moyen-terme {
+            background: #f39c12;
+            color: white;
+        }
+
+        .priorite-badge.long-terme {
+            background: #3498db;
+            color: white;
+        }
+
+        .article-reference {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .result-description {
+            color: var(--dark);
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .result-explication {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--gray);
+            margin-top: 0.8rem;
+        }
+
+        .action-corrective {
+            background: rgba(30, 95, 140, 0.08);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .action-corrective-label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .benefice {
+            background: rgba(46, 139, 87, 0.08);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .benefice-label {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Print styles */
+        @media print {
+            header, .step-section, .action-buttons, .loader-container {
+                display: none !important;
+            }
+
+            .results-container {
+                display: block !important;
+            }
+
+            .result-section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script src="header.js"></script>
+
+    <script>
+    </script>
+
+    <section class="hero" role="main">
+        <h1>🔍 Diagnostic IA QSE</h1>
+        <p>Laissez notre intelligence artificielle analyser la conformité de votre entreprise aux normes ISO</p>
+    </section>
+
+    <div class="diagnostic-container">
+        <!-- Étape 1 : Choix de la norme -->
+        <div class="step-section" id="step1">
+            <h2 class="step-title">
+                <span class="step-number">1</span>
+                Choisissez la norme ISO
+            </h2>
+            <div class="norm-selection">
+                <div class="norm-btn" data-norm="ISO 9001" onclick="selectNorm(this)">
+                    <div class="norm-icon">📊</div>
+                    <div class="norm-code">ISO 9001:2015</div>
+                    <div class="norm-name">Management de la Qualité</div>
+                </div>
+
+                <div class="norm-btn" data-norm="ISO 14001" onclick="selectNorm(this)">
+                    <div class="norm-icon">🌱</div>
+                    <div class="norm-code">ISO 14001:2015</div>
+                    <div class="norm-name">Management Environnemental</div>
+                </div>
+
+                <div class="norm-btn" data-norm="ISO 45001" onclick="selectNorm(this)">
+                    <div class="norm-icon">🛡️</div>
+                    <div class="norm-code">ISO 45001:2018</div>
+                    <div class="norm-name">Santé et Sécurité au Travail</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Étape 2 : Description -->
+        <div class="step-section" id="step2">
+            <h2 class="step-title">
+                <span class="step-number">2</span>
+                Décrivez la situation de votre entreprise
+            </h2>
+
+            <div class="description-area">
+                <label for="situation">
+                    Donnez-nous un aperçu de votre organisation, vos processus, vos forces et faiblesses
+                </label>
+                <textarea
+                    id="situation"
+                    placeholder="Exemple : Notre entreprise fabrique des pièces mécaniques depuis 10 ans. Nous avons 45 employés et des procédures qualité documentées, mais elles ne sont pas toujours respectées sur le terrain. Nos employés ne sont pas tous formés aux risques professionnels. Nous avons des déchets de production que nous recyclons partiellement..."
+                    oninput="updateCharCounter()"
+                ></textarea>
+
+                <div class="char-counter" id="charCounter">0 / 50 caractères minimum</div>
+            </div>
+        </div>
+
+        <!-- Bouton Lancer -->
+        <button class="launch-btn" id="launchBtn" onclick="launchDiagnostic()" disabled>
+            🚀 Lancer le Diagnostic
+        </button>
+        <div id="rateLimitMsg" style="display: none; color: var(--accent); text-align: center; margin-top: 1rem; font-weight: 500;"></div>
+        <div id="serverStatusMsg" style="display: none;"></div>
+
+        <!-- Loader -->
+        <div class="loader-container" id="loader">
+            <div class="loader-ai">
+                <div class="loader-ring"></div>
+            </div>
+            <p class="loader-text">
+                Analyse en cours par l'IA
+                <span class="loader-dots"></span>
+            </p>
+            <p style="color: var(--gray); margin-top: 1rem; font-size: 0.9rem;">
+                Notre expert virtuel examine votre situation selon les exigences de la norme
+            </p>
+        </div>
+
+        <!-- Résultats -->
+        <div class="results-container" id="results">
+            <!-- Score Global -->
+            <div class="score-section">
+                <h3 class="score-title">📊 Score Global de Conformité</h3>
+
+                <div class="circular-progress">
+                    <svg width="150" height="150">
+                        <circle class="progress-circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle
+                            class="progress-circle"
+                            id="progressCircle"
+                            cx="75"
+                            cy="75"
+                            r="65"
+                            stroke-dasharray="408.4"
+                            stroke-dashoffset="408.4"
+                        ></circle>
+                    </svg>
+                    <div class="score-value">
+                        <span id="scoreValue">0</span>
+                        <span class="score-percent">%</span>
+                    </div>
+                </div>
+
+                <div class="appreciation" id="appreciation">En cours d'évaluation...</div>
+            </div>
+
+            <!-- Non-Conformités -->
+            <div class="result-section non-conformites">
+                <h3 class="result-section-title">🔴 Non-Conformités Détectées</h3>
+                <div id="nonConformitesList">
+                    <!-- Contenu injecté par JS -->
+                </div>
+            </div>
+
+            <!-- Points de Conformité -->
+            <div class="result-section conformites">
+                <h3 class="result-section-title">✅ Points de Conformité</h3>
+                <div id="conformitesList">
+                    <!-- Contenu injecté par JS -->
+                </div>
+            </div>
+
+            <!-- Recommandations -->
+            <div class="result-section recommandations">
+                <h3 class="result-section-title">💡 Recommandations Prioritaires</h3>
+
+                <div id="recommandationsList">
+                    <!-- Contenu injecté par JS -->
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <button class="action-btn secondary" onclick="newDiagnostic()">
+                    🔄 Nouveau Diagnostic
+                </button>
+                <button class="action-btn primary" onclick="window.print()">
+                    🖨️ Imprimer le Rapport
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-enriched">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="about.html">À Propos</a></li>
+                    <li><a href="checklist.html">Checklists</a></li>
+                    <li><a href="glossaire.html">Glossaire</a></li>
+                    <li><a href="diagnostic.html">Diagnostic IA</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 contact@auditaxis-qse.com</li>
+                    <li>📍 Campus Universitaire</li>
+                    <li>🕐 Lun - Ven : 9h - 17h</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>AuditAxis QSE</h4>
+                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="diagnostic.js"></script>
+</body>
+</html>

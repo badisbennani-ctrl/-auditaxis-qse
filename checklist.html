@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Checklists interactives ISO 9001:2015, ISO 14001:2015, ISO 45001:2018. Outils gratuits pour vos audits QSE avec suivi de progression.">
+    <meta name="author" content="AuditAxis QSE">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Checklists ISO 9001 14001 45001 Gratuites | AuditAxis QSE">
+    <meta property="og:description" content="Checklists interactives pour audits ISO 9001, 14001, 45001. Suivez votre progression et préparez votre certification.">
+    <meta property="og:url" content="https://auditaxis-qse.com/checklist">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://auditaxis-qse.com/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Checklists ISO 9001 14001 45001 | AuditAxis QSE">
+    <meta name="twitter:description" content="Outils interactifs pour audits ISO avec suivi de progression.">
+
+    <title>Checklist ISO 9001 14001 45001 Gratuite | AuditAxis QSE</title>
+    <link rel="canonical" href="https://auditaxis-qse.com/checklist">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script src="header.js"></script>
+
+    <section class="hero" role="main">
+        <h1>Checklists d'Audit</h1>
+        <p>Outils interactifs pour vos audits ISO 9001, ISO 14001 et ISO 45001</p>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Vos Checklists QSE</h2>
+        <p class="section-subtitle">Cochez les éléments audités pour suivre votre progression</p>
+
+        <!-- ISO 9001 Checklist -->
+        <div class="checklist-container">
+            <div class="checklist-header">
+                <h3 class="checklist-title">📊 ISO 9001:2015 - Management de la Qualité</h3>
+                <button class="btn-reset" onclick="resetChecklist('iso9001')">🔄 Réinitialiser</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-iso9001" style="width: 0%"></div>
+            </div>
+            <p id="percent-iso9001" style="text-align: right; color: var(--gray); margin-bottom: 1rem;">Progression: 0%</p>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="q1" onchange="updateProgress('iso9001')">
+                <label for="q1">Le contexte de l'organisation est établi et documenté</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q2" onchange="updateProgress('iso9001')">
+                <label for="q2">Les parties intéressées et leurs attentes sont identifiées</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q3" onchange="updateProgress('iso9001')">
+                <label for="q3">La politique qualité est définie, communiquée et comprise</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q4" onchange="updateProgress('iso9001')">
+                <label for="q4">Les objectifs qualité sont SMART et monitorés</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q5" onchange="updateProgress('iso9001')">
+                <label for="q5">Les risques et opportunités sont identifiés et gérés</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q6" onchange="updateProgress('iso9001')">
+                <label for="q6">Les ressources nécessaires sont allouées (formation, infrastructure)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q7" onchange="updateProgress('iso9001')">
+                <label for="q7">Les processus sont définis, documentés et maîtrisés</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="q8" onchange="updateProgress('iso9001')">
+                <label for="q8">La satisfaction client est mesurée et analysée</label>
+            </div>
+        </div>
+
+        <!-- ISO 14001 Checklist -->
+        <div class="checklist-container">
+            <div class="checklist-header">
+                <h3 class="checklist-title">🌱 ISO 14001:2015 - Management Environnemental</h3>
+                <button class="btn-reset" onclick="resetChecklist('iso14001')">🔄 Réinitialiser</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-iso14001" style="width: 0%"></div>
+            </div>
+            <p id="percent-iso14001" style="text-align: right; color: var(--gray); margin-bottom: 1rem;">Progression: 0%</p>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="e1" onchange="updateProgress('iso14001')">
+                <label for="e1">L'analyse environnementale est réalisée (aspects/impacts)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e2" onchange="updateProgress('iso14001')">
+                <label for="e2">La politique environnementale est engagée par la direction</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e3" onchange="updateProgress('iso14001')">
+                <label for="e3">Les objectifs environnementaux sont définis avec programmes</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e4" onchange="updateProgress('iso14001')">
+                <label for="e4">La conformité réglementaire est assurée et démontrée</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e5" onchange="updateProgress('iso14001')">
+                <label for="e5">La gestion des déchets est maîtrisée (tri, recyclage, élimination)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e6" onchange="updateProgress('iso14001')">
+                <label for="e6">Les énergies et ressources sont optimisées (eau, énergie)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e7" onchange="updateProgress('iso14001')">
+                <label for="e7">La préparation et réponse aux situations d'urgence est établie</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="e8" onchange="updateProgress('iso14001')">
+                <label for="e8">Les audits internes sont programmés et réalisés</label>
+            </div>
+        </div>
+
+        <!-- ISO 45001 Checklist -->
+        <div class="checklist-container">
+            <div class="checklist-header">
+                <h3 class="checklist-title">🛡️ ISO 45001:2018 - Santé et Sécurité au Travail</h3>
+                <button class="btn-reset" onclick="resetChecklist('iso45001')">🔄 Réinitialiser</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-iso45001" style="width: 0%"></div>
+            </div>
+            <p id="percent-iso45001" style="text-align: right; color: var(--gray); margin-bottom: 1rem;">Progression: 0%</p>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="s1" onchange="updateProgress('iso45001')">
+                <label for="s1">L'évaluation des risques professionnels est à jour</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s2" onchange="updateProgress('iso45001')">
+                <label for="s2">La politique SST est affichée et communiquée</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s3" onchange="updateProgress('iso45001')">
+                <label for="s3">Les formations SST sont réalisées et documentées</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s4" onchange="updateProgress('iso45001')">
+                <label for="s4">Les équipements de protection individuelle (EPI) sont fournis</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s5" onchange="updateProgress('iso45001')">
+                <label for="s5">Les inspections de sécurité sont régulières et documentées</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s6" onchange="updateProgress('iso45001')">
+                <label for="s6">Les accidents/incidents sont analysés et suivis</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s7" onchange="updateProgress('iso45001')">
+                <label for="s7">Les exercices d'évacuation sont réalisés annuellement</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="s8" onchange="updateProgress('iso45001')">
+                <label for="s8">La consultation des travailleurs est effective (CHSCT/DP)</label>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-enriched">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="about.html">À Propos</a></li>
+                    <li><a href="checklist.html">Checklists</a></li>
+                    <li><a href="glossaire.html">Glossaire</a></li>
+                    <li><a href="diagnostic.html">Diagnostic IA</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 contact@auditaxis-qse.com</li>
+                    <li>📍 Campus Universitaire</li>
+                    <li>🕐 Lun - Ven : 9h - 17h</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>AuditAxis QSE</h4>
+                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hide loading bar after page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingBar').classList.add('hidden');
+            }, 500);
+        });
+
+        // Configuration du backend
+        const API_URL = 'https://auditaxis-backend-4g3g.onrender.com';
+
+        // Gestion du sessionId
+        function getSessionId() {
+            let sessionId = localStorage.getItem('checklistSessionId');
+            if (!sessionId) {
+                sessionId = crypto.randomUUID();
+                localStorage.setItem('checklistSessionId', sessionId);
+            }
+            return sessionId;
+        }
+
+        // Sauvegarde automatique de la checklist
+        async function saveChecklist(checklistId) {
+            const checklistMap = {
+                'iso9001': { prefix: 'q', count: 8, norme: 'ISO 9001:2015' },
+                'iso14001': { prefix: 'e', count: 8, norme: 'ISO 14001:2015' },
+                'iso45001': { prefix: 's', count: 8, norme: 'ISO 45001:2018' }
+            };
+
+            const config = checklistMap[checklistId];
+            const items = {};
+            let checked = 0;
+
+            for (let i = 1; i <= config.count; i++) {
+                const checkbox = document.getElementById(config.prefix + i);
+                items[config.prefix + i] = checkbox.checked;
+                if (checkbox.checked) {
+                    checked++;
+                    checkbox.parentElement.classList.add('checked');
+                } else {
+                    checkbox.parentElement.classList.remove('checked');
+                }
+            }
+
+            const percent = Math.round((checked / config.count) * 100);
+            document.getElementById('progress-' + checklistId).style.width = percent + '%';
+            document.getElementById('percent-' + checklistId).textContent = 'Progression: ' + percent + '%';
+
+            // Sauvegarde sur le backend
+            try {
+                const sessionId = getSessionId();
+                const response = await fetch(`${API_URL}/api/checklist/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        norme: config.norme,
+                        items: items,
+                        progression: percent
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Erreur lors de la sauvegarde:', await response.text());
+                } else {
+                    console.log(`✅ Checklist ${checklistId} sauvegardée`);
+                }
+            } catch (error) {
+                console.error('Erreur réseau lors de la sauvegarde:', error);
+            }
+        }
+
+        // Sauvegarder l'état d'une checkbox dans localStorage
+        function saveCheckboxState(checklistId, itemId, isChecked) {
+            localStorage.setItem(`checklist_${checklistId}_item_${itemId}`, isChecked ? '1' : '0');
+        }
+
+        // Charger l'état d'une checkbox depuis localStorage
+        function loadCheckboxState(checklistId, itemId) {
+            return localStorage.getItem(`checklist_${checklistId}_item_${itemId}`) === '1';
+        }
+
+        // Update progress bar (avec sauvegarde automatique)
+        function updateProgress(checklistId) {
+            const checklistMap = {
+                'iso9001': { prefix: 'q', count: 8 },
+                'iso14001': { prefix: 'e', count: 8 },
+                'iso45001': { prefix: 's', count: 8 }
+            };
+
+            const config = checklistMap[checklistId];
+
+            // Sauvegarder chaque checkbox dans localStorage
+            for (let i = 1; i <= config.count; i++) {
+                const checkbox = document.getElementById(config.prefix + i);
+                saveCheckboxState(checklistId, i, checkbox.checked);
+            }
+
+            saveChecklist(checklistId);
+
+            // Afficher le message de confirmation de sauvegarde
+            showSaveConfirmation(checklistId);
+        }
+
+        // Afficher le message de confirmation de sauvegarde (disparaît après 2s)
+        function showSaveConfirmation(checklistId) {
+            const indicatorMap = {
+                'iso9001': 'save-indicator-iso9001',
+                'iso14001': 'save-indicator-iso14001',
+                'iso45001': 'save-indicator-iso45001'
+            };
+
+            const indicatorId = indicatorMap[checklistId];
+            let indicator = document.getElementById(indicatorId);
+
+            // Créer l'indicateur s'il n'existe pas
+            if (!indicator) {
+                indicator = document.createElement('p');
+                indicator.id = indicatorId;
+                indicator.style.cssText = 'text-align: right; color: var(--secondary); font-size: 0.85rem; margin-top: -0.5rem; margin-bottom: 1rem; font-weight: 500; opacity: 0; transition: opacity 0.3s ease;';
+                const percentEl = document.getElementById('percent-' + checklistId);
+                if (percentEl) {
+                    percentEl.parentNode.insertBefore(indicator, percentEl.nextSibling);
+                }
+            }
+
+            indicator.textContent = '✅ Progression sauvegardée automatiquement';
+            indicator.style.opacity = '1';
+
+            // Disparaître après 2 secondes
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Charger la progression d'une checklist depuis localStorage
+        function loadChecklistFromLocalStorage(checklistId) {
+            const checklistMap = {
+                'iso9001': { prefix: 'q', count: 8 },
+                'iso14001': { prefix: 'e', count: 8 },
+                'iso45001': { prefix: 's', count: 8 }
+            };
+
+            const config = checklistMap[checklistId];
+            let checked = 0;
+
+            for (let i = 1; i <= config.count; i++) {
+                const checkbox = document.getElementById(config.prefix + i);
+                const savedState = loadCheckboxState(checklistId, i);
+
+                if (checkbox) {
+                    checkbox.checked = savedState;
+                    if (savedState) {
+                        checkbox.parentElement.classList.add('checked');
+                        checked++;
+                    } else {
+                        checkbox.parentElement.classList.remove('checked');
+                    }
+                }
+            }
+
+            const percent = Math.round((checked / config.count) * 100);
+            document.getElementById('progress-' + checklistId).style.width = percent + '%';
+            document.getElementById('percent-' + checklistId).textContent = 'Progression: ' + percent + '%';
+
+            return checked > 0;
+        }
+
+        // Chargement de la checklist depuis le backend et localStorage
+        async function loadChecklist() {
+            const sessionId = getSessionId();
+
+            // Charger d'abord depuis localStorage (pour toutes les checklists)
+            ['iso9001', 'iso14001', 'iso45001'].forEach(id => {
+                const hasData = loadChecklistFromLocalStorage(id);
+                if (hasData) {
+                    console.log(`✅ Checklist ${id} restaurée depuis localStorage`);
+                }
+            });
+
+            const checklistMap = {
+                'ISO 9001:2015': { prefix: 'q', id: 'iso9001' },
+                'ISO 14001:2015': { prefix: 'e', id: 'iso14001' },
+                'ISO 45001:2018': { prefix: 's', id: 'iso45001' }
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/checklist/${sessionId}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const savedData = data.data;
+
+                    if (savedData && savedData.items) {
+                        const config = checklistMap[savedData.norme];
+                        if (config) {
+                            let checked = 0;
+                            const count = Object.keys(savedData.items).length;
+
+                            for (let i = 1; i <= count; i++) {
+                                const checkbox = document.getElementById(config.prefix + i);
+                                if (checkbox && savedData.items[config.prefix + i]) {
+                                    checkbox.checked = true;
+                                    checkbox.parentElement.classList.add('checked');
+                                    checked++;
+                                    // Mettre à jour localStorage avec les données du backend
+                                    saveCheckboxState(config.id, i, true);
+                                } else if (checkbox) {
+                                    checkbox.checked = false;
+                                    checkbox.parentElement.classList.remove('checked');
+                                    saveCheckboxState(config.id, i, false);
+                                }
+                            }
+
+                            const percent = Math.round((checked / count) * 100);
+                            document.getElementById('progress-' + config.id).style.width = percent + '%';
+                            document.getElementById('percent-' + config.id).textContent = 'Progression: ' + percent + '%';
+                            console.log(`✅ Checklist ${config.id} synchronisée depuis le backend`);
+                        }
+                    }
+                } else if (response.status === 404) {
+                    console.log('ℹ️ Aucune session backend trouvée, utilisation de localStorage uniquement');
+                } else {
+                    console.error('Erreur lors du chargement:', await response.text());
+                }
+            } catch (error) {
+                console.error('Erreur réseau lors du chargement:', error);
+                console.log('ℹ️ Mode hors-ligne: utilisation de localStorage uniquement');
+            }
+        }
+
+        // Reset checklist
+        function resetChecklist(checklistId) {
+            const checklistMap = {
+                'iso9001': { prefix: 'q', count: 8 },
+                'iso14001': { prefix: 'e', count: 8 },
+                'iso45001': { prefix: 's', count: 8 }
+            };
+
+            const config = checklistMap[checklistId];
+
+            for (let i = 1; i <= config.count; i++) {
+                const checkbox = document.getElementById(config.prefix + i);
+                checkbox.checked = false;
+                checkbox.parentElement.classList.remove('checked');
+                // Effacer du localStorage
+                localStorage.removeItem(`checklist_${checklistId}_item_${i}`);
+            }
+
+            document.getElementById('progress-' + checklistId).style.width = '0%';
+            document.getElementById('percent-' + checklistId).textContent = 'Progression: 0%';
+
+            // Sauvegarder la réinitialisation sur le backend
+            saveChecklist(checklistId);
+
+            console.log(`🗑️ Checklist ${checklistId} réinitialisée et localStorage effacé`);
+        }
+
+        // Chargement au démarrage
+        document.addEventListener('DOMContentLoaded', loadChecklist);
+    </script>
+</body>
+</html>
