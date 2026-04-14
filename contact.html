@@ -417,15 +417,23 @@
                     submitBtn.textContent = 'Envoyer le Message';
                 }
             } catch (error) {
-                if (connexionTimer) if (connexionTimer) clearTimeout(connexionTimer);
+                if (connexionTimer) clearTimeout(connexionTimer);
+                // Debug détaillé
+                console.error('=== DÉTAIL ERREUR FETCH ===');
+                console.error('Nom:', error.name);
+                console.error('Message:', error.message);
+                console.error('Stack:', error.stack);
+                console.error('Erreur complète:', error);
+
                 // Vérifier si c'est un timeout (AbortError)
                 if (error.name === 'AbortError') {
                     errorMsg.textContent = '⏱️ Le serveur met trop de temps à répondre. Veuillez réessayer dans quelques secondes.';
+                } else if (error.message && error.message.includes('Failed to fetch')) {
+                    errorMsg.textContent = '❌ Erreur CORS ou réseau. Vérifiez que le backend est accessible.';
                 } else {
                     errorMsg.textContent = '❌ Erreur réseau. Le serveur backend est momentanément indisponible.';
                 }
                 errorMsg.style.display = 'block';
-                console.error('Erreur réseau:', error);
                 submitBtn.disabled = false;
                 submitBtn.removeAttribute('aria-busy');
                 submitBtn.textContent = 'Envoyer le Message';
