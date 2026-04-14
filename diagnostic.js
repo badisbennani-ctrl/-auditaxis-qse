@@ -168,11 +168,18 @@ const NORMES = {
                 explication: "L'organisme doit planifier et maîtriser les processus nécessaires pour satisfaire aux exigences de fourniture des produits et services."
             },
             {
-                motsCles: ["exigences client", "cahier charges", "commande", "contrat", "réclamation", "retour client", "enquête"],
+                motsCles: ["exigences client", "cahier charges", "commande", "contrat", "enquête satisfaction"],
                 article: "Art. 8.2",
                 titre: "Exigences relatives aux produits et services",
                 conformite: "Exigences client déterminées et satisfaites",
                 explication: "L'organisme doit déterminer les exigences relatives aux produits et services et s'assurer de sa capacité à y répondre avant tout engagement."
+            },
+            {
+                motsCles: ["réclamation", "retour client", "plainte client", "insatisfaction client", "litige client", "retour produit"],
+                article: "Art. 10.2",
+                titre: "Traitement des réclamations et actions correctives",
+                conformite: "Réclamations client traitées et actions correctives documentées",
+                explication: "L'organisme doit traiter les réclamations client, analyser les causes des non-conformités associées et mettre en œuvre des actions correctives documentées pour éviter leur récurrence, conformément à Art. 10.2 de l'ISO 9001:2015."
             },
             {
                 motsCles: ["fournisseur", "sous-traitant", "prestataire externe", "achats", "approvisionnement", "évaluation fournisseur"],
@@ -208,6 +215,55 @@ const NORMES = {
                 titre: "Revue de direction",
                 conformite: "Revues de direction planifiées et réalisées",
                 explication: "La direction doit procéder à des revues du SMQ à intervalles planifiés pour s'assurer de son adéquation, son efficacité et son alignement stratégique."
+            },
+            {
+                motsCles: ["étalonnage", "métrologie", "instrument mesure", "équipement mesure", "vérification métrologique", "raccordement étalon"],
+                article: "Art. 7.1.5",
+                titre: "Ressources de surveillance et de mesure",
+                conformite: "Équipements de mesure étalonnés et raccordés aux étalons",
+                explication: "L'organisme doit s'assurer que les ressources de surveillance et de mesure sont adaptées, maintenues et, le cas échéant, étalonnées et raccordées à des étalons de mesure internationaux ou nationaux."
+            },
+            {
+                motsCles: ["connaissance organisationnelle", "knowledge management", "retour expérience", "capitalisation", "base connaissance", "transfert compétence"],
+                article: "Art. 7.1.6",
+                titre: "Connaissances organisationnelles",
+                conformite: "Connaissances organisationnelles identifiées et préservées",
+                explication: "L'organisme doit déterminer les connaissances nécessaires au fonctionnement de ses processus, les maintenir à jour et les protéger contre toute perte lors de changements ou départs."
+            },
+            {
+                motsCles: ["conception", "développement produit", "r&d", "prototype", "design", "cahier charges conception", "validation conception"],
+                article: "Art. 8.3",
+                titre: "Conception et développement de produits et services",
+                conformite: "Processus de conception et développement maîtrisé",
+                explication: "L'organisme doit établir, mettre en œuvre et maintenir un processus de conception et développement pour assurer la fourniture ultérieure de produits et services conformes aux exigences."
+            },
+            {
+                motsCles: ["plan de contrôle", "gamme opératoire", "mode opératoire", "ordre fabrication", "fiche suiveuse", "contrôle production"],
+                article: "Art. 8.5.1",
+                titre: "Maîtrise de la production et de la prestation de service",
+                conformite: "Production maîtrisée par des plans de contrôle documentés",
+                explication: "L'organisme doit mettre en œuvre la production dans des conditions maîtrisées incluant la disponibilité d'informations documentées, des plans de contrôle, des équipements appropriés et des activités de libération des produits."
+            },
+            {
+                motsCles: ["traçabilité", "identification produit", "numéro lot", "étiquetage", "marquage", "numéro série", "suivi produit"],
+                article: "Art. 8.5.2",
+                titre: "Identification et traçabilité",
+                conformite: "Identification et traçabilité des produits assurées",
+                explication: "L'organisme doit utiliser des moyens appropriés pour identifier les éléments de sortie tout au long de la production afin d'assurer la traçabilité complète du produit."
+            },
+            {
+                motsCles: ["libération produit", "contrôle réception", "contrôle final", "validation produit", "acceptation produit", "bon à livrer", "contrôle qualité sortie"],
+                article: "Art. 8.6",
+                titre: "Libération des produits et services",
+                conformite: "Processus de libération des produits formalisé et documenté",
+                explication: "L'organisme doit mettre en œuvre des dispositions planifiées pour vérifier que les exigences relatives aux produits et services ont été satisfaites avant libération au client."
+            },
+            {
+                motsCles: ["analyse données", "analyse performance", "tableau de bord", "reporting", "statistique qualité", "exploitation données", "rapport performance"],
+                article: "Art. 9.1.3",
+                titre: "Analyse et évaluation des performances",
+                conformite: "Données analysées et évaluations transmises à la direction",
+                explication: "L'organisme doit analyser et évaluer les données issues de la surveillance et la mesure afin d'évaluer la conformité des produits, la satisfaction client, la performance des processus et l'efficacité du SMQ."
             },
             {
                 motsCles: ["amélioration continue", "amélioration", "pdca", "action corrective", "action préventive", "progrès"],
@@ -341,6 +397,41 @@ const NORMES = {
                 explication: "La direction doit procéder à des revues du SME pour s'assurer qu'il est approprié, adapté et efficace, en tenant compte des non-conformités et résultats d'audit."
             },
             {
+                motsCles: ["risque environnemental", "opportunité environnementale", "risque sme", "analyse risque environnement", "enjeux environnementaux risque"],
+                article: "Art. 6.1.1",
+                titre: "Risques et opportunités environnementaux",
+                conformite: "Risques et opportunités environnementaux déterminés et traités",
+                explication: "L'organisme doit déterminer les risques et opportunités liés à ses aspects environnementaux, ses obligations de conformité et ses enjeux internes/externes, afin de prévenir les effets indésirables sur le SME."
+            },
+            {
+                motsCles: ["plan action environnement", "programme environnemental", "action corrective environnement", "mesure environnementale planifiée"],
+                article: "Art. 6.1.4",
+                titre: "Planification des actions environnementales",
+                conformite: "Actions environnementales planifiées et intégrées aux processus",
+                explication: "L'organisme doit planifier les actions relatives à ses aspects environnementaux significatifs, ses obligations de conformité et les risques identifiés, en précisant le responsable, les moyens, l'échéance et la méthode d'évaluation de l'efficacité."
+            },
+            {
+                motsCles: ["ressources environnement", "budget environnemental", "moyens environnement", "infrastructure sme"],
+                article: "Art. 7.1",
+                titre: "Ressources du système de management environnemental",
+                conformite: "Ressources nécessaires au SME identifiées et fournies",
+                explication: "L'organisme doit déterminer et fournir les ressources humaines, matérielles et financières nécessaires à l'établissement, la mise en œuvre et l'amélioration continue du SME."
+            },
+            {
+                motsCles: ["urgence environnementale", "déversement accidentel", "fuite produit chimique", "pollution accidentelle", "plan urgence environnement", "exercice urgence environnement"],
+                article: "Art. 8.2",
+                titre: "Préparation et réponse aux urgences environnementales",
+                conformite: "Plan de réponse aux urgences environnementales établi et testé",
+                explication: "L'organisme doit établir et maintenir des processus pour identifier les situations d'urgence potentielles à impact environnemental, y répondre efficacement et les tester périodiquement par des exercices."
+            },
+            {
+                motsCles: ["amélioration sme", "opportunité amélioration environnement", "performance environnementale améliorée", "progrès sme"],
+                article: "Art. 10.1",
+                titre: "Amélioration générale du SME",
+                conformite: "Opportunités d'amélioration du SME identifiées et exploitées",
+                explication: "L'organisme doit identifier et sélectionner les opportunités d'amélioration et mettre en œuvre les actions nécessaires pour atteindre les résultats escomptés du SME."
+            },
+            {
                 motsCles: ["non-conformité", "action corrective", "amélioration", "incident environnemental", "écart environnemental"],
                 article: "Art. 10.2 & 10.3",
                 titre: "Non-conformités et amélioration continue",
@@ -409,11 +500,11 @@ const NORMES = {
                 explication: "L'organisme doit évaluer les risques S&ST issus des dangers identifiés en tenant compte de l'efficacité des mesures de prévention existantes. Les méthodes et critères d'évaluation doivent être définis, proactifs, systématiques et conservés sous forme documentée."
             },
             {
-                motsCles: ["opportunité sst", "opportunité amélioration", "amélioration performance sst", "opportunité sécurité"],
+                motsCles: ["opportunité sst", "opportunité sécurité", "amélioration conditions travail", "adaptation poste", "ergonomie", "bien-être travail"],
                 article: "Art. 6.1.2.3",
-                titre: "Évaluation des opportunités S&ST",
-                conformite: "Opportunités d'amélioration de la performance S&ST évaluées",
-                explication: "L'organisme doit établir un processus pour évaluer les opportunités S&ST permettant d'améliorer la performance, notamment les opportunités d'adaptation du travail aux travailleurs et d'élimination des dangers."
+                titre: "Opportunités S&ST et autres opportunités",
+                conformite: "Opportunités d'amélioration S&ST évaluées et exploitées",
+                explication: "L'organisme doit évaluer les opportunités S&ST permettant d'améliorer la performance, notamment l'adaptation du travail aux travailleurs, l'élimination des dangers à la source et la promotion d'une culture S&ST positive."
             },
             {
                 motsCles: ["exigences légales", "réglementation sst", "conformité réglementaire", "code travail", "décret sécurité", "obligation légale", "veille réglementaire sst"],
@@ -449,6 +540,13 @@ const NORMES = {
                 titre: "Compétences S&ST",
                 conformite: "Compétences S&ST déterminées et preuves de formation conservées",
                 explication: "L'organisme doit déterminer les compétences S&ST requises, s'assurer que les travailleurs sont compétents pour identifier les dangers, et conserver des informations documentées comme preuves de formation et d'expérience."
+            },
+            {
+                motsCles: ["rôles sst", "responsabilités sécurité", "autorités sst", "responsable sécurité", "animateur sécurité", "référent sst", "organigramme sst"],
+                article: "Art. 5.3",
+                titre: "Rôles, responsabilités et autorités S&ST",
+                conformite: "Rôles et responsabilités S&ST définis, documentés et communiqués",
+                explication: "La direction doit attribuer et communiquer les responsabilités et autorités pour les rôles pertinents du SMS&ST, notamment pour s'assurer de la conformité aux exigences de la norme et de la remontée de la performance S&ST à la direction."
             },
             {
                 motsCles: ["sensibilisation sst", "prise de conscience", "droit retrait", "communication sécurité", "affichage sécurité", "information travailleurs sst"],
@@ -526,6 +624,13 @@ const NORMES = {
                 titre: "Revue de direction S&ST",
                 conformite: "Revues de direction S&ST planifiées et réalisées",
                 explication: "La direction doit procéder à des revues du SMS&ST à intervalles planifiés en examinant : l'état des actions précédentes, les enjeux internes/externes, la performance S&ST, les résultats d'audit, les ressources et les opportunités d'amélioration continue."
+            },
+            {
+                motsCles: ["culture sécurité", "amélioration continue sécurité", "progrès sst", "plan amélioration sst", "démarche sécurité", "système amélioration sst"],
+                article: "Art. 10.1",
+                titre: "Amélioration continue du SMS&ST",
+                conformite: "Démarche d'amélioration continue S&ST active et documentée",
+                explication: "L'organisme doit améliorer en continu la pertinence et l'efficacité du SMS&ST en promouvant la culture S&ST, en impliquant les travailleurs dans l'amélioration et en communiquant les résultats de performance à l'ensemble du personnel."
             },
             {
                 motsCles: ["accident", "incident", "événement indésirable", "non-conformité sst", "at", "accident travail", "blessure", "presque accident", "action corrective sst"],
@@ -829,6 +934,34 @@ function analyserTexteLocal(texte, normeId) {
         "insuffisant", "incomplet", "ne sont plus"
     ];
 
+    // Fonction auxiliaire : contientTermeDansContexte
+    // Vérifie si un terme existe dans une fenêtre autour du mot-clé de la règle
+    function contientTermeDansContexte(termes, regleMotsCles, tailleContexte = 150) {
+        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+            const i = texteLower.indexOf(mot.toLowerCase());
+            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+        }, -1);
+        if (motCleIndex === -1) return false;
+        const debut = Math.max(0, motCleIndex - tailleContexte);
+        const fin = Math.min(texteLower.length, motCleIndex + tailleContexte);
+        const fenetre = texteLower.substring(debut, fin);
+        return termes.some(terme => fenetre.includes(terme.toLowerCase()));
+    }
+
+    // Fonction auxiliaire : extraireContexteRegle
+    // Extrait une fenêtre de contexte autour du premier mot-clé de la règle
+    function extraireContexteRegle(regleMotsCles, tailleContexte = 200) {
+        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+            const i = texteLower.indexOf(mot.toLowerCase());
+            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+        }, -1);
+        if (motCleIndex === -1) return texteLower;
+        return texteLower.substring(
+            Math.max(0, motCleIndex - tailleContexte),
+            Math.min(texteLower.length, motCleIndex + tailleContexte)
+        );
+    }
+
     // Fonction pour détecter si un terme de preuve est précédé d'une négation
     // Version améliorée : vérifie dans le contexte de CHAQUE mot-clé de la règle, pas globalement
     function termeDePreuveAvecNegation(texteLower, termesPreuve, regleMotsCles) {
@@ -946,11 +1079,11 @@ function analyserTexteLocal(texte, normeId) {
         const contradiction = detecterContradiction(regle.motsCles);
 
         if (motCleTrouve) {
-            // Le mot-clé est trouvé → vérifier les termes de preuve
-            const hasTermesPreuve = contientTerme(termesPreuve);
-            const hasTermesPartiel = contientTerme(termesPartiel);
-            const hasCritique = MOTS_CRITIQUES.some(mot => texteLower.includes(mot));
-            const hasAbsence = MOTS_ABSENCE.some(mot => texteLower.includes(mot));
+            // Le mot-clé est trouvé → vérifier les termes de preuve DANS LE CONTEXTE DE LA RÈGLE
+            const hasTermesPreuve = contientTermeDansContexte(termesPreuve, regle.motsCles);
+            const hasTermesPartiel = contientTermeDansContexte(termesPartiel, regle.motsCles);
+            const hasCritique = MOTS_CRITIQUES.some(mot => contientTermeDansContexte([mot], regle.motsCles));
+            const hasAbsence = MOTS_ABSENCE.some(mot => contientTermeDansContexte([mot], regle.motsCles));
 
             // Vérifier si un terme de preuve est précédé d'une négation (dans le contexte de la règle)
             const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve, regle.motsCles);
@@ -966,7 +1099,7 @@ function analyserTexteLocal(texte, normeId) {
                 totalPoints += 1;
             } else if (preuveNiee) {
                 // PREUVE NIÉE — NON CONFORME (ex: "pas documenté", "non réalisé")
-                const gravite = determinerGravite(regle.article, texteLower);
+                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles));
                 nonConformites.push({
                     article: regle.article,
                     titre: `Non-conformité ${gravite} - ${regle.titre}`,
@@ -997,8 +1130,8 @@ function analyserTexteLocal(texte, normeId) {
                 });
                 totalPoints += 0.5;
 
-                // Gravité ajustée selon contexte
-                const gravite = determinerGravite(regle.article, texteLower);
+                // Gravité ajustée selon contexte de la règle
+                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles));
 
                 // Ajouter aussi une non-conformité
                 nonConformites.push({
@@ -1017,15 +1150,15 @@ function analyserTexteLocal(texte, normeId) {
     // Ne créer des NC d'absence que si le texte est suffisamment long et détaillé
     const texteLongueur = texte.trim().length;
     const pourcentageReglesDetectees = (reglesAvecMotCleDetecte / norme.regles.length) * 100;
-    const texteSuffisammentLong = texteLongueur > 200;
-    const texteSuffisammentDetaille = pourcentageReglesDetectees >= 30;
+    const texteSuffisammentLong = texteLongueur > 400;
+    const texteSuffisammentDetaille = pourcentageReglesDetectees >= 50;
 
     if (!texteSuffisammentLong || !texteSuffisammentDetaille) {
         // Texte trop court ou peu détaillé - ne pas créer de NC d'absence
         // Ajouter un message d'avertissement dans les recommandations
         recommandationsAbsenceMessage = true;
     } else {
-        // Texte suffisamment long et détaillé - créer des NC d'absence (limité à 5)
+        // Texte suffisamment long et détaillé - créer des NC d'absence (limité à 3)
         const ncAbsence = [];
 
         norme.regles.forEach((regle) => {
@@ -1050,9 +1183,9 @@ function analyserTexteLocal(texte, normeId) {
             }
         });
 
-        // Trier par gravité décroissante et garder les 5 plus critiques
+        // Trier par gravité décroissante et garder les 3 plus critiques
         ncAbsence.sort((a, b) => b._scoreGravite - a._scoreGravite);
-        const ncAbsenceLimitees = ncAbsence.slice(0, 5);
+        const ncAbsenceLimitees = ncAbsence.slice(0, 3);
 
         // Supprimer les champs temporaires
         ncAbsenceLimitees.forEach(nc => {
@@ -1102,7 +1235,11 @@ function analyserTexteLocal(texte, normeId) {
     }
 
     // Calculer le score avec précision (conforme = 1pt, partiel = 0.5pt)
-    const score = Math.round((totalPoints / norme.regles.length) * 100);
+    // Diviser uniquement par le nombre de règles effectivement évaluées (mot-clé trouvé dans le texte)
+    const scoreBrut = reglesAvecMotCleDetecte > 0
+        ? Math.round((totalPoints / reglesAvecMotCleDetecte) * 100)
+        : 0;
+    const score = Math.min(scoreBrut, 100); // Plafonner à 100%
 
     // Déterminer l'appréciation
     let appreciation = "Faible";
