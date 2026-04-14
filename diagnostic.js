@@ -98,7 +98,7 @@ const NORMES = {
                 explication: "L'organisme doit déterminer les limites et l'applicabilité du SMQ et établir les processus nécessaires."
             },
             {
-                motsCles: ["leadership", "direction", "engagement direction", "management", "dirigeant", "responsabilité direction"],
+                motsCles: ["leadership", "engagement direction", "management", "dirigeant", "responsabilité direction"],
                 article: "Art. 5.1",
                 titre: "Leadership et engagement de la direction",
                 conformite: "Leadership et engagement de la direction démontré",
@@ -236,7 +236,7 @@ const NORMES = {
                 explication: "L'organisme doit déterminer les limites et l'applicabilité du SME en prenant en compte ses unités organisationnelles, activités, produits et services."
             },
             {
-                motsCles: ["leadership", "direction", "engagement direction", "management environnemental", "responsabilité direction"],
+                motsCles: ["leadership", "engagement direction", "management environnemental", "responsabilité direction"],
                 article: "Art. 5.1",
                 titre: "Leadership et engagement de la direction",
                 conformite: "Leadership et engagement de la direction démontré",
@@ -367,7 +367,7 @@ const NORMES = {
                 explication: "L'organisme doit déterminer les limites et l'applicabilité du système de management S&ST en prenant en compte les enjeux internes/externes et les activités planifiées. Le périmètre doit être disponible sous forme d'information documentée."
             },
             {
-                motsCles: ["leadership", "direction", "engagement direction", "management sst", "responsabilité direction", "directeur", "pdg"],
+                motsCles: ["leadership", "engagement direction", "management sst", "responsabilité direction", "directeur", "pdg"],
                 article: "Art. 5.1",
                 titre: "Leadership et engagement de la direction",
                 conformite: "Leadership et engagement de la direction S&ST démontré",
@@ -824,6 +824,7 @@ function analyserTexteLocal(texte, normeId) {
     const NEGATIONS = [
         "pas", "non", "ne sont pas", "pas toutes", "pas encore",
         "jamais", "aucun", "sans", "ne pas", "n'est pas", "n'ont pas",
+        "n'a pas", "n'a pas été", "n'ont pas été", "ne sont pas", "n'existe pas",
         "pas de", "aucune", "ni", "absence de", "manque de",
         "insuffisant", "incomplet", "ne sont plus"
     ];
@@ -1063,8 +1064,8 @@ function analyserTexteLocal(texte, normeId) {
         nonConformites = [...nonConformites, ...ncAbsenceLimitees];
     }
 
-    // LIMITER LE NOMBRE TOTAL DE NC (avant d'ajouter ncCitees)
-    // Séparer les NC par type pour préserver les plus importantes
+    // LIMITER LE NOMBRE TOTAL DE NC
+    // Règle : TOUTES les ncCitees sont conservées, puis max 7 NC supplémentaires
     const ncCiteesInternes = nonConformites.filter(nc => nc.estNCCitee);
     const ncContradictions = nonConformites.filter(nc => nc.titre.includes("Contradiction"));
     const ncPreuveNiee = nonConformites.filter(nc => nc.titre.includes("explicitement nié"));
@@ -1084,10 +1085,10 @@ function analyserTexteLocal(texte, normeId) {
         return graviteB - graviteA;
     });
 
-    // Limiter à 8 NC non-citées maximum (contradictions + autres)
-    const ncAutresLimitees = ncAutres.slice(0, 8);
+    // Limiter à 7 NC non-citées maximum (contradictions + autres)
+    const ncAutresLimitees = ncAutres.slice(0, 7);
 
-    // Reconstruire la liste : NC citées en premier, puis autres limités
+    // Reconstruire la liste : NC citées en premier, puis contradictions, puis autres limités
     nonConformites = [...ncCiteesInternes, ...ncContradictions, ...ncAutresLimitees];
 
     // Calcul du score de confiance
