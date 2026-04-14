@@ -11,12 +11,12 @@
 
     // Mapping des pages pour la navigation
     const navItems = [
-        { href: 'index.html', label: 'Page d\'accueil', text: 'Accueil' },
-        { href: 'about.html', label: 'À propos de notre méthodologie', text: 'À Propos' },
-        { href: 'checklist.html', label: 'Checklists ISO interactives', text: 'Checklists' },
-        { href: 'glossaire.html', label: 'Glossaire des termes QSE', text: 'Glossaire' },
-        { href: 'diagnostic.html', label: 'Diagnostic IA gratuit', text: 'Diagnostic IA' },
-        { href: 'contact.html', label: 'Contactez-nous', text: 'Contact' }
+        { href: '/', label: 'Page d\'accueil', text: 'Accueil' },
+        { href: '/about', label: 'À propos de notre méthodologie', text: 'À Propos' },
+        { href: '/checklist', label: 'Checklists ISO interactives', text: 'Checklists' },
+        { href: '/glossaire', label: 'Glossaire des termes QSE', text: 'Glossaire' },
+        { href: '/diagnostic', label: 'Diagnostic IA gratuit', text: 'Diagnostic IA' },
+        { href: '/contact', label: 'Contactez-nous', text: 'Contact' }
     ];
 
     // Construire les liens de navigation avec détection active
