@@ -367,26 +367,12 @@
                 return;
             }
 
-            // Timer pour changer le message après 5s (cold start Render)
-            let connexionTimer = null;
-
             try {
-                connexionTimer = setTimeout(() => {
-                    submitBtn.textContent = 'Connexion au serveur...';
-                }, 5000);
-
-                // Timeout global de 45s pour le fetch
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    controller.abort();
-                }, 45000); // 45s timeout
-
-                const response = await fetch(`${API_URL}/api/contact`, {
+                const response = await fetch('https://auditaxis-backend.onrender.com/api/contact', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    signal: controller.signal,
                     body: JSON.stringify({
                         nom: nom,
                         email: email,
@@ -396,43 +382,23 @@
                     })
                 });
 
-                if (connexionTimer) clearTimeout(connexionTimer);
-                clearTimeout(timeoutId);
-
                 if (response.ok) {
                     const data = await response.json();
                     successMsg.style.display = 'block';
                     document.getElementById('contactForm').reset();
-                    console.log('✅ Message envoyé:', data);
-                    // Démarrer le cooldown de 30s après envoi réussi
                     startCooldown();
                 } else {
-                    if (connexionTimer) clearTimeout(connexionTimer);
                     const errorData = await response.json();
+                    alert('Erreur: ' + (errorData.message || 'Une erreur est survenue'));
                     errorMsg.textContent = '❌ ' + (errorData.message || 'Une erreur est survenue lors de l\'envoi.');
                     errorMsg.style.display = 'block';
-                    console.error('Erreur API:', errorData);
-                    submitBtn.disabled = false;
-                    submitBtn.removeAttribute('aria-busy');
-                    submitBtn.textContent = 'Envoyer le Message';
                 }
+                submitBtn.disabled = false;
+                submitBtn.removeAttribute('aria-busy');
+                submitBtn.textContent = 'Envoyer le Message';
             } catch (error) {
-                if (connexionTimer) clearTimeout(connexionTimer);
-                // Debug détaillé
-                console.error('=== DÉTAIL ERREUR FETCH ===');
-                console.error('Nom:', error.name);
-                console.error('Message:', error.message);
-                console.error('Stack:', error.stack);
-                console.error('Erreur complète:', error);
-
-                // Vérifier si c'est un timeout (AbortError)
-                if (error.name === 'AbortError') {
-                    errorMsg.textContent = '⏱️ Le serveur met trop de temps à répondre. Veuillez réessayer dans quelques secondes.';
-                } else if (error.message && error.message.includes('Failed to fetch')) {
-                    errorMsg.textContent = '❌ Erreur CORS ou réseau. Vérifiez que le backend est accessible.';
-                } else {
-                    errorMsg.textContent = '❌ Erreur réseau. Le serveur backend est momentanément indisponible.';
-                }
+                alert('Erreur: ' + error.message);
+                errorMsg.textContent = '❌ Erreur: ' + error.message;
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.removeAttribute('aria-busy');
