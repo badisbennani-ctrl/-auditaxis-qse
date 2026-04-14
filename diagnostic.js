@@ -84,193 +84,221 @@ const NORMES = {
         nom: "ISO 9001:2015",
         regles: [
             {
-                motsCles: ["contexte", "enjeux externes", "enjeux internes", "parties intéressées", "environnement", "stakeholder", "pne"],
-                article: "Art. 4.1 & 4.2",
-                titre: "Contexte de l'organisme",
-                conformite: "Contexte et parties intéressées identifiés",
-                explication: "L'organisme doit déterminer les enjeux externes et internes pertinents et identifier les parties intéressées et leurs exigences."
+                motsCles: ["contexte", "enjeux externes", "enjeux internes", "analyse contexte", "environnement externe", "facteurs internes", "contexte organisation", "enjeux stratégiques"],
+                article: "Art. 4.1",
+                titre: "Compréhension de l'organisme et de son contexte",
+                conformite: "Enjeux externes et internes identifiés et surveillés",
+                explication: "L'organisme doit déterminer les enjeux externes et internes pertinents par rapport à sa finalité et son orientation stratégique, et surveiller les informations relatives à ces enjeux."
             },
             {
-                motsCles: ["domaine application", "périmètre", "champ application", "système management qualité", "smq", "limites"],
-                article: "Art. 4.3 & 4.4",
-                titre: "Domaine d'application du SMQ",
-                conformite: "Domaine d'application défini et documenté",
-                explication: "L'organisme doit déterminer les limites et l'applicabilité du SMQ et établir les processus nécessaires."
+                motsCles: ["parties intéressées", "parties prenantes", "besoins parties", "attentes parties", "exigences parties", "clients exigences", "actionnaires", "fournisseurs parties"],
+                article: "Art. 4.2",
+                titre: "Compréhension des besoins des parties intéressées",
+                conformite: "Parties intéressées identifiées et leurs exigences déterminées",
+                explication: "L'organisme doit identifier les parties intéressées pertinentes pour le SMQ et déterminer leurs exigences pertinentes, puis surveiller et revoir ces informations."
             },
             {
-                motsCles: ["leadership", "engagement direction", "management", "dirigeant", "responsabilité direction"],
+                motsCles: ["domaine application", "périmètre smq", "champ application", "limites smq", "applicabilité", "domaine smq", "périmètre qualité"],
+                article: "Art. 4.3",
+                titre: "Détermination du domaine d'application du SMQ",
+                conformite: "Domaine d'application défini, documenté et tenu à jour",
+                explication: "L'organisme doit déterminer les limites et l'applicabilité du SMQ en tenant compte des enjeux internes/externes, des exigences des parties intéressées et de ses produits et services."
+            },
+            {
+                motsCles: ["processus smq", "cartographie processus", "interaction processus", "approche processus", "séquence processus", "système management qualité", "mise en oeuvre smq", "processus nécessaires"],
+                article: "Art. 4.4",
+                titre: "Système de management de la qualité et ses processus",
+                conformite: "SMQ établi, mis en œuvre, tenu à jour et amélioré en continu",
+                explication: "L'organisme doit établir, mettre en œuvre, tenir à jour et améliorer en continu un SMQ incluant les processus nécessaires, leurs séquences, interactions, ressources, responsabilités et critères de maîtrise."
+            },
+            {
+                motsCles: ["leadership", "engagement direction", "responsabilité direction", "engagement management", "implication direction", "direction smq", "top management", "haute direction"],
                 article: "Art. 5.1",
                 titre: "Leadership et engagement de la direction",
                 conformite: "Leadership et engagement de la direction démontré",
-                explication: "La direction doit démontrer son leadership en assumant la responsabilité de l'efficacité du SMQ et en fournissant les ressources nécessaires."
+                explication: "La direction doit démontrer son leadership en assumant la responsabilité de l'efficacité du SMQ, en établissant politique et objectifs, en intégrant les exigences SMQ aux processus métiers, et en promouvant l'approche processus et par les risques."
             },
             {
-                motsCles: ["politique qualité", "politique", "orientation client", "satisfaction client", "client", "engagement client"],
-                article: "Art. 5.2 & 5.1.2",
-                titre: "Politique qualité et orientation client",
-                conformite: "Politique qualité établie et orientée client",
-                explication: "La direction doit établir une politique qualité appropriée au contexte et s'assurer que les exigences client sont comprises et satisfaites."
+                motsCles: ["orientation client", "satisfaction client", "exigences client", "focus client", "centré client", "besoins clients", "attentes clients", "écoute client"],
+                article: "Art. 5.1.2",
+                titre: "Orientation client",
+                conformite: "Orientation client démontrée et priorité à la satisfaction client",
+                explication: "La direction doit s'assurer que les exigences clients et légales sont déterminées et satisfaites, que les risques et opportunités liés à la conformité produits/services sont pris en compte, et que l'amélioration de la satisfaction client reste prioritaire."
             },
             {
-                motsCles: ["rôles", "responsabilités", "autorités", "fonctions", "organigramme", "responsable qualité"],
+                motsCles: ["politique qualité", "politique smq", "engagement qualité", "orientation qualité", "politique documentée", "politique communiquée", "axes qualité"],
+                article: "Art. 5.2",
+                titre: "Politique qualité",
+                conformite: "Politique qualité établie, documentée et communiquée",
+                explication: "La direction doit établir une politique qualité appropriée au contexte de l'organisme, fournissant un cadre pour les objectifs qualité, incluant l'engagement de satisfaire aux exigences et d'améliorer en continu le SMQ. Elle doit être disponible comme information documentée et communiquée."
+            },
+            {
+                motsCles: ["rôles responsabilités", "autorités smq", "responsabilités définies", "organigramme", "attribution responsabilités", "fonctions responsabilités", "responsable qualité", "représentant direction"],
                 article: "Art. 5.3",
-                titre: "Rôles et responsabilités",
-                conformite: "Rôles et responsabilités définis et communiqués",
-                explication: "La direction doit attribuer les responsabilités et autorités pour les rôles pertinents du SMQ."
+                titre: "Rôles, responsabilités et autorités",
+                conformite: "Rôles, responsabilités et autorités attribués et communiqués",
+                explication: "La direction doit s'assurer que les responsabilités et autorités pour les rôles pertinents sont attribuées, communiquées et comprises, notamment pour assurer la conformité du SMQ, délivrer les résultats attendus et promouvoir l'orientation client."
             },
             {
-                motsCles: ["risque", "opportunité", "évaluation risque", "action préventive", "gestion risque", "analyse risque"],
+                motsCles: ["risques opportunités", "analyse risques", "gestion risques", "identification risques", "traitement risques", "risques smq", "opportunités amélioration", "approche risques", "actions préventives"],
                 article: "Art. 6.1",
                 titre: "Actions face aux risques et opportunités",
-                conformite: "Risques et opportunités identifiés et traités",
-                explication: "L'organisme doit déterminer les risques et opportunités pouvant affecter la conformité des produits et services."
+                conformite: "Risques et opportunités identifiés, analysés et traités",
+                explication: "L'organisme doit déterminer les risques et opportunités à prendre en compte pour assurer que le SMQ atteint ses résultats, accroître les effets souhaitables, prévenir les effets indésirables et s'améliorer. Les actions doivent être proportionnelles à l'impact potentiel."
             },
             {
-                motsCles: ["objectif qualité", "objectif", "indicateur", "kpi", "mesure performance", "cible", "tableau bord"],
+                motsCles: ["objectifs qualité", "objectifs smq", "objectifs mesurables", "objectifs smart", "indicateurs qualité", "cibles qualité", "planification objectifs", "objectifs surveillés"],
                 article: "Art. 6.2",
                 titre: "Objectifs qualité et planification",
-                conformite: "Objectifs qualité SMART définis et surveillés",
-                explication: "Les objectifs qualité doivent être mesurables, cohérents avec la politique qualité et surveillés régulièrement."
+                conformite: "Objectifs qualité SMART définis, surveillés et communiqués",
+                explication: "L'organisme doit établir des objectifs qualité mesurables, cohérents avec la politique qualité, pertinents pour la conformité et la satisfaction client, surveillés, communiqués et mis à jour. Le plan pour les atteindre doit préciser actions, ressources, responsables, échéances et méthodes d'évaluation."
             },
             {
-                motsCles: ["ressources humaines", "personnel", "effectif", "recrutement", "infrastructure", "équipement"],
+                motsCles: ["planification modifications", "gestion changements", "maîtrise modifications", "changements planifiés", "modifications smq", "gestion modifications"],
+                article: "Art. 6.3",
+                titre: "Planification des modifications",
+                conformite: "Modifications du SMQ planifiées et maîtrisées",
+                explication: "Lorsque des modifications du SMQ sont nécessaires, elles doivent être réalisées de façon planifiée en tenant compte de leur objectif, des conséquences possibles, de l'intégrité du SMQ, de la disponibilité des ressources et des responsabilités."
+            },
+            {
+                motsCles: ["ressources smq", "ressources humaines", "infrastructure", "équipements", "ressources nécessaires", "moyens", "ressources disponibles", "environnement travail", "ressources processus"],
                 article: "Art. 7.1",
-                titre: "Ressources humaines et infrastructure",
-                conformite: "Ressources nécessaires identifiées et fournies",
-                explication: "L'organisme doit identifier et fournir les ressources nécessaires pour le SMQ incluant personnel, infrastructure et environnement de travail."
+                titre: "Ressources",
+                conformite: "Ressources nécessaires au SMQ identifiées et fournies",
+                explication: "L'organisme doit identifier et fournir les ressources nécessaires : ressources humaines, infrastructure (bâtiments, équipements, TIC), environnement de travail (aspects humains et physiques), ressources de surveillance et mesure, et connaissances organisationnelles."
             },
             {
-                motsCles: ["compétence", "formation", "qualification", "habilitation", "plan formation", "évaluation"],
-                article: "Art. 7.2",
-                titre: "Compétences du personnel",
-                conformite: "Compétences déterminées et formation assurée",
-                explication: "L'organisme doit déterminer les compétences nécessaires et s'assurer que les personnes sont compétentes sur la base de leur formation ou expérience."
-            },
-            {
-                motsCles: ["sensibilisation", "conscience", "communication", "information", "affichage", "réunion"],
-                article: "Art. 7.3 & 7.4",
-                titre: "Sensibilisation et communication",
-                conformite: "Personnel sensibilisé et communication établie",
-                explication: "Les personnes doivent être sensibilisées à la politique qualité et l'organisme doit déterminer les besoins de communication interne et externe."
-            },
-            {
-                motsCles: ["document", "procédure", "enregistrement", "instruction", "manuel qualité", "information documentée"],
-                article: "Art. 7.5",
-                titre: "Informations documentées",
-                conformite: "Informations documentées maîtrisées",
-                explication: "Le SMQ doit inclure les informations documentées exigées par la norme et celles jugées nécessaires par l'organisme pour l'efficacité du système."
-            },
-            {
-                motsCles: ["processus", "procédure opérationnelle", "production", "prestation service", "fabrication", "opérationnel"],
-                article: "Art. 8.1 & 8.5",
-                titre: "Maîtrise opérationnelle et production",
-                conformite: "Processus opérationnels maîtrisés",
-                explication: "L'organisme doit planifier et maîtriser les processus nécessaires pour satisfaire aux exigences de fourniture des produits et services."
-            },
-            {
-                motsCles: ["exigences client", "cahier charges", "commande", "contrat", "enquête satisfaction"],
-                article: "Art. 8.2",
-                titre: "Exigences relatives aux produits et services",
-                conformite: "Exigences client déterminées et satisfaites",
-                explication: "L'organisme doit déterminer les exigences relatives aux produits et services et s'assurer de sa capacité à y répondre avant tout engagement."
-            },
-            {
-                motsCles: ["réclamation", "retour client", "plainte client", "insatisfaction client", "litige client", "retour produit"],
-                article: "Art. 10.2",
-                titre: "Traitement des réclamations et actions correctives",
-                conformite: "Réclamations client traitées et actions correctives documentées",
-                explication: "L'organisme doit traiter les réclamations client, analyser les causes des non-conformités associées et mettre en œuvre des actions correctives documentées pour éviter leur récurrence, conformément à Art. 10.2 de l'ISO 9001:2015."
-            },
-            {
-                motsCles: ["fournisseur", "sous-traitant", "prestataire externe", "achats", "approvisionnement", "évaluation fournisseur"],
-                article: "Art. 8.4",
-                titre: "Maîtrise des prestataires externes",
-                conformite: "Fournisseurs évalués et maîtrisés",
-                explication: "L'organisme doit s'assurer que les processus, produits et services fournis par des prestataires externes sont conformes aux exigences."
-            },
-            {
-                motsCles: ["non-conformité", "non conformité", "défaut", "rebut", "écart", "anomalie", "produit non conforme"],
-                article: "Art. 8.7 & 10.2",
-                titre: "Maîtrise des non-conformités et actions correctives",
-                conformite: "Non-conformités identifiées et traitées",
-                explication: "L'organisme doit identifier les éléments de sortie non conformes et mener les actions correctives appropriées pour éliminer les causes."
-            },
-            {
-                motsCles: ["surveillance", "mesure", "analyse", "évaluation", "indicateur performance", "données", "statistique"],
-                article: "Art. 9.1",
-                titre: "Surveillance, mesure et évaluation des performances",
-                conformite: "Performances surveillées et mesurées",
-                explication: "L'organisme doit déterminer ce qui est nécessaire de surveiller et mesurer pour évaluer la performance et l'efficacité du SMQ."
-            },
-            {
-                motsCles: ["audit interne", "audit", "programme audit", "auditeur", "plan audit", "rapport audit"],
-                article: "Art. 9.2",
-                titre: "Audit interne",
-                conformite: "Programme d'audits internes planifié et réalisé",
-                explication: "L'organisme doit réaliser des audits internes à intervalles planifiés pour vérifier la conformité et l'efficacité du SMQ."
-            },
-            {
-                motsCles: ["revue direction", "revue management", "réunion direction", "bilan annuel", "revue système"],
-                article: "Art. 9.3",
-                titre: "Revue de direction",
-                conformite: "Revues de direction planifiées et réalisées",
-                explication: "La direction doit procéder à des revues du SMQ à intervalles planifiés pour s'assurer de son adéquation, son efficacité et son alignement stratégique."
-            },
-            {
-                motsCles: ["étalonnage", "métrologie", "instrument mesure", "équipement mesure", "vérification métrologique", "raccordement étalon"],
+                motsCles: ["étalonnage", "métrologie", "équipements mesure", "traçabilité mesure", "vérification équipements", "instruments mesure", "surveillance mesure ressources", "étalons mesure"],
                 article: "Art. 7.1.5",
-                titre: "Ressources de surveillance et de mesure",
-                conformite: "Équipements de mesure étalonnés et raccordés aux étalons",
-                explication: "L'organisme doit s'assurer que les ressources de surveillance et de mesure sont adaptées, maintenues et, le cas échéant, étalonnées et raccordées à des étalons de mesure internationaux ou nationaux."
+                titre: "Ressources pour la surveillance et la mesure",
+                conformite: "Équipements de mesure étalonnés et traçabilité assurée",
+                explication: "L'organisme doit déterminer et fournir les ressources pour assurer des résultats valides et fiables. Les équipements de mesure doivent être étalonnés par rapport à des étalons internationaux/nationaux, identifiés et protégés. Les informations documentées doivent être conservées."
             },
             {
-                motsCles: ["connaissance organisationnelle", "knowledge management", "retour expérience", "capitalisation", "base connaissance", "transfert compétence"],
+                motsCles: ["connaissances organisationnelles", "knowledge management", "capitalisation connaissances", "gestion connaissances", "savoir faire", "retour expérience", "expertise interne"],
                 article: "Art. 7.1.6",
                 titre: "Connaissances organisationnelles",
-                conformite: "Connaissances organisationnelles identifiées et préservées",
-                explication: "L'organisme doit déterminer les connaissances nécessaires au fonctionnement de ses processus, les maintenir à jour et les protéger contre toute perte lors de changements ou départs."
+                conformite: "Connaissances organisationnelles déterminées et maintenues",
+                explication: "L'organisme doit déterminer les connaissances nécessaires à la mise en œuvre de ses processus et à l'obtention de la conformité produits/services. Ces connaissances doivent être tenues à jour, protégées contre la perte (turn-over) et enrichies par retour d'expérience."
             },
             {
-                motsCles: ["conception", "développement produit", "r&d", "prototype", "design", "cahier charges conception", "validation conception"],
+                motsCles: ["compétences", "formation personnel", "qualification personnel", "habilitation", "plan formation", "évaluation compétences", "développement compétences", "formation smq"],
+                article: "Art. 7.2",
+                titre: "Compétences",
+                conformite: "Compétences déterminées, assurées et documentées",
+                explication: "L'organisme doit déterminer les compétences nécessaires, s'assurer que le personnel est compétent par formation ou expérience, mener des actions pour acquérir les compétences manquantes et conserver des informations documentées comme preuves de compétences."
+            },
+            {
+                motsCles: ["sensibilisation", "sensibilisation qualité", "conscience qualité", "personnel sensibilisé", "culture qualité", "implication personnel", "sensibilisation politique"],
+                article: "Art. 7.3",
+                titre: "Sensibilisation",
+                conformite: "Personnel sensibilisé à la politique et aux objectifs qualité",
+                explication: "L'organisme doit s'assurer que le personnel est sensibilisé à la politique qualité, aux objectifs qualité pertinents, à l'importance de leur contribution au SMQ et aux répercussions d'un non-respect des exigences du SMQ."
+            },
+            {
+                motsCles: ["communication interne", "communication externe", "plan communication", "communication smq", "réunions qualité", "communication processus", "information personnel"],
+                article: "Art. 7.4",
+                titre: "Communication",
+                conformite: "Besoins de communication interne et externe déterminés",
+                explication: "L'organisme doit déterminer les besoins de communication interne et externe pertinents pour le SMQ : sujets, moments, destinataires, canaux et émetteurs de la communication."
+            },
+            {
+                motsCles: ["informations documentées", "documentation smq", "procédures documentées", "enregistrements qualité", "documents qualité", "maîtrise documents", "gestion documentaire", "contrôle documents"],
+                article: "Art. 7.5",
+                titre: "Informations documentées",
+                conformite: "Informations documentées créées, mises à jour et maîtrisées",
+                explication: "Le SMQ doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à son efficacité. Elles doivent être créées, identifiées, révisées, approuvées, distribuées, protégées, stockées et éliminées selon un processus maîtrisé."
+            },
+            {
+                motsCles: ["planification opérationnelle", "maîtrise opérationnelle", "planification production", "critères processus", "maîtrise production", "planification réalisation", "processes opérationnels"],
+                article: "Art. 8.1",
+                titre: "Planification et maîtrise opérationnelles",
+                conformite: "Processus opérationnels planifiés et maîtrisés",
+                explication: "L'organisme doit planifier, mettre en œuvre et maîtriser les processus nécessaires à la fourniture de produits et services en déterminant les exigences, établissant des critères, déterminant les ressources et maîtrisant les modifications prévues et imprévues."
+            },
+            {
+                motsCles: ["exigences client", "communication client", "réclamation client", "retour client", "plainte client", "insatisfaction client", "commande client", "contrat client", "exigences produits services"],
+                article: "Art. 8.2",
+                titre: "Exigences relatives aux produits et services",
+                conformite: "Exigences clients déterminées, revues et satisfaites",
+                explication: "La communication avec les clients doit inclure les informations sur produits/services, le traitement des commandes, les retours d'information et réclamations. Les exigences doivent être déterminées, revues avant engagement et documentées."
+            },
+            {
+                motsCles: ["conception développement", "design", "développement produit", "conception produit", "processus conception", "validation conception", "vérification conception", "revue conception"],
                 article: "Art. 8.3",
-                titre: "Conception et développement de produits et services",
-                conformite: "Processus de conception et développement maîtrisé",
-                explication: "L'organisme doit établir, mettre en œuvre et maintenir un processus de conception et développement pour assurer la fourniture ultérieure de produits et services conformes aux exigences."
+                titre: "Conception et développement",
+                conformite: "Processus de conception et développement établi et maîtrisé",
+                explication: "L'organisme doit établir un processus de conception et développement incluant : planification, éléments d'entrée (exigences fonctionnelles, légales, réglementaires), maîtrise (revues, vérification, validation), éléments de sortie et gestion des modifications. Les informations documentées doivent être conservées."
             },
             {
-                motsCles: ["plan de contrôle", "gamme opératoire", "mode opératoire", "ordre fabrication", "fiche suiveuse", "contrôle production"],
-                article: "Art. 8.5.1",
-                titre: "Maîtrise de la production et de la prestation de service",
-                conformite: "Production maîtrisée par des plans de contrôle documentés",
-                explication: "L'organisme doit mettre en œuvre la production dans des conditions maîtrisées incluant la disponibilité d'informations documentées, des plans de contrôle, des équipements appropriés et des activités de libération des produits."
+                motsCles: ["prestataires externes", "fournisseurs", "sous-traitants", "évaluation fournisseurs", "maîtrise fournisseurs", "achats", "sélection fournisseurs", "surveillance fournisseurs", "externalisation"],
+                article: "Art. 8.4",
+                titre: "Maîtrise des prestataires externes",
+                conformite: "Prestataires externes évalués, sélectionnés et maîtrisés",
+                explication: "L'organisme doit s'assurer que les processus, produits et services fournis par des prestataires externes sont conformes. Il doit appliquer des critères d'évaluation et de sélection, définir l'étendue de la maîtrise et communiquer les exigences aux prestataires. Les informations documentées doivent être conservées."
             },
             {
-                motsCles: ["traçabilité", "identification produit", "numéro lot", "étiquetage", "marquage", "numéro série", "suivi produit"],
-                article: "Art. 8.5.2",
-                titre: "Identification et traçabilité",
-                conformite: "Identification et traçabilité des produits assurées",
-                explication: "L'organisme doit utiliser des moyens appropriés pour identifier les éléments de sortie tout au long de la production afin d'assurer la traçabilité complète du produit."
+                motsCles: ["production", "prestation service", "maîtrise production", "conditions maîtrisées", "traçabilité", "identification produit", "livraison", "préservation produit", "activités après livraison"],
+                article: "Art. 8.5",
+                titre: "Production et prestation de service",
+                conformite: "Production et prestation de service sous conditions maîtrisées",
+                explication: "L'organisme doit mettre en œuvre la production dans des conditions maîtrisées incluant : disponibilité des informations documentées, ressources de surveillance/mesure, identification et traçabilité, protection de la propriété client, préservation des produits et activités après livraison."
             },
             {
-                motsCles: ["libération produit", "contrôle réception", "contrôle final", "validation produit", "acceptation produit", "bon à livrer", "contrôle qualité sortie"],
+                motsCles: ["libération produit", "contrôle final", "acceptation produit", "vérification conformité", "validation produit", "contrôle qualité", "autorisation livraison", "libération service"],
                 article: "Art. 8.6",
                 titre: "Libération des produits et services",
-                conformite: "Processus de libération des produits formalisé et documenté",
-                explication: "L'organisme doit mettre en œuvre des dispositions planifiées pour vérifier que les exigences relatives aux produits et services ont été satisfaites avant libération au client."
+                conformite: "Dispositions de libération planifiées et mises en œuvre",
+                explication: "L'organisme doit mettre en œuvre les dispositions planifiées pour vérifier que les exigences produits/services sont satisfaites avant libération. La libération ne doit pas intervenir avant l'exécution satisfaisante de toutes les dispositions planifiées, sauf autorisation compétente. Les informations documentées doivent inclure preuves de conformité et traçabilité des autorisations."
             },
             {
-                motsCles: ["analyse données", "analyse performance", "tableau de bord", "reporting", "statistique qualité", "exploitation données", "rapport performance"],
+                motsCles: ["non-conformité produit", "produit non conforme", "élément non conforme", "traitement non-conformité", "rebut", "dérogation", "correction produit", "isolement produit non conforme"],
+                article: "Art. 8.7",
+                titre: "Maîtrise des éléments de sortie non conformes",
+                conformite: "Éléments non conformes identifiés, maîtrisés et traités",
+                explication: "L'organisme doit identifier et maîtriser les éléments de sortie non conformes pour empêcher leur utilisation non intentionnelle en menant des actions de correction, isolement, retour ou dérogation. La conformité doit être vérifiée après correction. Les informations documentées doivent décrire la NC et les actions menées."
+            },
+            {
+                motsCles: ["surveillance performance", "mesure performance", "indicateurs performance", "kpi qualité", "évaluation performance", "satisfaction client mesure", "analyse données", "évaluation smq"],
+                article: "Art. 9.1",
+                titre: "Surveillance, mesure, analyse et évaluation",
+                conformite: "Performances surveillées, mesurées, analysées et évaluées",
+                explication: "L'organisme doit déterminer ce qu'il est nécessaire de surveiller et mesurer, les méthodes, les moments et les moments d'analyse des résultats. La satisfaction client doit être surveillée. Les résultats doivent être analysés pour évaluer conformité produits, satisfaction client, performance SMQ, efficacité planification et performances prestataires."
+            },
+            {
+                motsCles: ["analyse évaluation données", "analyse résultats", "évaluation données qualité", "exploitation données", "analyse statistique", "tendances qualité", "analyse performances"],
                 article: "Art. 9.1.3",
-                titre: "Analyse et évaluation des performances",
-                conformite: "Données analysées et évaluations transmises à la direction",
-                explication: "L'organisme doit analyser et évaluer les données issues de la surveillance et la mesure afin d'évaluer la conformité des produits, la satisfaction client, la performance des processus et l'efficacité du SMQ."
+                titre: "Analyse et évaluation",
+                conformite: "Données analysées pour évaluer la performance du SMQ",
+                explication: "L'organisme doit analyser et évaluer les données issues de la surveillance et mesure pour évaluer la conformité produits, la satisfaction client, la performance du SMQ, l'efficacité de la planification, l'efficacité des actions face aux risques, la performance des prestataires et les besoins d'amélioration."
             },
             {
-                motsCles: ["amélioration continue", "amélioration", "pdca", "action corrective", "action préventive", "progrès"],
+                motsCles: ["audit interne", "programme audit", "auditeurs internes", "audit smq", "programme audit interne", "planification audit", "résultats audit", "rapport audit interne"],
+                article: "Art. 9.2",
+                titre: "Audit interne",
+                conformite: "Programme d'audits internes planifié, réalisé et documenté",
+                explication: "L'organisme doit réaliser des audits internes à intervalles planifiés pour vérifier la conformité du SMQ aux exigences de la norme et à ses propres exigences. Le programme doit couvrir fréquence, méthodes, responsabilités. Les auditeurs doivent être objectifs et impartiaux. Les résultats doivent être rapportés à la direction."
+            },
+            {
+                motsCles: ["revue de direction", "revue management", "comité direction", "bilan direction", "revue smq", "réunion direction qualité", "management review", "revue annuelle"],
+                article: "Art. 9.3",
+                titre: "Revue de direction",
+                conformite: "Revues de direction planifiées et réalisées à intervalles définis",
+                explication: "La direction doit procéder à des revues du SMQ à intervalles planifiés pour s'assurer de son adéquation, adaptation et efficacité. Les éléments d'entrée incluent : suivi actions précédentes, performances SMQ, satisfaction client, résultats audits, performances prestataires, adéquation ressources et opportunités d'amélioration."
+            },
+            {
+                motsCles: ["action corrective", "traitement non-conformité", "analyse causes", "causes racines", "correction non-conformité", "réclamation traitement", "élimination causes", "actions correctives smq"],
+                article: "Art. 10.2",
+                titre: "Non-conformité et action corrective",
+                conformite: "Non-conformités traitées et actions correctives mises en œuvre",
+                explication: "Lorsqu'une non-conformité se produit, l'organisme doit réagir, évaluer la nécessité d'éliminer les causes, mettre en œuvre les actions, examiner leur efficacité et modifier le SMQ si nécessaire. Les actions correctives doivent être proportionnées aux conséquences. Les informations documentées doivent être conservées."
+            },
+            {
+                motsCles: ["amélioration continue", "amélioration smq", "kaizen", "démarche amélioration", "progrès continu", "amélioration performances", "plan amélioration", "amélioration pertinence"],
                 article: "Art. 10.3",
                 titre: "Amélioration continue",
-                conformite: "Démarche d'amélioration continue en place",
-                explication: "L'organisme doit améliorer en continu la pertinence, l'adéquation et l'efficacité du SMQ en utilisant les résultats d'analyse et de la revue de direction."
+                conformite: "Démarche d'amélioration continue établie et opérationnelle",
+                explication: "L'organisme doit améliorer en continu la pertinence, l'adéquation et l'efficacité du SMQ en prenant en compte les résultats d'analyse et d'évaluation ainsi que les éléments de sortie de la revue de direction pour identifier besoins et opportunités d'amélioration."
             }
         ]
     },
@@ -278,165 +306,186 @@ const NORMES = {
         nom: "ISO 14001:2015",
         regles: [
             {
-                motsCles: ["contexte", "enjeux externes", "enjeux internes", "conditions environnementales", "parties intéressées"],
-                article: "Art. 4.1 & 4.2",
-                titre: "Contexte et parties intéressées",
-                conformite: "Contexte environnemental et parties intéressées identifiés",
-                explication: "L'organisme doit déterminer les enjeux externes et internes pertinents incluant les conditions environnementales affectées par ou susceptibles d'affecter l'organisme."
+                motsCles: ["contexte", "enjeux externes", "enjeux internes", "analyse contexte", "conditions environnementales", "facteurs internes", "contexte organisation", "enjeux stratégiques"],
+                article: "Art. 4.1",
+                titre: "Compréhension de l'organisme et de son contexte",
+                conformite: "Enjeux externes et internes pertinents pour le SME identifiés et surveillés",
+                explication: "L'organisme doit déterminer les enjeux externes et internes pertinents par rapport à sa finalité et qui influent sur sa capacité à atteindre les résultats attendus de son SME, incluant les conditions environnementales affectées par l'organisme ou susceptibles de l'affecter."
             },
             {
-                motsCles: ["domaine application", "périmètre sme", "système management environnemental", "sme", "limites"],
-                article: "Art. 4.3 & 4.4",
-                titre: "Domaine d'application du SME",
-                conformite: "Domaine d'application du SME défini et documenté",
-                explication: "L'organisme doit déterminer les limites et l'applicabilité du SME en prenant en compte ses unités organisationnelles, activités, produits et services."
+                motsCles: ["parties intéressées", "parties prenantes", "besoins parties", "attentes parties", "obligations conformité", "exigences légales environnement", "exigences parties"],
+                article: "Art. 4.2",
+                titre: "Compréhension des besoins et attentes des parties intéressées",
+                conformite: "Parties intéressées identifiées, besoins déterminés et obligations de conformité établies",
+                explication: "L'organisme doit identifier les parties intéressées pertinentes pour le SME, déterminer leurs besoins et attentes pertinents, puis identifier lesquels deviennent des obligations de conformité."
             },
             {
-                motsCles: ["leadership", "engagement direction", "management environnemental", "responsabilité direction"],
+                motsCles: ["domaine application", "périmètre sme", "champ application", "limites sme", "applicabilité sme", "domaine environnemental", "limites physiques", "unités organisationnelles"],
+                article: "Art. 4.3",
+                titre: "Détermination du domaine d'application du SME",
+                conformite: "Domaine d'application du SME défini, documenté et disponible pour les parties intéressées",
+                explication: "L'organisme doit déterminer les limites et l'applicabilité du SME en tenant compte des enjeux internes/externes, des obligations de conformité, de ses unités organisationnelles, fonctions, limites physiques, activités, produits et services, ainsi que de son autorité et capacité de maîtrise."
+            },
+            {
+                motsCles: ["processus sme", "système management environnemental", "mise en oeuvre sme", "processus nécessaires", "interactions processus", "amélioration performance environnementale", "établir sme"],
+                article: "Art. 4.4",
+                titre: "Système de management environnemental",
+                conformite: "SME établi, mis en œuvre, tenu à jour et amélioré en continu",
+                explication: "L'organisme doit établir, mettre en œuvre, tenir à jour et améliorer en continu un SME incluant les processus nécessaires et leurs interactions, en prenant en considération les connaissances acquises en 4.1 et 4.2."
+            },
+            {
+                motsCles: ["leadership", "engagement direction", "responsabilité direction", "engagement management", "implication direction", "direction sme", "haute direction", "top management environnement"],
                 article: "Art. 5.1",
-                titre: "Leadership et engagement de la direction",
-                conformite: "Leadership et engagement de la direction démontré",
-                explication: "La direction doit démontrer son leadership en assumant la responsabilité de l'efficacité du SME et en s'assurant que les ressources requises sont disponibles."
+                titre: "Leadership et engagement",
+                conformite: "Leadership et engagement de la direction démontrés pour le SME",
+                explication: "La direction doit démontrer son leadership en assumant la responsabilité de l'efficacité du SME, en établissant politique et objectifs compatibles avec l'orientation stratégique, en intégrant les exigences SME aux processus métiers, en assurant les ressources, en promouvant l'amélioration continue et en orientant le personnel."
             },
             {
-                motsCles: ["politique environnementale", "politique", "protection environnement", "prévention pollution", "engagement environnemental"],
+                motsCles: ["politique environnementale", "politique sme", "engagement environnemental", "prévention pollution", "protection environnement", "politique documentée", "engagements conformité", "politique communiquée"],
                 article: "Art. 5.2",
                 titre: "Politique environnementale",
-                conformite: "Politique environnementale établie et communiquée",
-                explication: "La direction doit établir une politique environnementale incluant l'engagement de protection de l'environnement, la prévention de la pollution et l'amélioration continue."
+                conformite: "Politique environnementale établie, documentée, communiquée et disponible",
+                explication: "La direction doit établir une politique environnementale appropriée au contexte, fournissant un cadre pour les objectifs environnementaux, incluant l'engagement de protection de l'environnement (prévention de la pollution), de satisfaction des obligations de conformité et d'amélioration continue du SME. Elle doit être documentée, communiquée en interne et disponible pour les parties intéressées."
             },
             {
-                motsCles: ["aspect environnemental", "impact environnemental", "aspect significatif", "cycle de vie", "émission", "pollution", "rejet"],
-                article: "Art. 6.1.2",
-                titre: "Aspects environnementaux significatifs",
-                conformite: "Aspects environnementaux identifiés et évalués",
-                explication: "L'organisme doit déterminer les aspects environnementaux de ses activités, produits et services dans une perspective de cycle de vie et identifier ceux qui sont significatifs."
+                motsCles: ["rôles responsabilités", "autorités sme", "responsabilités définies", "attribution responsabilités", "fonctions responsabilités", "représentant direction", "responsable environnement"],
+                article: "Art. 5.3",
+                titre: "Rôles, responsabilités et autorités au sein de l'organisme",
+                conformite: "Responsabilités et autorités pour le SME attribuées et communiquées",
+                explication: "La direction doit s'assurer que les responsabilités et autorités des rôles pertinents sont attribuées et communiquées au sein de l'organisme, notamment pour assurer la conformité du SME aux exigences de la norme et rendre compte de la performance environnementale à la direction."
             },
             {
-                motsCles: ["obligations conformité", "réglementation", "légal", "loi", "permis", "autorisation", "exigences légales"],
-                article: "Art. 6.1.3",
-                titre: "Obligations de conformité réglementaire",
-                conformite: "Obligations de conformité déterminées et respectées",
-                explication: "L'organisme doit déterminer et avoir accès à ses obligations de conformité relatives à ses aspects environnementaux incluant lois, réglementations et permis."
-            },
-            {
-                motsCles: ["urgence", "situation urgence", "accident", "déversement", "fuite", "incendie", "plan urgence"],
-                article: "Art. 6.1.1 & 8.2",
-                titre: "Préparation aux situations d'urgence",
-                conformite: "Plan de réponse aux urgences environnementales établi",
-                explication: "L'organisme doit identifier les situations d'urgence potentielles ayant un impact environnemental et établir des processus pour y répondre et les tester périodiquement."
-            },
-            {
-                motsCles: ["objectif environnemental", "objectif", "cible", "programme", "indicateur", "mesurable", "performance"],
-                article: "Art. 6.2",
-                titre: "Objectifs environnementaux et planification",
-                conformite: "Objectifs environnementaux mesurables définis",
-                explication: "L'organisme doit établir des objectifs environnementaux mesurables, cohérents avec la politique environnementale, surveillés et mis à jour si nécessaire."
-            },
-            {
-                motsCles: ["ressources", "compétence", "formation environnement", "qualification", "personnel environnement"],
-                article: "Art. 7.1 & 7.2",
-                titre: "Ressources et compétences environnementales",
-                conformite: "Ressources et compétences environnementales assurées",
-                explication: "L'organisme doit identifier les ressources nécessaires et s'assurer que les personnes dont le travail affecte la performance environnementale sont compétentes."
-            },
-            {
-                motsCles: ["sensibilisation", "conscience environnementale", "communication environnement", "information personnel"],
-                article: "Art. 7.3 & 7.4",
-                titre: "Sensibilisation et communication environnementale",
-                conformite: "Personnel sensibilisé aux aspects environnementaux",
-                explication: "Les personnes doivent être sensibilisées à la politique environnementale, aux aspects significatifs et aux impacts associés à leur travail."
-            },
-            {
-                motsCles: ["document", "procédure environnement", "enregistrement", "information documentée", "registre environnemental"],
-                article: "Art. 7.5",
-                titre: "Informations documentées environnementales",
-                conformite: "Documentation environnementale maîtrisée",
-                explication: "Le SME doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à l'efficacité du système de management environnemental."
-            },
-            {
-                motsCles: ["déchet", "recyclage", "tri", "élimination", "valorisation", "gestion déchet", "rebut"],
-                article: "Art. 8.1",
-                titre: "Maîtrise opérationnelle - Gestion des déchets",
-                conformite: "Gestion des déchets opérationnelle maîtrisée",
-                explication: "L'organisme doit établir des critères opérationnels et maîtriser ses processus liés aux aspects environnementaux significatifs dont la gestion des déchets."
-            },
-            {
-                motsCles: ["énergie", "consommation énergie", "électricité", "eau", "ressource naturelle", "économie énergie"],
-                article: "Art. 8.1",
-                titre: "Maîtrise opérationnelle - Ressources et énergie",
-                conformite: "Consommation des ressources naturelles maîtrisée",
-                explication: "L'organisme doit maîtriser ses processus opérationnels liés à l'utilisation des ressources naturelles et de l'énergie dans une perspective de cycle de vie."
-            },
-            {
-                motsCles: ["surveillance", "mesure", "analyse", "évaluation", "indicateur environnemental", "performance environnementale"],
-                article: "Art. 9.1",
-                titre: "Surveillance et mesure de la performance environnementale",
-                conformite: "Performance environnementale surveillée et mesurée",
-                explication: "L'organisme doit surveiller, mesurer, analyser et évaluer sa performance environnementale avec des équipements de mesure étalonnés et des indicateurs appropriés."
-            },
-            {
-                motsCles: ["évaluation conformité", "conformité réglementaire", "respect obligations", "vérification légale"],
-                article: "Art. 9.1.2",
-                titre: "Évaluation de la conformité réglementaire",
-                conformite: "Évaluation régulière de la conformité réalisée",
-                explication: "L'organisme doit établir des processus pour évaluer périodiquement le respect de ses obligations de conformité et maintenir la connaissance de son état de conformité."
-            },
-            {
-                motsCles: ["audit interne", "audit environnemental", "programme audit", "auditeur", "rapport audit"],
-                article: "Art. 9.2",
-                titre: "Audit interne environnemental",
-                conformite: "Audits internes environnementaux planifiés et réalisés",
-                explication: "L'organisme doit réaliser des audits internes à intervalles planifiés pour vérifier la conformité du SME aux exigences de la norme ISO 14001:2015."
-            },
-            {
-                motsCles: ["revue direction", "revue management", "bilan environnemental", "revue système"],
-                article: "Art. 9.3",
-                titre: "Revue de direction environnementale",
-                conformite: "Revues de direction environnementales réalisées",
-                explication: "La direction doit procéder à des revues du SME pour s'assurer qu'il est approprié, adapté et efficace, en tenant compte des non-conformités et résultats d'audit."
-            },
-            {
-                motsCles: ["risque environnemental", "opportunité environnementale", "risque sme", "analyse risque environnement", "enjeux environnementaux risque"],
+                motsCles: ["risques opportunités", "analyse risques environnement", "gestion risques sme", "identification risques", "situations urgence", "risques sme", "opportunités environnement", "planification risques"],
                 article: "Art. 6.1.1",
-                titre: "Risques et opportunités environnementaux",
-                conformite: "Risques et opportunités environnementaux déterminés et traités",
-                explication: "L'organisme doit déterminer les risques et opportunités liés à ses aspects environnementaux, ses obligations de conformité et ses enjeux internes/externes, afin de prévenir les effets indésirables sur le SME."
+                titre: "Actions face aux risques et opportunités — Généralités",
+                conformite: "Risques et opportunités liés au SME identifiés, analysés et planifiés",
+                explication: "L'organisme doit déterminer les risques et opportunités liés à ses aspects environnementaux, obligations de conformité et autres enjeux, pour assurer que le SME atteint ses résultats, prévenir les effets indésirables et s'inscrire dans une amélioration continue. Les situations d'urgence potentielles à impact environnemental doivent être identifiées."
             },
             {
-                motsCles: ["plan action environnement", "programme environnemental", "action corrective environnement", "mesure environnementale planifiée"],
+                motsCles: ["aspects environnementaux", "impacts environnementaux", "aspects significatifs", "cycle de vie", "émissions air", "rejets eau", "déchets", "aspects activités produits services"],
+                article: "Art. 6.1.2",
+                titre: "Aspects environnementaux",
+                conformite: "Aspects environnementaux et impacts associés déterminés et documentés",
+                explication: "L'organisme doit déterminer les aspects environnementaux de ses activités, produits et services dans une perspective de cycle de vie, ainsi que leurs impacts environnementaux associés. Il doit identifier les aspects environnementaux significatifs selon des critères établis, les communiquer en interne et conserver les informations documentées correspondantes."
+            },
+            {
+                motsCles: ["obligations conformité", "exigences légales", "réglementation environnementale", "permis environnementaux", "licences environnement", "lois environnement", "exigences réglementaires", "conformité légale environnement"],
+                article: "Art. 6.1.3",
+                titre: "Obligations de conformité",
+                conformite: "Obligations de conformité déterminées, accessibles et intégrées au SME",
+                explication: "L'organisme doit déterminer et avoir accès à ses obligations de conformité relatives à ses aspects environnementaux (lois, réglementations, permis, accords volontaires), déterminer comment elles s'appliquent, les prendre en compte dans le SME et conserver les informations documentées correspondantes."
+            },
+            {
+                motsCles: ["planification actions", "actions aspects significatifs", "actions obligations conformité", "plan actions environnement", "intégration actions processus", "efficacité actions"],
                 article: "Art. 6.1.4",
-                titre: "Planification des actions environnementales",
-                conformite: "Actions environnementales planifiées et intégrées aux processus",
-                explication: "L'organisme doit planifier les actions relatives à ses aspects environnementaux significatifs, ses obligations de conformité et les risques identifiés, en précisant le responsable, les moyens, l'échéance et la méthode d'évaluation de l'efficacité."
+                titre: "Planification d'actions",
+                conformite: "Actions planifiées pour traiter aspects significatifs, obligations et risques",
+                explication: "L'organisme doit planifier des actions pour traiter ses aspects environnementaux significatifs, ses obligations de conformité et les risques et opportunités identifiés, puis définir comment intégrer ces actions dans les processus du SME et évaluer leur efficacité."
             },
             {
-                motsCles: ["ressources environnement", "budget environnemental", "moyens environnement", "infrastructure sme"],
+                motsCles: ["objectifs environnementaux", "objectifs sme", "objectifs mesurables environnement", "cibles environnementales", "objectifs aspects significatifs", "objectifs conformité", "planification objectifs environnement"],
+                article: "Art. 6.2.1",
+                titre: "Objectifs environnementaux",
+                conformite: "Objectifs environnementaux établis, mesurables, surveillés et documentés",
+                explication: "L'organisme doit établir des objectifs environnementaux aux fonctions et niveaux concernés, en cohérence avec la politique environnementale, tenant compte des aspects significatifs et obligations de conformité. Ces objectifs doivent être mesurables (si réalisable), surveillés, communiqués et mis à jour."
+            },
+            {
+                motsCles: ["planification atteinte objectifs", "plan actions objectifs environnement", "ressources objectifs", "responsables objectifs", "échéances objectifs", "indicateurs objectifs environnementaux", "évaluation résultats objectifs"],
+                article: "Art. 6.2.2",
+                titre: "Planification des actions pour atteindre les objectifs environnementaux",
+                conformite: "Plan d'actions défini pour atteindre chaque objectif environnemental",
+                explication: "L'organisme doit déterminer pour chaque objectif environnemental : ce qui sera fait, les ressources nécessaires, les responsables, les échéances et la façon dont les résultats seront évalués via des indicateurs. Il doit aussi envisager l'intégration de ces actions dans les processus métiers."
+            },
+            {
+                motsCles: ["ressources sme", "ressources humaines environnement", "infrastructure environnement", "ressources nécessaires sme", "moyens sme", "ressources management environnemental"],
                 article: "Art. 7.1",
-                titre: "Ressources du système de management environnemental",
+                titre: "Ressources",
                 conformite: "Ressources nécessaires au SME identifiées et fournies",
-                explication: "L'organisme doit déterminer et fournir les ressources humaines, matérielles et financières nécessaires à l'établissement, la mise en œuvre et l'amélioration continue du SME."
+                explication: "L'organisme doit identifier et fournir les ressources nécessaires à l'établissement, la mise en œuvre, la tenue à jour et l'amélioration continue du SME, incluant ressources humaines, naturelles, infrastructures, technologies et ressources financières."
             },
             {
-                motsCles: ["urgence environnementale", "déversement accidentel", "fuite produit chimique", "pollution accidentelle", "plan urgence environnement", "exercice urgence environnement"],
+                motsCles: ["compétences environnement", "formation personnel sme", "qualification personnel environnement", "plan formation sme", "évaluation compétences environnement", "compétences aspects environnementaux"],
+                article: "Art. 7.2",
+                titre: "Compétences",
+                conformite: "Compétences nécessaires au SME déterminées, assurées et documentées",
+                explication: "L'organisme doit déterminer les compétences nécessaires des personnes dont le travail a une incidence sur la performance environnementale et les obligations de conformité, s'assurer de leur compétence, déterminer les besoins de formation et mener des actions pour acquérir les compétences manquantes. Les preuves de compétences doivent être conservées."
+            },
+            {
+                motsCles: ["sensibilisation environnement", "sensibilisation sme", "conscience environnementale", "personnel sensibilisé environnement", "culture environnementale", "sensibilisation politique environnementale", "sensibilisation aspects significatifs"],
+                article: "Art. 7.3",
+                titre: "Sensibilisation",
+                conformite: "Personnel sensibilisé à la politique, aux aspects significatifs et aux obligations",
+                explication: "L'organisme doit s'assurer que les personnes effectuant un travail sous son contrôle sont sensibilisées à la politique environnementale, aux aspects environnementaux significatifs et leurs impacts, à l'importance de leur contribution à l'efficacité du SME et aux répercussions d'un non-respect des exigences du SME et des obligations de conformité."
+            },
+            {
+                motsCles: ["communication interne environnement", "communication externe environnement", "plan communication sme", "communication sme", "communication parties intéressées", "informations environnementales", "communication obligations conformité"],
+                article: "Art. 7.4",
+                titre: "Communication",
+                conformite: "Processus de communication interne et externe établis et opérationnels",
+                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus de communication interne et externe pertinents pour le SME (sujets, moments, destinataires, canaux), en tenant compte des obligations de conformité et en s'assurant que les informations communiquées sont cohérentes avec le SME et fiables."
+            },
+            {
+                motsCles: ["informations documentées sme", "documentation sme", "procédures documentées environnement", "enregistrements environnement", "documents sme", "maîtrise documents environnement", "gestion documentaire sme", "contrôle documents environnement"],
+                article: "Art. 7.5",
+                titre: "Informations documentées",
+                conformite: "Informations documentées du SME créées, mises à jour et maîtrisées",
+                explication: "Le SME doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à son efficacité. Elles doivent être créées avec identification appropriée, révisées et approuvées, puis maîtrisées pour leur disponibilité, protection, distribution, stockage, contrôle des versions et élimination."
+            },
+            {
+                motsCles: ["planification opérationnelle environnement", "maîtrise opérationnelle sme", "critères opérationnels", "maîtrise processus environnement", "cycle de vie maîtrise", "fournisseurs exigences environnementales", "modifications prévues imprévues", "processus externalisés environnement"],
+                article: "Art. 8.1",
+                titre: "Planification et maîtrise opérationnelles",
+                conformite: "Processus opérationnels du SME planifiés, maîtrisés et documentés",
+                explication: "L'organisme doit établir, mettre en œuvre, maîtriser et tenir à jour les processus nécessaires en établissant des critères opérationnels et en les mettant en œuvre. Dans une perspective de cycle de vie, il doit maîtriser les exigences environnementales en conception, à l'achat, communiquer ses exigences aux fournisseurs externes et informer sur les impacts significatifs potentiels liés à l'utilisation et fin de vie de ses produits et services."
+            },
+            {
+                motsCles: ["situations urgence", "préparation urgence", "réponse urgence", "plan urgence environnement", "accidents environnementaux", "déversements", "incidents environnementaux", "exercices urgence"],
                 article: "Art. 8.2",
-                titre: "Préparation et réponse aux urgences environnementales",
-                conformite: "Plan de réponse aux urgences environnementales établi et testé",
-                explication: "L'organisme doit établir et maintenir des processus pour identifier les situations d'urgence potentielles à impact environnemental, y répondre efficacement et les tester périodiquement par des exercices."
+                titre: "Préparation et réponse aux situations d'urgence",
+                conformite: "Processus de préparation et réponse aux situations d'urgence établis et testés",
+                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus pour se préparer et répondre aux situations d'urgence potentielles identifiées en 6.1.1, en planifiant des actions préventives, en répondant aux urgences réelles, en testant périodiquement les réponses planifiées et en formant les parties intéressées pertinentes."
             },
             {
-                motsCles: ["amélioration sme", "opportunité amélioration environnement", "performance environnementale améliorée", "progrès sme"],
-                article: "Art. 10.1",
-                titre: "Amélioration générale du SME",
-                conformite: "Opportunités d'amélioration du SME identifiées et exploitées",
-                explication: "L'organisme doit identifier et sélectionner les opportunités d'amélioration et mettre en œuvre les actions nécessaires pour atteindre les résultats escomptés du SME."
+                motsCles: ["surveillance performance environnementale", "mesure performance sme", "indicateurs performance environnement", "kpi environnement", "évaluation performance sme", "analyse données environnement", "équipements surveillance étalonnés"],
+                article: "Art. 9.1.1",
+                titre: "Surveillance, mesure, analyse et évaluation — Généralités",
+                conformite: "Performance environnementale surveillée, mesurée, analysée et évaluée",
+                explication: "L'organisme doit surveiller, mesurer, analyser et évaluer sa performance environnementale en déterminant ce qu'il faut surveiller, les méthodes, les critères et indicateurs appropriés, et les moments d'analyse. Des équipements étalonnés ou vérifiés doivent être utilisés. Les résultats doivent être communiqués en interne et en externe selon les obligations de conformité."
             },
             {
-                motsCles: ["non-conformité", "action corrective", "amélioration", "incident environnemental", "écart environnemental"],
-                article: "Art. 10.2 & 10.3",
-                titre: "Non-conformités et amélioration continue",
-                conformite: "Non-conformités traitées et amélioration continue en place",
-                explication: "L'organisme doit réagir aux non-conformités, analyser leurs causes et mettre en œuvre des actions correctives pour améliorer continuellement le SME."
+                motsCles: ["évaluation conformité", "conformité obligations", "vérification conformité légale", "audit conformité", "état conformité", "évaluation exigences légales environnement"],
+                article: "Art. 9.1.2",
+                titre: "Évaluation de la conformité",
+                conformite: "Processus d'évaluation de la conformité établi et mis en œuvre périodiquement",
+                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour les processus nécessaires à l'évaluation du respect de ses obligations de conformité, déterminer la fréquence d'évaluation, évaluer la conformité et entreprendre les actions nécessaires, et maintenir la connaissance de son état de conformité. Les résultats doivent être conservés comme informations documentées."
+            },
+            {
+                motsCles: ["audit interne environnement", "programme audit sme", "auditeurs internes sme", "audit sme", "planification audit environnement", "résultats audit environnement", "rapport audit interne sme"],
+                article: "Art. 9.2",
+                titre: "Audit interne",
+                conformite: "Programme d'audits internes du SME planifié, réalisé et documenté",
+                explication: "L'organisme doit réaliser des audits internes à intervalles planifiés pour vérifier la conformité du SME aux exigences de la norme et à ses propres exigences, et son efficacité. Le programme doit prendre en compte l'importance environnementale des processus et les résultats des audits précédents. Les auditeurs doivent être objectifs et impartiaux."
+            },
+            {
+                motsCles: ["revue direction environnement", "revue management sme", "bilan direction sme", "revue sme", "réunion direction environnement", "management review environnement", "revue annuelle sme"],
+                article: "Art. 9.3",
+                titre: "Revue de direction",
+                conformite: "Revues de direction du SME planifiées et réalisées à intervalles définis",
+                explication: "La direction doit procéder à des revues du SME à intervalles planifiés pour s'assurer de son adéquation, adaptation et efficacité. Les éléments d'entrée incluent : suivi actions précédentes, modifications des enjeux et obligations, niveau de réalisation des objectifs environnementaux, performance environnementale (non-conformités, audits, conformité), adéquation des ressources et communications des parties intéressées."
+            },
+            {
+                motsCles: ["action corrective environnement", "traitement non-conformité sme", "analyse causes environnement", "causes racines sme", "correction non-conformité sme", "impacts environnementaux négatifs correction", "élimination causes sme"],
+                article: "Art. 10.2",
+                titre: "Non-conformité et actions correctives",
+                conformite: "Non-conformités traitées et actions correctives mises en œuvre et évaluées",
+                explication: "Lorsqu'une non-conformité se produit, l'organisme doit réagir pour la maîtriser, corriger et atténuer les impacts environnementaux négatifs, analyser les causes, mettre en œuvre les actions correctives, examiner leur efficacité et modifier le SME si nécessaire. Les actions correctives doivent être proportionnelles aux conséquences environnementales."
+            },
+            {
+                motsCles: ["amélioration continue environnement", "amélioration sme", "démarche amélioration environnementale", "progrès continu sme", "amélioration performance environnementale", "plan amélioration sme"],
+                article: "Art. 10.3",
+                titre: "Amélioration continue",
+                conformite: "Démarche d'amélioration continue du SME établie et opérationnelle",
+                explication: "L'organisme doit améliorer en continu la pertinence, l'adéquation et l'efficacité du SME afin d'améliorer sa performance environnementale, en s'appuyant sur les résultats d'analyse et d'évaluation, d'évaluation de conformité, d'audits internes et de revues de direction."
             }
         ]
     },
@@ -444,207 +493,158 @@ const NORMES = {
         nom: "ISO 45001:2018",
         regles: [
             {
-                motsCles: ["contexte", "enjeux externes", "enjeux internes", "parties intéressées", "enjeux organisationnels"],
-                article: "Art. 4.1 & 4.2",
-                titre: "Contexte et parties intéressées",
-                conformite: "Contexte S&ST et parties intéressées identifiés",
-                explication: "L'organisme doit déterminer les enjeux externes et internes pertinents pour sa finalité et identifier les travailleurs et autres parties intéressées ainsi que leurs besoins et attentes en matière de S&ST."
+                motsCles: ["contexte", "enjeux externes", "enjeux internes", "analyse contexte", "facteurs SST", "contexte organisation"],
+                article: "Art. 4.1",
+                titre: "Compréhension de l'organisme et de son contexte",
+                conformite: "Enjeux externes et internes influant sur le système SST identifiés",
+                explication: "L'organisme doit déterminer les enjeux externes et internes (conditions de travail, culture, etc.) qui influent sur sa capacité à atteindre les résultats attendus de son système de management de la SST."
             },
             {
-                motsCles: ["périmètre", "domaine application", "périmètre sst", "système management sst", "sms", "limites sst"],
-                article: "Art. 4.3 & 4.4",
-                titre: "Périmètre et système de management S&ST",
-                conformite: "Périmètre du SMS&ST défini et documenté",
-                explication: "L'organisme doit déterminer les limites et l'applicabilité du système de management S&ST en prenant en compte les enjeux internes/externes et les activités planifiées. Le périmètre doit être disponible sous forme d'information documentée."
+                motsCles: ["parties intéressées", "travailleurs", "représentants", "besoins", "attentes", "exigences légales"],
+                article: "Art. 4.2",
+                titre: "Besoins et attentes des travailleurs et parties intéressées",
+                conformite: "Besoins des travailleurs et parties intéressées identifiés et convertis en exigences",
+                explication: "L'organisme doit identifier les parties intéressées et accorder une attention particulière aux besoins et attentes des travailleurs (permanents et temporaires) qui deviennent des obligations de conformité."
             },
             {
-                motsCles: ["leadership", "engagement direction", "management sst", "responsabilité direction", "directeur", "pdg"],
+                motsCles: ["domaine application", "périmètre sst", "limites", "champ d'application"],
+                article: "Art. 4.3",
+                titre: "Détermination du domaine d'application du système SST",
+                conformite: "Limites et applicabilité du système SST définies et documentées",
+                explication: "L'organisme doit déterminer les limites physiques et organisationnelles de son système SST en tenant compte de ses activités, produits et services."
+            },
+            {
+                motsCles: ["système management sst", "processus sst", "amélioration sst"],
+                article: "Art. 4.4",
+                titre: "Système de management de la S&ST",
+                conformite: "Système SST établi, mis en œuvre et amélioré en continu",
+                explication: "L'organisme doit établir un système incluant les processus nécessaires et leurs interactions pour améliorer la performance SST."
+            },
+            {
+                motsCles: ["leadership", "engagement direction", "responsabilité", "culture sst"],
                 article: "Art. 5.1",
-                titre: "Leadership et engagement de la direction",
-                conformite: "Leadership et engagement de la direction S&ST démontré",
-                explication: "La direction doit démontrer son leadership en assumant la pleine responsabilité de la prévention des traumatismes et pathologies, en fournissant les ressources nécessaires et en promouvant une culture favorable à la S&ST."
+                titre: "Leadership et engagement",
+                conformite: "Responsabilité de la direction démontrée pour la prévention et la sécurité",
+                explication: "La direction doit assumer l'entière responsabilité de la prévention des traumatismes et pathologies liés au travail et promouvoir une culture SST positive."
             },
             {
-                motsCles: ["politique sst", "politique santé sécurité", "politique sécurité", "engagement sst", "charte sécurité", "politique s&st"],
+                motsCles: ["politique sst", "santé sécurité", "engagement"],
                 article: "Art. 5.2",
                 titre: "Politique de S&ST",
-                conformite: "Politique S&ST documentée, communiquée et accessible",
-                explication: "La direction doit établir une politique S&ST documentée incluant l'engagement à procurer des conditions sûres et saines, à éliminer les dangers, à satisfaire les exigences légales et à consulter les travailleurs."
+                conformite: "Politique SST établie avec engagements de prévention et consultation",
+                explication: "La direction doit définir une politique incluant l'engagement à fournir des conditions de travail sûres, à éliminer les dangers et à consulter les travailleurs."
             },
             {
-                motsCles: ["rôles", "responsabilités", "autorités sst", "organigramme sécurité", "responsable sécurité", "animateur sécurité", "hssse"],
+                motsCles: ["rôles", "responsabilités", "autorités", "fonctions"],
                 article: "Art. 5.3",
-                titre: "Rôles, responsabilités et autorités S&ST",
-                conformite: "Rôles et responsabilités S&ST attribués et communiqués",
-                explication: "La direction doit attribuer et communiquer les responsabilités et autorités pour s'assurer que le système de management S&ST est conforme aux exigences et pour rendre compte de sa performance à tous les niveaux."
+                titre: "Rôles, responsabilités et autorités",
+                conformite: "Responsabilités SST attribuées et communiquées à tous les niveaux",
+                explication: "La direction doit s'assurer que les responsabilités pour le système SST sont clairement définies, notamment pour rendre compte de la performance du système."
             },
             {
-                motsCles: ["consultation travailleurs", "participation travailleurs", "cse", "chsct", "délégué", "représentant travailleurs", "comité sécurité", "implication personnel"],
+                motsCles: ["consultation", "participation", "représentants travailleurs", "dialogue", "obstacles"],
                 article: "Art. 5.4",
                 titre: "Consultation et participation des travailleurs",
                 conformite: "Processus de consultation et participation des travailleurs établi",
-                explication: "L'organisme doit établir des processus pour la consultation des travailleurs non encadrants sur l'identification des dangers, l'évaluation des risques, les objectifs S&ST et les mesures de prévention. Les obstacles à la participation doivent être identifiés et éliminés."
+                explication: "L'organisme doit établir des processus pour consulter les travailleurs non-encadrants sur les politiques, objectifs et changements, et supprimer les obstacles à leur participation."
             },
             {
-                motsCles: ["identification danger", "identification des dangers", "danger", "source danger", "analyse danger", "risque professionnel", "document unique", "duer"],
+                motsCles: ["risques", "opportunités", "planification", "incertitude"],
+                article: "Art. 6.1.1",
+                titre: "Actions face aux risques et opportunités",
+                conformite: "Risques et opportunités liés au système SST déterminés",
+                explication: "L'organisme doit planifier des actions pour faire face aux risques du système et saisir les opportunités d'amélioration de la performance SST."
+            },
+            {
+                motsCles: ["identification dangers", "sources dangers", "situations dangereuses", "facteurs sociaux"],
                 article: "Art. 6.1.2.1",
                 titre: "Identification des dangers",
-                conformite: "Processus d'identification continue et proactive des dangers établi",
-                explication: "L'organisme doit établir un processus d'identification continue et proactive des dangers couvrant : organisation du travail, facteurs sociaux (harcèlement, charge de travail), activités habituelles et inhabituelles, facteurs humains, événements passés et situations d'urgence potentielles."
+                conformite: "Processus continu d'identification des dangers établi",
+                explication: "L'organisme doit identifier les dangers liés à l'organisation du travail, aux facteurs sociaux (charge de travail, harcèlement), aux activités courantes et aux situations d'urgence."
             },
             {
-                motsCles: ["évaluation risques", "évaluation des risques", "analyse risque", "cotation risque", "niveau risque", "matrice risque", "duer"],
+                motsCles: ["évaluation risques", "risques professionnels", "méthodologie"],
                 article: "Art. 6.1.2.2",
                 titre: "Évaluation des risques pour la S&ST",
-                conformite: "Évaluation des risques S&ST réalisée et documentée",
-                explication: "L'organisme doit évaluer les risques S&ST issus des dangers identifiés en tenant compte de l'efficacité des mesures de prévention existantes. Les méthodes et critères d'évaluation doivent être définis, proactifs, systématiques et conservés sous forme documentée."
+                conformite: "Risques SST évalués selon une méthodologie définie",
+                explication: "L'organisme doit évaluer les risques pour la SST à partir des dangers identifiés, en tenant compte de l'efficacité des mesures de prévention existantes."
             },
             {
-                motsCles: ["opportunité sst", "opportunité sécurité", "amélioration conditions travail", "adaptation poste", "ergonomie", "bien-être travail"],
-                article: "Art. 6.1.2.3",
-                titre: "Opportunités S&ST et autres opportunités",
-                conformite: "Opportunités d'amélioration S&ST évaluées et exploitées",
-                explication: "L'organisme doit évaluer les opportunités S&ST permettant d'améliorer la performance, notamment l'adaptation du travail aux travailleurs, l'élimination des dangers à la source et la promotion d'une culture S&ST positive."
-            },
-            {
-                motsCles: ["exigences légales", "réglementation sst", "conformité réglementaire", "code travail", "décret sécurité", "obligation légale", "veille réglementaire sst"],
+                motsCles: ["exigences légales", "conformité", "veille réglementaire", "lois travail"],
                 article: "Art. 6.1.3",
-                titre: "Exigences légales et autres exigences S&ST",
-                conformite: "Exigences légales S&ST déterminées, accessibles et à jour",
-                explication: "L'organisme doit établir et tenir à jour un processus pour déterminer les exigences légales et autres exigences applicables à ses dangers et risques S&ST, et s'assurer qu'elles sont prises en compte dans le SMS&ST."
+                titre: "Détermination des exigences légales",
+                conformite: "Exigences légales et autres exigences SST identifiées et accessibles",
+                explication: "L'organisme doit déterminer et avoir accès aux exigences légales à jour applicables à ses dangers et à son système SST."
             },
             {
-                motsCles: ["plan action sst", "planification actions", "action prévention", "mesure prévention planifiée", "hiérarchie mesures"],
-                article: "Art. 6.1.4",
-                titre: "Planification des actions S&ST",
-                conformite: "Actions S&ST planifiées en intégrant la hiérarchie des mesures",
-                explication: "L'organisme doit planifier les actions face aux risques, opportunités et exigences légales en tenant compte de la hiérarchie des mesures de prévention et en les intégrant aux processus opérationnels."
+                motsCles: ["objectifs sst", "cibles", "santé", "sécurité", "prévention"],
+                article: "Art. 6.2.1",
+                titre: "Objectifs de S&ST",
+                conformite: "Objectifs SST cohérents avec la politique et mesurables établis",
+                explication: "L'organisme doit établir des objectifs pour maintenir et améliorer le système SST et sa performance à tous les niveaux."
             },
             {
-                motsCles: ["objectif sst", "objectif santé sécurité", "indicateur sécurité", "kpi sst", "cible sécurité", "tableau bord sst"],
-                article: "Art. 6.2",
-                titre: "Objectifs S&ST et planification",
-                conformite: "Objectifs S&ST mesurables, surveillés et communiqués",
-                explication: "L'organisme doit établir des objectifs S&ST mesurables, cohérents avec la politique S&ST, prenant en compte les résultats d'évaluation des risques et la consultation des travailleurs. Un plan d'action doit définir le responsable, les ressources, l'échéance et les indicateurs de suivi."
-            },
-            {
-                motsCles: ["ressources sst", "infrastructure sécurité", "moyens sécurité", "budget sst", "équipement sécurité"],
-                article: "Art. 7.1",
-                titre: "Ressources S&ST",
-                conformite: "Ressources nécessaires au SMS&ST identifiées et fournies",
-                explication: "L'organisme doit identifier et fournir les ressources humaines, matérielles et financières nécessaires à l'établissement, la mise en œuvre, la tenue à jour et l'amélioration continue du système de management S&ST."
-            },
-            {
-                motsCles: ["compétence sst", "formation sécurité", "habilitation", "qualification sécurité", "plan formation sst", "recyclage sécurité", "formé sst"],
+                motsCles: ["compétences", "formation", "aptitude", "qualification"],
                 article: "Art. 7.2",
-                titre: "Compétences S&ST",
-                conformite: "Compétences S&ST déterminées et preuves de formation conservées",
-                explication: "L'organisme doit déterminer les compétences S&ST requises, s'assurer que les travailleurs sont compétents pour identifier les dangers, et conserver des informations documentées comme preuves de formation et d'expérience."
+                titre: "Compétences",
+                conformite: "Travailleurs compétents sur la base d'une formation ou expérience",
+                explication: "L'organisme doit s'assurer que les travailleurs sont capables d'identifier les dangers et de réaliser leurs tâches en toute sécurité."
             },
             {
-                motsCles: ["rôles sst", "responsabilités sécurité", "autorités sst", "responsable sécurité", "animateur sécurité", "référent sst", "organigramme sst"],
-                article: "Art. 5.3",
-                titre: "Rôles, responsabilités et autorités S&ST",
-                conformite: "Rôles et responsabilités S&ST définis, documentés et communiqués",
-                explication: "La direction doit attribuer et communiquer les responsabilités et autorités pour les rôles pertinents du SMS&ST, notamment pour s'assurer de la conformité aux exigences de la norme et de la remontée de la performance S&ST à la direction."
+                motsCles: ["sensibilisation", "culture", "droit de retrait", "conséquences"],
+                article: "Art. 7.3",
+                titre: "Sensibilisation",
+                conformite: "Travailleurs sensibilisés aux risques et à leur droit de retrait",
+                explication: "Les travailleurs doivent être informés de la politique SST et de leur capacité à se soustraire à un danger grave et imminent sans représailles."
             },
             {
-                motsCles: ["sensibilisation sst", "prise de conscience", "droit retrait", "communication sécurité", "affichage sécurité", "information travailleurs sst"],
-                article: "Art. 7.3 & 7.4",
-                titre: "Sensibilisation et communication S&ST",
-                conformite: "Travailleurs sensibilisés et communication S&ST établie",
-                explication: "Les travailleurs doivent être sensibilisés à la politique S&ST, aux dangers et risques les concernant, aux conséquences du non-respect des exigences et à leur droit de retrait face à un danger grave et imminent. Des processus de communication interne et externe doivent être établis."
-            },
-            {
-                motsCles: ["information documentée sst", "document sécurité", "procédure sst", "enregistrement sécurité", "registre sst", "instruction sécurité"],
-                article: "Art. 7.5",
-                titre: "Informations documentées S&ST",
-                conformite: "Informations documentées S&ST maîtrisées et accessibles",
-                explication: "Le SMS&ST doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à son efficacité. Elles doivent être protégées, accessibles aux travailleurs et maîtrisées en termes de version."
-            },
-            {
-                motsCles: ["maîtrise opérationnelle", "processus opérationnel sst", "critères opérationnels", "adaptation travail"],
+                motsCles: ["maîtrise opérationnelle", "processus", "contrôle"],
                 article: "Art. 8.1.1",
-                titre: "Planification et maîtrise opérationnelles S&ST",
-                conformite: "Processus opérationnels S&ST planifiés et maîtrisés",
-                explication: "L'organisme doit planifier, mettre en œuvre et maîtriser les processus nécessaires au SMS&ST en établissant des critères opérationnels et en adaptant le travail aux travailleurs."
+                titre: "Planification et maîtrise opérationnelles",
+                conformite: "Mesures de maîtrise des processus SST mises en œuvre",
+                explication: "L'organisme doit établir des critères opérationnels pour ses processus et mettre en œuvre des contrôles pour prévenir les blessures."
             },
             {
-                motsCles: ["epi", "équipement protection individuelle", "casque", "gants", "chaussures sécurité", "masque", "gilet", "harnais", "protection collective", "hiérarchie prévention", "élimination danger", "substitution", "mesure collective"],
+                motsCles: ["hiérarchie", "élimination", "substitution", "protection collective", "epi"],
                 article: "Art. 8.1.2",
-                titre: "Hiérarchie des mesures de prévention",
+                titre: "Élimination des dangers et réduction des risques",
                 conformite: "Hiérarchie des mesures de prévention appliquée",
-                explication: "L'organisme doit éliminer les dangers et réduire les risques S&ST en appliquant la hiérarchie suivante : 1. Élimination du danger 2. Substitution par procédés moins dangereux 3. Mesures de protection collective 4. Mesures administratives incluant la formation 5. EPI en dernier recours."
+                explication: "L'organisme doit suivre l'ordre : 1. Éliminer, 2. Substituer, 3. Protections collectives, 4. Signalisation/Formation, 5. EPI."
             },
             {
-                motsCles: ["pilotage changement", "gestion changement", "modification organisation", "nouveau équipement", "changement processus", "réorganisation"],
-                article: "Art. 8.1.3",
-                titre: "Pilotage du changement",
-                conformite: "Processus de pilotage du changement établi et appliqué",
-                explication: "L'organisme doit établir un processus pour évaluer les risques S&ST avant tout changement temporaire ou permanent (nouveaux produits, réorganisation, nouvelles exigences légales, évolution technologique) afin d'en limiter les effets négatifs."
-            },
-            {
-                motsCles: ["intervenant extérieur", "sous-traitant", "prestataire", "externalisation", "fournisseur sst", "contractant", "entreprise extérieure"],
+                motsCles: ["achats", "sous-traitants", "intervenants extérieurs", "coordination"],
                 article: "Art. 8.1.4",
-                titre: "Intervenants extérieurs et externalisation",
-                conformite: "Intervenants extérieurs et fonctions externalisées maîtrisés",
-                explication: "L'organisme doit coordonner avec ses intervenants extérieurs pour identifier les dangers et maîtriser les risques S&ST liés à leurs activités. Les fonctions externalisées doivent rester conformes aux exigences du SMS&ST."
+                titre: "Achats et intervenants extérieurs",
+                conformite: "Processus d'achat et de coordination des sous-traitants maîtrisés",
+                explication: "L'organisme doit coordonner ses processus d'achat avec ses sous-traitants pour identifier et maîtriser les dangers liés aux interventions extérieures."
             },
             {
-                motsCles: ["urgence", "situation urgence", "plan urgence", "exercice évacuation", "secours", "incendie", "pompier", "premiers secours", "plan secours"],
+                motsCles: ["urgence", "préparation", "réponse", "accidents", "exercices"],
                 article: "Art. 8.2",
                 titre: "Préparation et réponse aux situations d'urgence",
-                conformite: "Plan de réponse aux urgences établi, testé et communiqué",
-                explication: "L'organisme doit établir des processus de préparation aux situations d'urgence incluant : réponse planifiée avec premiers secours, formation, exercices périodiques d'évaluation, et communication aux travailleurs et parties intéressées."
+                conformite: "Processus de réponse aux situations d'urgence établi et testé",
+                explication: "L'organisme doit planifier les actions pour répondre aux situations d'urgence (incendie, fuite, etc.) et réaliser des exercices périodiques."
             },
             {
-                motsCles: ["surveillance sst", "mesure performance sst", "indicateur sst", "étalonnage", "suivi sécurité", "monitoring sst", "statistique sécurité"],
-                article: "Art. 9.1.1",
-                titre: "Surveillance et mesure de la performance S&ST",
-                conformite: "Performance S&ST surveillée et mesurée avec équipements étalonnés",
-                explication: "L'organisme doit surveiller, mesurer, analyser et évaluer sa performance S&ST, notamment le degré de satisfaction aux exigences légales, l'efficacité des mesures de prévention et les progrès vers les objectifs S&ST."
-            },
-            {
-                motsCles: ["évaluation conformité sst", "conformité légale sst", "respect réglementation sst", "vérification légale sst"],
+                motsCles: ["évaluation conformité", "audit légal", "vérification"],
                 article: "Art. 9.1.2",
-                titre: "Évaluation de la conformité S&ST",
-                conformite: "Conformité aux exigences légales S&ST évaluée et documentée",
-                explication: "L'organisme doit établir un processus pour évaluer périodiquement la conformité aux exigences légales et autres exigences S&ST, agir en cas d'écart et conserver les résultats des évaluations sous forme documentée."
+                titre: "Évaluation de la conformité",
+                conformite: "Conformité aux exigences légales évaluée périodiquement",
+                explication: "L'organisme doit évaluer périodiquement s'il respecte les lois et autres exigences et conserver les preuves documentées."
             },
             {
-                motsCles: ["audit interne sst", "audit sécurité", "programme audit sst", "auditeur sst", "rapport audit sst", "plan audit sécurité"],
+                motsCles: ["audit interne", "programme audit", "vérification"],
                 article: "Art. 9.2",
-                titre: "Audit interne S&ST",
-                conformite: "Audits internes S&ST planifiés et réalisés par auditeurs impartiaux",
-                explication: "L'organisme doit réaliser des audits internes S&ST à intervalles planifiés pour vérifier la conformité du SMS&ST. Les auditeurs doivent être impartiaux. Les résultats doivent être rapportés à la direction et aux travailleurs concernés."
+                titre: "Audit interne",
+                conformite: "Audits internes réalisés à intervalles planifiés",
+                explication: "L'organisme doit mener des audits pour vérifier que le système SST est conforme aux exigences de la norme et aux objectifs de l'entreprise."
             },
             {
-                motsCles: ["revue direction sst", "revue management sst", "bilan sécurité", "revue système sst", "réunion direction sécurité"],
-                article: "Art. 9.3",
-                titre: "Revue de direction S&ST",
-                conformite: "Revues de direction S&ST planifiées et réalisées",
-                explication: "La direction doit procéder à des revues du SMS&ST à intervalles planifiés en examinant : l'état des actions précédentes, les enjeux internes/externes, la performance S&ST, les résultats d'audit, les ressources et les opportunités d'amélioration continue."
-            },
-            {
-                motsCles: ["culture sécurité", "amélioration continue sécurité", "progrès sst", "plan amélioration sst", "démarche sécurité", "système amélioration sst"],
-                article: "Art. 10.1",
-                titre: "Amélioration continue du SMS&ST",
-                conformite: "Démarche d'amélioration continue S&ST active et documentée",
-                explication: "L'organisme doit améliorer en continu la pertinence et l'efficacité du SMS&ST en promouvant la culture S&ST, en impliquant les travailleurs dans l'amélioration et en communiquant les résultats de performance à l'ensemble du personnel."
-            },
-            {
-                motsCles: ["accident", "incident", "événement indésirable", "non-conformité sst", "at", "accident travail", "blessure", "presque accident", "action corrective sst"],
+                motsCles: ["non-conformité", "incident", "action corrective", "analyse causes"],
                 article: "Art. 10.2",
-                titre: "Événements indésirables, non-conformités et actions correctives",
-                conformite: "Accidents et non-conformités analysés avec actions correctives documentées",
-                explication: "L'organisme doit réagir rapidement aux événements indésirables et non-conformités, analyser leurs causes fondamentales, mettre en œuvre des actions correctives proportionnées selon la hiérarchie des mesures de prévention et évaluer leur efficacité."
-            },
-            {
-                motsCles: ["amélioration continue sst", "amélioration sst", "progrès sécurité", "culture sécurité", "culture sst", "pdca sst"],
-                article: "Art. 10.3",
-                titre: "Amélioration continue S&ST",
-                conformite: "Amélioration continue du SMS&ST en place",
-                explication: "L'organisme doit améliorer en continu la pertinence, l'adéquation et l'efficacité du SMS&ST en améliorant la performance S&ST, en promouvant la culture S&ST et la participation des travailleurs, et en communiquant les résultats aux travailleurs."
+                titre: "Incidents, non-conformités et actions correctives",
+                conformite: "Réaction aux incidents et élimination des causes racines",
+                explication: "Suite à un accident ou incident, l'organisme doit réagir, analyser les causes avec la participation des travailleurs et mettre en place des corrections."
             }
         ]
     }
@@ -1147,18 +1147,17 @@ function analyserTexteLocal(texte, normeId) {
     });
 
     // NIVEAU 3 — NON CONFORME PAR ABSENCE
-    // Ne créer des NC d'absence que si le texte est suffisamment long et détaillé
-    const texteLongueur = texte.trim().length;
+    // Logique basée sur le pourcentage de règles détectées (pas sur texteLongueur)
     const pourcentageReglesDetectees = (reglesAvecMotCleDetecte / norme.regles.length) * 100;
-    const texteSuffisammentLong = texteLongueur > 400;
-    const texteSuffisammentDetaille = pourcentageReglesDetectees >= 50;
 
-    if (!texteSuffisammentLong || !texteSuffisammentDetaille) {
-        // Texte trop court ou peu détaillé - ne pas créer de NC d'absence
-        // Ajouter un message d'avertissement dans les recommandations
+    // Indicateur d'analyse partielle (20-50% de règles détectées)
+    const analysePartielle = pourcentageReglesDetectees >= 20 && pourcentageReglesDetectees < 50;
+
+    if (pourcentageReglesDetectees < 20) {
+        // Moins de 20% de règles détectées → aucune NC d'absence (texte trop partiel)
         recommandationsAbsenceMessage = true;
     } else {
-        // Texte suffisamment long et détaillé - créer des NC d'absence (limité à 3)
+        // 20% ou plus de règles détectées → créer des NC d'absence
         const ncAbsence = [];
 
         norme.regles.forEach((regle) => {
@@ -1183,9 +1182,11 @@ function analyserTexteLocal(texte, normeId) {
             }
         });
 
-        // Trier par gravité décroissante et garder les 3 plus critiques
+        // Trier par gravité décroissante
         ncAbsence.sort((a, b) => b._scoreGravite - a._scoreGravite);
-        const ncAbsenceLimitees = ncAbsence.slice(0, 3);
+
+        // Limiter selon le pourcentage : 20-50% → max 3, >=50% → max 5
+        const ncAbsenceLimitees = pourcentageReglesDetectees >= 50 ? ncAbsence : ncAbsence.slice(0, 3);
 
         // Supprimer les champs temporaires
         ncAbsenceLimitees.forEach(nc => {
@@ -1307,7 +1308,9 @@ function analyserTexteLocal(texte, normeId) {
         niveauConfiance: scoreConfiance.niveau,
         secteurDetecte: secteurDetecte,
         nbMajeures: nbMajeures,
-        nbMineures: nbMineures
+        nbMineures: nbMineures,
+        analysePartielle: analysePartielle || false,
+        pourcentageReglesDetectees: pourcentageReglesDetectees
     };
 }
 
@@ -1339,10 +1342,17 @@ function detecterSecteur(texteLower) {
 // GÉNÉRATION DU RÉSUMÉ EXÉCUTIF
 // ============================================
 function genererResumeExecutif(resultat, normeNom) {
-    const { score, appreciation, nbMajeures, nbMineures, secteurDetecte, niveauConfiance } = resultat;
+    const { score, appreciation, nbMajeures, nbMineures, secteurDetecte, niveauConfiance, analysePartielle } = resultat;
 
     const secteurLabel = secteurDetecte ? SECTEURS[secteurDetecte]?.label : 'Secteur non détecté';
     const confianceText = `Analyse avec un niveau de confiance ${niveauConfiance.toLowerCase()}`;
+
+    // Badge "Analyse partielle" si texte entre 400 et 800 caractères
+    const badgeAnalysePartielle = analysePartielle ? `
+    <div style="display: inline-block; background: linear-gradient(135deg, var(--accent), #f39c12); color: white; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-left: 0.75rem;">
+        ⚠️ Analyse partielle
+    </div>
+    ` : '';
 
     // Générer le top 3 des actions prioritaires
     const actionsPrioritaires = resultat.recommandations
@@ -1359,7 +1369,9 @@ function genererResumeExecutif(resultat, normeNom) {
 
     return `
 <div class="resume-executif" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid var(--primary); padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(30, 95, 140, 0.1);">
-    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">📋 Résumé Exécutif - ${normeNom}</h3>
+    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">
+        📋 Résumé Exécutif - ${normeNom}${badgeAnalysePartielle}
+    </h3>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
         <div style="background: white; padding: 1rem; border-radius: 6px;">
@@ -1480,6 +1492,283 @@ function recordApiCall() {
     localStorage.setItem(LAST_API_CALL_KEY, Date.now().toString());
 }
 
+// ============================================
+// MODALE D'AVERTISSEMENT TEXTE COURT
+// ============================================
+let pendingSituation = null;
+let pendingNorm = null;
+let pendingPourcentage = null;
+let pendingResultat = null;
+
+function ouvrirModaleTexteCourt(situation, norme) {
+    const texteLongueur = situation.trim().length;
+
+    // Créer la modale si elle n'existe pas
+    let modal = document.getElementById('texteCourtModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'texteCourtModal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'modalTitle');
+        modal.innerHTML = `
+            <style>
+                #texteCourtModal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6);
+                    z-index: 10000;
+                    justify-content: center;
+                    align-items: center;
+                }
+                #texteCourtModal.active {
+                    display: flex;
+                }
+                .modal-content {
+                    background: white;
+                    border-radius: 12px;
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                }
+                .modal-header {
+                    background: linear-gradient(135deg, var(--primary), #2c3e50);
+                    color: white;
+                    padding: 1.25rem;
+                    border-radius: 12px 12px 0 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .modal-header h2 {
+                    margin: 0;
+                    font-size: 1.2rem;
+                }
+                .modal-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                }
+                .modal-close:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                }
+                .modal-body {
+                    padding: 1.25rem;
+                }
+                .alert-box {
+                    background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+                    border-left: 4px solid var(--accent);
+                    padding: 1rem;
+                    border-radius: 6px;
+                    margin-bottom: 1rem;
+                }
+                .alert-box strong {
+                    color: #856404;
+                }
+                .alert-box p {
+                    margin: 0;
+                    color: #856404;
+                }
+                .texte-preview {
+                    background: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                    border-radius: 6px;
+                    padding: 1rem;
+                    max-height: 200px;
+                    overflow-y: auto;
+                    font-family: inherit;
+                    font-size: 0.9rem;
+                    line-height: 1.5;
+                    color: #495057;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                }
+                .char-counter {
+                    text-align: right;
+                    font-size: 0.85rem;
+                    color: #6c757d;
+                    margin-top: 0.5rem;
+                }
+                .char-counter.warning {
+                    color: var(--accent);
+                    font-weight: 600;
+                }
+                .modal-footer {
+                    padding: 1rem 1.25rem;
+                    border-top: 1px solid #dee2e6;
+                    display: flex;
+                    gap: 0.75rem;
+                    justify-content: flex-end;
+                }
+                .btn-modal {
+                    padding: 0.625rem 1.25rem;
+                    border-radius: 6px;
+                    font-size: 0.95rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    border: none;
+                    transition: all 0.2s;
+                }
+                .btn-modal-secondary {
+                    background: #6c757d;
+                    color: white;
+                }
+                .btn-modal-secondary:hover {
+                    background: #5a6268;
+                }
+                .btn-modal-primary {
+                    background: var(--primary);
+                    color: white;
+                }
+                .btn-modal-primary:hover {
+                    background: #1a4a6e;
+                }
+            </style>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">⚠️ Texte insuffisant</h2>
+                    <button class="modal-close" onclick="fermerModaleTexteCourt()" aria-label="Fermer">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-box">
+                        <strong>Avertissement :</strong><br>
+                        Texte insuffisant pour une analyse fiable des absences.
+                        Les non-conformités d'absence ne seront pas générées.
+                    </div>
+                    <div style="margin-bottom: 0.5rem; font-weight: 600; color: var(--primary);">
+                        📝 Texte soumis :
+                    </div>
+                    <div class="texte-preview" id="modalTextePreview"></div>
+                    <div class="char-counter warning" id="modalCharCounter"></div>
+                    <div id="modalPourcentageInfo" style="margin-top: 0.75rem; padding: 0.75rem; background: #fff3cd; border-radius: 6px; font-size: 0.9rem; color: #856404;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-modal btn-modal-secondary" onclick="fermerModaleTexteCourt()">Modifier le texte</button>
+                    <button class="btn-modal btn-modal-primary" onclick="continuerAnalyse()">Continuer quand même</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Gestion de la fermeture par Echap
+        modal.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                fermerModaleTexteCourt();
+            }
+        });
+
+        // Focus trap
+        modal.addEventListener('keydown', function(e) {
+            const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+            }
+        });
+    }
+
+    // Mettre à jour le contenu
+    document.getElementById('modalTextePreview').textContent = situation;
+
+    // Calculer le pourcentage de règles détectées et stocker le résultat
+    const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
+    const localResult = analyserTexteLocal(situation, normMap[norme]);
+    const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+    const pourcentage = (reglesDetectees / NORMES[normMap[norme]].regles.length) * 100;
+
+    document.getElementById('modalCharCounter').textContent = `${texteLongueur} caractère(s) - ${Math.round(pourcentage)}% de règles détectées`;
+    document.getElementById('modalPourcentageInfo').innerHTML = `<strong>${Math.round(pourcentage)}% des exigences de la norme sont couvertes.</strong><br>Seuil minimum requis : 20%. Ajoutez plus de détails sur votre système de management pour obtenir une analyse complète.`;
+
+    // Stocker le résultat pour éviter un recalcul lors de "Continuer quand même"
+    pendingResultat = localResult;
+
+    // Afficher la modale
+    modal.classList.add('active');
+
+    // Focus sur le premier bouton pour l'accessibilité
+    setTimeout(() => {
+        modal.querySelector('.btn-modal-secondary').focus();
+    }, 100);
+}
+
+function fermerModaleTexteCourt() {
+    const modal = document.getElementById('texteCourtModal');
+    if (modal) {
+        modal.classList.remove('active');
+        pendingSituation = null;
+        pendingNorm = null;
+        pendingPourcentage = null;
+    }
+}
+
+function continuerAnalyse() {
+    const modal = document.getElementById('texteCourtModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+
+    // Les résultats ont déjà été calculés dans ouvrirModaleTexteCourt()
+    // On utilise le résultat en cache pour éviter un recalcul
+    if (pendingResultat) {
+        displayResults(pendingResultat);
+        pendingResultat = null;
+    }
+    pendingSituation = null;
+    pendingNorm = null;
+    pendingPourcentage = null;
+}
+
+// Fonction pour lancer l'analyse locale (fallback ou après confirmation modale)
+function lancerAnalyseLocale(situation, norme, pourcentageReglesDetectees) {
+    const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
+    try {
+        const localResult = analyserTexteLocal(situation, normMap[norme]);
+        // Vérifier si le pourcentage de règles détectées est < 20% → afficher modale
+        if (pourcentageReglesDetectees === undefined) {
+            // Si non fourni, on recalculle rapidement
+            const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+            pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[norme]].regles.length) * 100;
+        }
+        if (pourcentageReglesDetectees < 20) {
+            pendingSituation = situation;
+            pendingNorm = norme;
+            pendingPourcentage = pourcentageReglesDetectees;
+            ouvrirModaleTexteCourt(situation, norme);
+            return;
+        }
+        displayResults(localResult);
+    } catch (error) {
+        console.error('Erreur analyse locale:', error);
+        const errorDisplay = document.getElementById('rateLimitMsg');
+        if (errorDisplay) {
+            errorDisplay.textContent = '❌ L\'analyse a échoué. Veuillez réessayer.';
+            errorDisplay.style.display = 'block';
+        }
+    }
+}
+
+
 async function launchDiagnostic() {
     const rateLimitMsg = document.getElementById('rateLimitMsg');
 
@@ -1492,6 +1781,7 @@ async function launchDiagnostic() {
     }
 
     const situation = document.getElementById('situation').value;
+
     if (situation.length < MIN_CHARS) {
         if (rateLimitMsg) {
             rateLimitMsg.textContent = `Veuillez décrire votre situation avec au moins ${MIN_CHARS} caractères`;
@@ -1609,7 +1899,19 @@ async function launchDiagnostic() {
             serverStatusMsg.style.display = 'none';
         }
 
-        displayResults(result);
+        // Calculer le pourcentage de règles détectées pour vérifier si modale nécessaire
+        const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
+        const reglesDetectees = result.conformites.length + result.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+        const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
+
+        if (pourcentageReglesDetectees < 20) {
+            pendingSituation = situation;
+            pendingNorm = selectedNorm;
+            pendingPourcentage = pourcentageReglesDetectees;
+            ouvrirModaleTexteCourt(situation, selectedNorm);
+        } else {
+            displayResults(result);
+        }
     } catch (error) {
         // Annuler l'affichage du message si c'était programmé
         if (showConnectionMsg) clearTimeout(showConnectionMsg);
@@ -1638,7 +1940,17 @@ async function launchDiagnostic() {
         try {
             const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
             const localResult = analyserTexteLocal(situation, normMap[selectedNorm]);
-            displayResults(localResult);
+            // Vérifier le pourcentage de règles détectées
+            const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+            const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
+            if (pourcentageReglesDetectees < 20) {
+                pendingSituation = situation;
+                pendingNorm = selectedNorm;
+                pendingPourcentage = pourcentageReglesDetectees;
+                ouvrirModaleTexteCourt(situation, selectedNorm);
+            } else {
+                displayResults(localResult);
+            }
         } catch (localError) {
             // Si l'analyse locale échoue aussi, afficher l'erreur sans alert()
             console.error('Erreur API et analyse locale:', error, localError);

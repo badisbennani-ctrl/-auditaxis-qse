@@ -139,9 +139,9 @@ The diagnostic system has **two modes** that work together:
 ### ISO Standards Database (NORMES)
 
 Complete keyword rules for:
-- **ISO 9001:2015** (Quality): 19 rules covering clauses 4.1-10.3
-- **ISO 14001:2015** (Environment): 16 rules covering environmental management
-- **ISO 45001:2018** (Safety): 20 rules covering occupational health & safety
+- **ISO 9001:2015** (Quality): 30 rules covering clauses 4.1-10.3
+- **ISO 14001:2015** (Environment): 20 rules covering clauses 4.1-10.3
+- **ISO 45001:2018** (Safety): 21 rules covering clauses 4.1-10.3
 
 Each rule structure:
 ```javascript
@@ -153,6 +153,11 @@ Each rule structure:
     explication: "Detailed explanation"
 }
 ```
+
+**NC d'absence logic** (`diagnostic.js`): Based on percentage of rules detected (not text length):
+- `< 20%` rules detected → No absence NCs, show warning modal
+- `20-50%` rules detected → Max 3 absence NCs, display "Analyse partielle" badge
+- `>= 50%` rules detected → Max 5 absence NCs (full analysis)
 
 ### Design System
 
@@ -244,6 +249,13 @@ All pages include complete meta tags:
 1. Edit `diagnostic.js` → `NORMES` object (iso9001, iso14001, or iso45001)
 2. Follow existing rule structure: `motsCles`, `article`, `titre`, `conformite`, `explication`
 3. Test with diagnostic.html input matching the keywords
+4. Verify syntax: `node --check diagnostic.js`
+
+### Diagnostic Testing
+```bash
+# Verify JavaScript syntax before deployment
+node --check diagnostic.js
+```
 
 ### Adding a New Page
 1. Create `page-name.html` (copy from index.html template, keep header-placeholder div)
@@ -273,7 +285,7 @@ curl https://auditaxis-backend.onrender.com/api/health
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `diagnostic.js` | ~650 | Hybrid AI engine (local keyword + API fallback) |
+| `diagnostic.js` | ~2314 | Hybrid AI engine (local keyword + API fallback), modal logic, NC absence rules, 71 ISO rules |
 | `style.css` | ~650 | All styling, animations, hamburger menu, accessibility |
 | `header.js` | ~90 | Dynamic header injection, navigation active state, hamburger menu |
 | `checklist.html` | ~450 | Interactive checklists with localStorage persistence |
