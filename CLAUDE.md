@@ -4,61 +4,63 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**AuditAxis QSE** - A professional website for QSE (Quality, Safety, Environment) Audit & Inspection Management. Features a hybrid AI diagnostic tool with local keyword-based analysis and optional Gemini AI backend API.
+**AuditAxis QSE** - Professional website for QSE (Quality, Safety, Environment) Audit & Inspection Management. Features a hybrid AI diagnostic tool with local keyword-based analysis and optional Gemini AI backend API.
 
 **Language**: French (all content)  
-**Deployment**: Netlify (frontend static hosting), Render (backend API)
+**Deployment**: Vercel (frontend static hosting), Render (backend API)
 
 ## Architecture
 
 ### Tech Stack
 - **Frontend**: Pure HTML5/CSS3/ES6+ (no frameworks), header dynamically injected via `header.js`
-- **Backend**: Node.js + Express.js (optional, only needed for Gemini AI integration)
-- **AI Services**: Google Gemini Flash API (via backend), local keyword matching (client-side)
-- **Deployment**: Netlify (frontend), Render (backend at `auditaxis-backend.onrender.com`)
+- **Backend**: Node.js + Express.js with Google Gemini Flash API
+- **AI Services**: Local keyword matching (client-side) + Gemini AI API (server-side)
+- **Deployment**: Vercel (frontend), Render (backend at `auditaxis-backend.onrender.com`)
 
 ### Frontend Structure
 ```
 /
 ├── index.html          # Homepage with animated hero, statistics counters
 ├── about.html          # About project, ISO standards methodology
-├── checklist.html      # Interactive ISO checklists with progress bars
+├── checklist.html      # Interactive ISO checklists with localStorage persistence
 ├── diagnostic.html     # AI diagnostic interface
-├── diagnostic.js       # Hybrid AI analysis (~650 lines, local + API)
+├── diagnostic.js       # Hybrid AI analysis, NORMES database (71 ISO rules)
 ├── glossaire.html      # QSE glossary with alphabetical navigation
-├── contact.html        # Contact form with Netlify Forms
-├── style.css           # Complete stylesheet (~650 lines, includes animations)
+├── contact.html        # Contact form (POST to backend API)
+├── style.css           # Complete stylesheet with animations
 ├── header.js           # Dynamic header injection and hamburger menu
 ├── 404.html            # Custom error page
-├── _redirects          # Netlify URL rewrites
+├── _redirects          # URL rewrites for clean URLs
 ├── sitemap.xml         # SEO sitemap
 └── robots.txt          # Search engine crawl instructions
 ```
 
 ### Backend Structure (backend/)
+Separate git repository: `auditaxis-backend`
 ```
 backend/
-├── server.js           # Express server with rate limiting, CORS configured
-├── package.json        # Dependencies: express, @google/generative-ai, cors, dotenv, express-rate-limit
-├── .env                # Production environment variables (not in repo)
-├── .env.example        # Template for GEMINI_API_KEY, PORT, CORS_ORIGIN
-├── .git/               # Git repository (backend is separate, deploys to Render)
+├── index.js            # Express app entry point, CORS, route registration
+├── package.json        # Dependencies: express, @google/generative-ai, cors, dotenv, nodemailer
+├── .env.example        # Template for GEMINI_API_KEY, PORT, EMAIL_USER, EMAIL_PASS
 ├── routes/
-│   ├── diagnostic.js   # POST /api/diagnostic - Gemini AI analysis
-│   ├── checklist.js    # POST/GET /api/checklist/save/:id - In-memory storage
-│   └── contact.js      # POST /api/contact - Form validation
+│   ├── diagnostic.js   # POST /api/diagnostic - Gemini AI analysis with validation
+│   ├── checklist.js    # POST/GET /api/checklist - In-memory session storage (Map)
+│   └── contact.js      # POST /api/contact - Form validation (nom, email, sujet, message)
 └── services/
-    └── gemini.js       # Google Gemini Flash API integration
+    └── gemini.js       # Google Gemini Flash API integration with prompt engineering
 ```
 
 ## Commands
 
 ### Frontend Development
 ```bash
-# Serve static files locally (from root directory, not backend/)
+# Serve static files locally
 python -m http.server 8000
 npx serve .
 # Or use VS Code Live Server extension
+
+# Deploy to Vercel
+vercel deploy --prod
 ```
 
 ### Backend Development
@@ -68,82 +70,56 @@ cd backend
 # Install dependencies
 npm install
 
-# Development with auto-reload (requires Node.js 18+ for --watch)
+# Development with auto-reload (Node.js 18+)
 npm run dev
 
 # Production start
 npm start
 
-# Server runs on http://localhost:3001
-# Health check: http://localhost:3001/api/health
+# Health check
+curl http://localhost:3001/api/health
 ```
 
-### Environment Setup
+### Environment Setup (Backend)
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env with your GEMINI_API_KEY and CORS_ORIGIN (e.g., http://localhost:8000)
+# Edit .env with GEMINI_API_KEY, PORT, EMAIL_USER, EMAIL_PASS, CORS_ORIGIN
 ```
 
-### Testing Contact Form
-The contact form uses Netlify Forms in production. For local testing, the backend validates at `/api/contact` but form submission requires Netlify's form handling or manual POST testing.
+## Backend API Reference
 
-## Key Implementation Details
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | Health check, returns `{"status":"ok","timestamp","uptime","version"}` |
+| `/api/diagnostic` | POST | AI analysis with Gemini Flash. Body: `{norme, description}` |
+| `/api/checklist/save` | POST | Save checklist session. Body: `{norme, items, progression}` |
+| `/api/checklist/:sessionId` | GET | Retrieve checklist by session ID |
+| `/api/contact` | POST | Validate contact form. Body: `{nom, email, sujet, message}` |
 
-### Hybrid AI Diagnostic Architecture
-
-The diagnostic system has **two modes** that work together:
-
-**1. Local Analysis (Client-side, works offline)**
-- Uses keyword matching against `NORMES` database in `diagnostic.js`
-- Three-level conformity scoring: Conforme (1), Partiel (0.5), Non Conforme (0)
-- Severity logic: Articles 4-7 → MAJEURE, Articles 8-10 → MINEURE
-
-**2. Gemini AI Analysis (via Backend API)**
-- Frontend calls `POST ${API_BASE}/api/diagnostic` when backend is available
-- Backend responds with structured JSON containing non-conformities, conformities, recommendations
-- Rate limited: 10 requests per 15 minutes per IP
-- Frontend has cold-start detection (Render free tier sleeps after 15min)
+**Note**: Checklist storage is in-memory only (Map). Data lost on server restart.
 
 **API Base URL**: `https://auditaxis-backend.onrender.com`
 
-### Backend API Reference
+### Hybrid AI Diagnostic Architecture
 
-| Endpoint | Method | Description | Rate Limit |
-|----------|--------|-------------|------------|
-| `/api/health` | GET | Health check, returns `{status: 'ok', timestamp, uptime, version}` | 100/15min |
-| `/api/diagnostic` | POST | AI analysis with Gemini Flash. Body: `{norme, description}` | 10/15min |
-| `/api/checklist/save` | POST | Save checklist session. Body: `{norme, items, progression}`. Returns `sessionId` | 100/15min |
-| `/api/checklist/:sessionId` | GET | Retrieve checklist by session ID | 100/15min |
-| `/api/contact` | POST | Validate contact form. Body: `{nom, email, sujet, message}` | 100/15min |
+**1. Local Analysis (Client-side, offline)**
+- Keyword matching against `NORMES` database in `diagnostic.js`
+- 3-level scoring: Conforme (1), Partiel (0.5), Non Conforme (0)
+- Severity: Articles 4-7 → MAJEURE, Articles 8-10 → MINEURE
 
-**Note**: Checklist storage is in-memory only (Map). Data is lost on server restart.
-
-### API Response Formats
-
-**Diagnostic Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "score": 75,
-    "non_conformites": [{ "titre", "article", "gravite", "probleme", "explication", "action_corrective" }],
-    "conformites": [{ "description", "article", "statut" }],
-    "recommandations": [{ "action", "priorite", "benefice" }]
-  }
-}
-```
-
-**Error Responses:** All errors return `{error: string, message: string}`. Common codes: `NORME_INVALIDE`, `DESCRIPTION_TROP_COURTE`, `AUTH_ERROR`, `RATE_LIMIT`.
+**2. Gemini AI Analysis (Backend API)**
+- Cold-start detection (Render free tier sleeps after 15min)
+- Frontend shows loading indicators during wake-up
 
 ### ISO Standards Database (NORMES)
 
-Complete keyword rules for:
-- **ISO 9001:2015** (Quality): 30 rules covering clauses 4.1-10.3
-- **ISO 14001:2015** (Environment): 20 rules covering clauses 4.1-10.3
-- **ISO 45001:2018** (Safety): 21 rules covering clauses 4.1-10.3
+Located in `diagnostic.js`. Keyword rules for:
+- **ISO 9001:2015** (Quality): 30 rules, clauses 4.1-10.3
+- **ISO 14001:2015** (Environment): 20 rules, clauses 4.1-10.3
+- **ISO 45001:2018** (Safety): 22 rules, clauses 4.1-10.2
 
-Each rule structure:
+Rule structure:
 ```javascript
 {
     motsCles: ["keyword1", "keyword2", ...],
@@ -154,14 +130,14 @@ Each rule structure:
 }
 ```
 
-**NC d'absence logic** (`diagnostic.js`): Based on percentage of rules detected (not text length):
-- `< 20%` rules detected → No absence NCs, show warning modal
-- `20-50%` rules detected → Max 3 absence NCs, display "Analyse partielle" badge
-- `>= 50%` rules detected → Max 5 absence NCs (full analysis)
+**NC d'absence logic**: Based on percentage of rules detected:
+- `< 20%` → No absence NCs, show warning modal
+- `20-50%` → Max 3 absence NCs
+- `>= 50%` → Max 5 absence NCs (full analysis)
 
 ### Design System
 
-**Color Palette** (CSS custom properties in `style.css`):
+**Color Palette** (`style.css`):
 ```css
 :root {
     --primary: #1e5f8c;        /* QSE Blue */
@@ -171,70 +147,44 @@ Each rule structure:
 }
 ```
 
-**Navigation** (consistent across all pages, dynamically injected by `header.js`):
+**Navigation** (injected by `header.js`):
 ```
 Accueil | À Propos | Checklists | Glossaire | Diagnostic IA | Contact
 ```
 
-### Animations (style.css)
+### Key Animations (`style.css`)
 
-Key animation classes:
-- `.card-animate` - Staggered reveal with delay-1 through delay-6
+- `.card-animate` - Staggered reveal (delay-1 through delay-6)
 - `.standard-card-3d` - 3D perspective rotation on hover
 - `.loading-bar` - Gradient progress animation
 
-**Accessibility**: All infinite animations (`shimmer`, `pulse`, `float`, `loadingProgress`) are wrapped in `@media (prefers-reduced-motion: no-preference)` to respect user motion preferences.
+**Accessibility**: Infinite animations wrapped in `@media (prefers-reduced-motion: no-preference)`.
 
-### Responsive Navigation (header.js)
+### Responsive Navigation (`header.js`)
 
-Mobile hamburger menu implementation:
-- **CSS**: `.hamburger` button visible only under 768px (`display: none` above)
-- **Animation**: 3 bars (25px × 3px, gap 5px) transform to X when `header.nav-open` class is present
-- **Menu**: Absolute positioned below header (`top: 100%`), same gradient background, toggled via `display: flex/none`
-- **Accessibility**: Animations wrapped in `@media (prefers-reduced-motion: no-preference)`, ARIA attributes on hamburger button
-- **JavaScript**: `header.js` injects header and handles toggle logic, closes on link click or outside click
+Hamburger menu (visible < 768px):
+- 3 bars transform to X when `header.nav-open` class is present
+- Closes on link click or outside click
+- ARIA attributes: `aria-expanded`, `aria-controls`, `aria-label`
 
 ### Accessibility Features
 
-- **Focus indicators**: `:focus-visible` with 3px solid primary outline and 2px offset
-- **ARIA attributes**: `aria-label` on all nav links describing destination, `aria-current="page"` on active link, hamburger has `aria-expanded`, `aria-controls`
-- **Semantic HTML**: `role="main"` on primary content sections
-- **Screen reader support**: Hamburger button has dynamic `aria-label` ("Ouvrir/Fermer le menu")
+- `:focus-visible` with 3px solid primary outline, 2px offset
+- `aria-label` on nav links, `aria-current="page"` on active link
+- `role="main"` on primary content sections
 
-### Checklist Persistence (localStorage)
+### Checklist Persistence (`checklist.html`)
 
-Checklist progress automatically saved:
-- **Keys**: `checklist_${checklistId}_item_${index}` (e.g., `checklist_iso9001_item_0`)
-- **Save**: Triggered on every checkbox change via `updateProgress()`
-- **Load**: Restored on `DOMContentLoaded` from localStorage
-- **Reset**: Clears localStorage keys when `resetChecklist()` is called
-- **Indicator**: "Progression sauvegardée automatiquement" text displayed under each checklist
+- **Keys**: `checklist_${id}_item_${index}` (localStorage)
+- **Auto-save**: On every checkbox change via `updateProgress()`
+- **Reset**: Clears localStorage keys
 
 ### SEO & Open Graph
 
-All pages include complete meta tags:
-- **Open Graph**: `og:title`, `og:description`, `og:url`, `og:type`, `og:image`
-- **Twitter Card**: `twitter:card`, `twitter:title`, `twitter:description`
-- **Canonical URLs**: Absolute URLs with domain `https://auditaxis-qse.com`
-- **Meta**: `author`, `description` with ISO keywords in French
+All pages include: `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, Twitter Card, canonical URLs.
 
-### Netlify Configuration
+### URL Redirects (`_redirects`)
 
-**Forms** (`contact.html`):
-```html
-<form name="contact" method="POST" data-netlify="true">
-    <input type="hidden" name="form-name" value="contact">
-</form>
-```
-
-**Security Headers** (`netlify.toml`):
-- `X-Frame-Options: DENY` - Clickjacking protection
-- `X-Content-Type-Options: nosniff` - MIME sniffing prevention
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
-- `Content-Security-Policy`: Restricts sources to self, backend API, and data: for images
-
-**Redirects** (configured in `netlify.toml`):
 - `/contact` → `/contact.html`
 - `/about` → `/about.html`
 - `/home` → `/index.html`
@@ -247,76 +197,58 @@ All pages include complete meta tags:
 
 ### Adding an ISO Rule
 1. Edit `diagnostic.js` → `NORMES` object (iso9001, iso14001, or iso45001)
-2. Follow existing rule structure: `motsCles`, `article`, `titre`, `conformite`, `explication`
-3. Test with diagnostic.html input matching the keywords
-4. Verify syntax: `node --check diagnostic.js`
-
-### Diagnostic Testing
-```bash
-# Verify JavaScript syntax before deployment
-node --check diagnostic.js
-```
+2. Follow structure: `motsCles`, `article`, `titre`, `conformite`, `explication`
+3. Verify syntax: `node --check diagnostic.js`
 
 ### Adding a New Page
-1. Create `page-name.html` (copy from index.html template, keep header-placeholder div)
+1. Create `page-name.html` (copy template, keep `header-placeholder` div)
 2. Include `<script src="header.js"></script>` for dynamic navigation
-3. Update `_redirects` with new route
-4. Update `sitemap.xml`
-5. Update `NAV_ITEMS` in `header.js` if adding to main navigation
+3. Update `_redirects` and `sitemap.xml`
+4. Update `navItems` in `header.js`
 
-### Modifying Backend API
+### Backend API Changes
 1. Edit files in `backend/routes/` or `backend/services/`
-2. Test locally with `npm run dev` (from backend/ directory)
-3. Deploy to Render (pushes to connected git repo auto-deploy)
+2. Test locally: `npm run dev` (from `backend/`)
+3. Deploy: `git push origin main` (auto-deploys to Render)
 
 ### Testing Diagnostic
 
-**Sample inputs for testing:**
+**Sample inputs:**
 - ISO 9001: "Nous avons une politique qualité documentée et des objectifs SMART."
 - ISO 14001: "Nous identifions nos aspects environnementaux et avons un plan de gestion des déchets."
 - ISO 45001: "Nous avons des EPI pour les travailleurs mais pas de plan d'urgence testé."
 
-**Backend health check:**
+**Health check:**
 ```bash
 curl https://auditaxis-backend.onrender.com/api/health
 ```
 
-## File Size Reference
+## File Reference
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `diagnostic.js` | ~2314 | Hybrid AI engine (local keyword + API fallback), modal logic, NC absence rules, 71 ISO rules |
-| `style.css` | ~650 | All styling, animations, hamburger menu, accessibility |
-| `header.js` | ~90 | Dynamic header injection, navigation active state, hamburger menu |
-| `checklist.html` | ~450 | Interactive checklists with localStorage persistence |
-| `backend/server.js` | ~200 | Express server, CORS, rate limiting, Helmet security |
-| `backend/services/gemini.js` | ~110 | Gemini API integration with prompt engineering |
-| `backend/routes/diagnostic.js` | ~85 | POST /api/diagnostic with validation |
-| `backend/routes/checklist.js` | ~90 | In-memory checklist storage with Map |
+| `diagnostic.js` | ~2314 | Hybrid AI engine, NORMES database (71 ISO rules) |
+| `style.css` | ~1100 | All styling, animations, responsive, accessibility |
+| `header.js` | ~105 | Dynamic header injection, hamburger menu |
+| `checklist.html` | ~450 | Interactive checklists with localStorage |
+| `contact.html` | ~440 | Contact form with backend API integration |
+| `backend/index.js` | ~45 | Express app, CORS, route registration |
+| `backend/services/gemini.js` | ~110 | Gemini API integration |
+| `backend/routes/diagnostic.js` | ~135 | POST /api/diagnostic with validation |
+| `backend/routes/checklist.js` | ~90 | In-memory checklist storage |
 | `backend/routes/contact.js` | ~75 | Contact form validation |
-
-## Backend CORS Configuration
-
-The backend accepts requests from:
-- `https://auditaxis-qse.netlify.app` (default production)
-- `https://auditaxisqse.netlify.app` (legacy Netlify URL)
-- `http://localhost:5500`, `http://127.0.0.1:5500` (VS Code Live Server)
-- `http://localhost:8000`, `http://127.0.0.1:8000` (Python/npx serve)
-
-**Environment Variable**: Set `CORS_ORIGIN` in `.env` to add a custom production URL. The server uses a whitelist approach with dynamic origin validation.
 
 ## Git Structure
 
-This project has a nested git repository:
-- **Frontend root**: `/` (deployed to Netlify)
-- **Backend**: `/backend/` (separate git repo, deployed to Render)
+Two separate repositories:
+- **Frontend**: `auditaxis-frontend` (this repo) → Deployed to Vercel
+- **Backend**: `auditaxis-backend` → Deployed to Render
 
-The backend has its own `.git/` directory and deploys independently to Render. When making changes, commit both repos separately.
+Commit and push each repo separately.
 
 ## Cold Start Handling
 
-The Render backend (free tier) sleeps after 15 minutes of inactivity. The frontend handles this:
-- `wakeUpBackend()` called on page load (silent, 8s timeout)
-- `checkServerHealth()` measures response time to detect cold state
-- UI shows loading indicators when server is cold/waking up
-- First diagnostic call may take 10-30s if server was asleep
+Render backend (free tier) sleeps after 15min inactivity. Frontend handles this:
+- `wakeUpBackend()` on page load (silent, 8s timeout)
+- UI shows "Connexion au serveur..." after 5s delay
+- First API call may take 10-30s if server was asleep
