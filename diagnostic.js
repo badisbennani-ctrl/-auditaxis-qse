@@ -6,7 +6,7 @@
 // ============================================
 
 // Configuration API
-const API_BASE = 'https://auditaxis-backend-4g3g.onrender.com';
+const API_BASE = 'https://auditaxis-backend-v2.onrender.com';
 const API_RATE_LIMIT_MS = 10000; // 10 secondes entre chaque appel API
 const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 

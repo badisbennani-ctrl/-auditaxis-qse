@@ -148,7 +148,7 @@
         });
 
         // Configuration du backend
-        const API_URL = 'https://auditaxis-backend.onrender.com';
+        const API_URL = 'https://auditaxis-backend-v2.onrender.com';
 
         // Fonction pour réveiller le serveur (Render free tier s'endort après 15min)
         async function wakeUpBackend() {
@@ -369,7 +369,7 @@
 
             try {
                 console.log('=== ENVOI FORMULAIRE ===');
-                console.log('URL:', 'https://auditaxis-backend.onrender.com/api/contact');
+                console.log('URL:', `${API_URL}/api/contact`);
                 console.log('Data:', { nom, email, sujet, message, company });
 
                 // Timeout de 30s pour cold start Render
@@ -381,10 +381,13 @@
 
                 submitBtn.textContent = 'Connexion en cours...';
 
-                const response = await fetch('https://auditaxis-backend.onrender.com/api/contact', {
+                const response = await fetch(`${API_URL}/api/contact`, {
                     method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         nom: nom,
