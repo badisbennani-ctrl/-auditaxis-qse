@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expertise AuditAxis QSE - Maîtrise des normes ISO 9001, 14001 et 45001. Notre approche professionnelle de l'audit et de l'inspection.">
+    <title>Expertise QSE - AuditAxis | Qualité, Sécurité, Environnement</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        .expertise-hero {
+            background: linear-gradient(rgba(30, 95, 140, 0.8), rgba(46, 139, 87, 0.8)), url('https://images.unsplash.com/photo-1454165833767-027ffea70288?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: -3rem;
+            padding-bottom: 4rem;
+        }
+
+        .pillar-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid var(--primary);
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .pillar-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .pillar-card.qualite { border-top-color: var(--primary); }
+        .pillar-card.securite { border-top-color: var(--accent-red); }
+        .pillar-card.environnement { border-top-color: var(--secondary); }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin: 4rem 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .feature-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .feature-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .cta-section {
+            background: var(--dark);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            border-radius: 20px;
+            margin: 4rem auto;
+            max-width: 1000px;
+        }
+
+        .btn-modern {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .btn-modern:hover {
+            background: var(--secondary-light);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script src="header.js"></script>
+
+    <section class="expertise-hero">
+        <div class="container">
+            <h1 class="animate-fade">Notre Expertise QSE</h1>
+            <p class="animate-fade" style="font-size: 1.2rem; max-width: 800px; margin: 1.5rem auto;">Une approche intégrée et innovante pour transformer vos contraintes normatives en leviers de performance durable.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="pillar-grid">
+            <div class="pillar-card qualite animate-fade" style="animation-delay: 0.1s;">
+                <span class="pillar-icon">🎯</span>
+                <h3>Qualité (ISO 9001)</h3>
+                <p>Optimisation des processus et satisfaction client. Nous vous aidons à instaurer une culture d'excellence opérationnelle centrée sur la valeur ajoutée.</p>
+                <ul style="margin-top: 1rem; list-style-type: '→ '; padding-left: 1rem; color: var(--gray);">
+                    <li>Approche processus</li>
+                    <li>Gestion des risques</li>
+                    <li>Amélioration continue</li>
+                </ul>
+            </div>
+
+            <div class="pillar-card securite animate-fade" style="animation-delay: 0.2s;">
+                <span class="pillar-icon">🛡️</span>
+                <h3>Sécurité (ISO 45001)</h3>
+                <p>Protection du capital humain et prévention des risques. Notre expertise garantit un environnement de travail sûr et conforme aux exigences légales.</p>
+                <ul style="margin-top: 1rem; list-style-type: '→ '; padding-left: 1rem; color: var(--gray);">
+                    <li>Analyse des dangers</li>
+                    <li>Culture de sécurité</li>
+                    <li>Conformité réglementaire</li>
+                </ul>
+            </div>
+
+            <div class="pillar-card environnement animate-fade" style="animation-delay: 0.3s;">
+                <span class="pillar-icon">🌿</span>
+                <h3>Environnement (ISO 14001)</h3>
+                <p>Maîtrise des impacts et performance écologique. Intégrez la perspective du cycle de vie dans votre stratégie globale pour un futur durable.</p>
+                <ul style="margin-top: 1rem; list-style-type: '→ '; padding-left: 1rem; color: var(--gray);">
+                    <li>Analyse environnementale</li>
+                    <li>Économie circulaire</li>
+                    <li>Transition écologique</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="feature-row">
+            <div class="feature-content animate-fade">
+                <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Audit 5.0 : L'Intelligence Artificielle au service de la conformité</h2>
+                <p>AuditAxis QSE redéfinit l'audit traditionnel en intégrant des outils de diagnostic assistés par IA. Notre plateforme analyse vos situations réelles et identifie instantanément les écarts normatifs potentiels.</p>
+                <p style="margin-top: 1rem;">Gagnez en précision et en temps grâce à notre moteur de recommandation contextualisé, capable de suggérer des actions correctives basées sur les meilleures pratiques du secteur.</p>
+            </div>
+            <div class="feature-image animate-fade">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Intelligence Artificielle et Technologie">
+            </div>
+        </section>
+
+        <section class="feature-row">
+            <div class="feature-content animate-fade">
+                <h2 style="color: var(--secondary); margin-bottom: 1.5rem;">Un Accompagnement Académique et Professionnel</h2>
+                <p>Issu d'un projet académique rigoureux, AuditAxis combine la précision théorique des normes ISO avec une interface utilisateur moderne et intuitive.</p>
+                <p style="margin-top: 1rem;">Que vous soyez étudiant en QSE ou responsable Qualité en entreprise, nos outils sont conçus pour simplifier la complexité normative et rendre la conformité accessible à tous.</p>
+            </div>
+            <div class="feature-image animate-fade">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Équipe et Collaboration">
+            </div>
+        </section>
+
+        <div class="cta-section animate-fade">
+            <h2>Prêt à optimiser votre système QSE ?</h2>
+            <p style="margin-top: 1rem; opacity: 0.9;">Utilisez nos outils gratuits pour évaluer votre conformité dès aujourd'hui.</p>
+            <a href="/diagnostic" class="btn-modern">Lancer un Diagnostic IA</a>
+        </div>
+    </div>
+
+    <footer class="footer-enriched">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/expertise">Expertise</a></li>
+                    <li><a href="/checklist">Checklists</a></li>
+                    <li><a href="/glossaire">Glossaire</a></li>
+                    <li><a href="/diagnostic">Diagnostic IA</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 contact@auditaxis-qse.com</li>
+                    <li>📍 Campus Universitaire</li>
+                    <li>🕐 Lun - Ven : 9h - 17h</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>AuditAxis QSE</h4>
+                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footer-year">2026</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple scroll animation trigger
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-fade').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

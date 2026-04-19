@@ -12,6 +12,7 @@
     // Mapping des pages pour la navigation
     const navItems = [
         { href: '/', label: 'Page d\'accueil', text: 'Accueil' },
+        { href: '/expertise', label: 'Notre expertise QSE', text: 'Expertise' },
         { href: '/about', label: 'À propos de notre méthodologie', text: 'À Propos' },
         { href: '/checklist', label: 'Checklists ISO interactives', text: 'Checklists' },
         { href: '/glossaire', label: 'Glossaire des termes QSE', text: 'Glossaire' },

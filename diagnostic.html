@@ -678,10 +678,38 @@
 
         <!-- Résultats -->
         <div class="results-container" id="results">
-            <!-- Résumé Exécutif (injecté par JS) -->
-            <div id="resumeExecutifContainer" style="display: none;"></div>
+            <!-- Dashboard de Fusion QSE -->
+            <div id="qseDashboard" class="step-section" style="margin-bottom: 2rem; border-top: 4px solid var(--primary);">
+                <h3 class="result-section-title" style="color: var(--primary); border-color: var(--primary); justify-content: center;">
+                    🏆 Synthèse de Fusion QSE Finale
+                </h3>
+                
+                <div class="norm-selection" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+                    <div class="norm-btn" style="cursor: default; border-color: var(--primary-light);">
+                        <div class="norm-icon">📊</div>
+                        <div class="norm-code">ISO 9001</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="score9001">0%</div>
+                    </div>
+                    <div class="norm-btn" style="cursor: default; border-color: var(--secondary);">
+                        <div class="norm-icon">🌱</div>
+                        <div class="norm-code">ISO 14001</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--secondary);" id="score14001">0%</div>
+                    </div>
+                    <div class="norm-btn" style="cursor: default; border-color: var(--accent-red);">
+                        <div class="norm-icon">🛡️</div>
+                        <div class="norm-code">ISO 45001</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-red);" id="score45001">0%</div>
+                    </div>
+                </div>
 
-            <!-- Score Global -->
+                <div style="text-align: center; background: var(--light); padding: 1.5rem; border-radius: 12px;">
+                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray);">Niveau de Risque Global</div>
+                    <div id="globalRiskLevel" style="font-size: 1.8rem; font-weight: 900; margin: 0.5rem 0;">ÉVALUATION...</div>
+                    <div id="reliabilityInfo" style="font-size: 0.8rem; color: var(--secondary);">✓ Analyse certifiée anti-hallucination</div>
+                </div>
+            </div>
+
+            <!-- Score Global Circular -->
             <div class="score-section">
                 <h3 class="score-title">📊 Score Global de Conformité</h3>
 

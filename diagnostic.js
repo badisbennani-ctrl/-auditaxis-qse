@@ -6,7 +6,7 @@
 // ============================================
 
 // Configuration API
-const API_BASE = ''; // Utilise le même domaine sur Vercel
+const API_BASE = 'https://auditaxis-backend-v2.onrender.com'; // Utilise le même domaine sur Vercel
 const API_RATE_LIMIT_MS = 10000; // 10 secondes entre chaque appel API
 const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 
@@ -362,88 +362,116 @@ const NORMES = {
                 explication: "L'organisme doit déterminer les risques et opportunités liés à ses aspects environnementaux, obligations de conformité et autres enjeux, pour assurer que le SME atteint ses résultats, prévenir les effets indésirables et s'inscrire dans une amélioration continue. Les situations d'urgence potentielles à impact environnemental doivent être identifiées."
             },
             {
-                motsCles: ["aspects environnementaux", "impacts environnementaux", "aspects significatifs", "cycle de vie", "émissions air", "rejets eau", "déchets", "aspects activités produits services"],
-                article: "Art. 6.1.2",
-                titre: "Aspects environnementaux",
-                conformite: "Aspects environnementaux et impacts associés déterminés et documentés",
-                explication: "L'organisme doit déterminer les aspects environnementaux de ses activités, produits et services dans une perspective de cycle de vie, ainsi que leurs impacts environnementaux associés. Il doit identifier les aspects environnementaux significatifs selon des critères établis, les communiquer en interne et conserver les informations documentées correspondantes."
+                motsCles: ["aspects environnementaux", "impacts environnementaux", "identification aspects", "inventaire aspects", "activités produits services", "émissions air", "rejets eau", "déchets", "consommation ressources", "nuisance sonore", "pollution sol", "aspects directs", "aspects indirects"],
+                article: "Art. 6.1.2.a",
+                titre: "Identification des aspects environnementaux",
+                conformite: "Aspects environnementaux liés aux activités, produits et services identifiés",
+                explication: "L'organisme doit déterminer les aspects environnementaux de ses activités, produits et services qu'il peut maîtriser et ceux sur lesquels il peut avoir une influence, ainsi que leurs impacts environnementaux associés, en tenant compte d'une perspective de cycle de vie."
             },
             {
-                motsCles: ["obligations conformité", "exigences légales", "réglementation environnementale", "permis environnementaux", "licences environnement", "lois environnement", "exigences réglementaires", "conformité légale environnement"],
+                motsCles: ["aspects significatifs", "évaluation aspects", "critères significativité", "priorisation impacts", "analyse environnementale évaluation", "méthodologie évaluation", "critères évaluation", "aes", "impacts majeurs"],
+                article: "Art. 6.1.2.b",
+                titre: "Détermination des aspects environnementaux significatifs",
+                conformite: "Critères d'évaluation établis et aspects significatifs identifiés",
+                explication: "L'organisme doit déterminer quels sont les aspects qui ont ou peuvent avoir un impact environnemental significatif (AES) en utilisant des critères établis. Ces aspects doivent être pris en compte pour l'établissement du SME et les objectifs."
+            },
+            {
+                motsCles: ["obligations conformité", "exigences légales", "réglementation environnementale", "permis environnementaux", "licences environnement", "lois environnement", "exigences réglementaires", "conformité légale environnement", "veille réglementaire"],
                 article: "Art. 6.1.3",
                 titre: "Obligations de conformité",
                 conformite: "Obligations de conformité déterminées, accessibles et intégrées au SME",
                 explication: "L'organisme doit déterminer et avoir accès à ses obligations de conformité relatives à ses aspects environnementaux (lois, réglementations, permis, accords volontaires), déterminer comment elles s'appliquent, les prendre en compte dans le SME et conserver les informations documentées correspondantes."
             },
             {
-                motsCles: ["planification actions", "actions aspects significatifs", "actions obligations conformité", "plan actions environnement", "intégration actions processus", "efficacité actions"],
+                motsCles: ["planification actions", "actions aspects significatifs", "actions obligations conformité", "plan actions environnement", "intégration actions processus", "efficacité actions", "maîtrise risques"],
                 article: "Art. 6.1.4",
                 titre: "Planification d'actions",
                 conformite: "Actions planifiées pour traiter aspects significatifs, obligations et risques",
                 explication: "L'organisme doit planifier des actions pour traiter ses aspects environnementaux significatifs, ses obligations de conformité et les risques et opportunités identifiés, puis définir comment intégrer ces actions dans les processus du SME et évaluer leur efficacité."
             },
             {
-                motsCles: ["objectifs environnementaux", "objectifs sme", "objectifs mesurables environnement", "cibles environnementales", "objectifs aspects significatifs", "objectifs conformité", "planification objectifs environnement"],
+                motsCles: ["objectifs environnementaux", "objectifs sme", "objectifs mesurables environnement", "cibles environnementales", "objectifs aspects significatifs", "objectifs conformité", "planification objectifs environnement", "politique environnementale cohérence"],
                 article: "Art. 6.2.1",
                 titre: "Objectifs environnementaux",
                 conformite: "Objectifs environnementaux établis, mesurables, surveillés et documentés",
                 explication: "L'organisme doit établir des objectifs environnementaux aux fonctions et niveaux concernés, en cohérence avec la politique environnementale, tenant compte des aspects significatifs et obligations de conformité. Ces objectifs doivent être mesurables (si réalisable), surveillés, communiqués et mis à jour."
             },
             {
-                motsCles: ["planification atteinte objectifs", "plan actions objectifs environnement", "ressources objectifs", "responsables objectifs", "échéances objectifs", "indicateurs objectifs environnementaux", "évaluation résultats objectifs"],
+                motsCles: ["planification atteinte objectifs", "plan actions objectifs environnement", "ressources objectifs", "responsables objectifs", "échéances objectifs", "indicateurs objectifs environnementaux", "évaluation résultats objectifs", "étapes réalisation"],
                 article: "Art. 6.2.2",
                 titre: "Planification des actions pour atteindre les objectifs environnementaux",
                 conformite: "Plan d'actions défini pour atteindre chaque objectif environnemental",
                 explication: "L'organisme doit déterminer pour chaque objectif environnemental : ce qui sera fait, les ressources nécessaires, les responsables, les échéances et la façon dont les résultats seront évalués via des indicateurs. Il doit aussi envisager l'intégration de ces actions dans les processus métiers."
             },
             {
-                motsCles: ["ressources sme", "ressources humaines environnement", "infrastructure environnement", "ressources nécessaires sme", "moyens sme", "ressources management environnemental"],
+                motsCles: ["ressources sme", "ressources humaines environnement", "infrastructure environnement", "ressources nécessaires sme", "moyens sme", "ressources management environnemental", "budget environnement"],
                 article: "Art. 7.1",
                 titre: "Ressources",
                 conformite: "Ressources nécessaires au SME identifiées et fournies",
                 explication: "L'organisme doit identifier et fournir les ressources nécessaires à l'établissement, la mise en œuvre, la tenue à jour et l'amélioration continue du SME, incluant ressources humaines, naturelles, infrastructures, technologies et ressources financières."
             },
             {
-                motsCles: ["compétences environnement", "formation personnel sme", "qualification personnel environnement", "plan formation sme", "évaluation compétences environnement", "compétences aspects environnementaux"],
+                motsCles: ["compétences environnement", "formation personnel sme", "qualification personnel environnement", "plan formation sme", "évaluation compétences environnement", "compétences aspects environnementaux", "besoins formation environnement"],
                 article: "Art. 7.2",
                 titre: "Compétences",
                 conformite: "Compétences nécessaires au SME déterminées, assurées et documentées",
                 explication: "L'organisme doit déterminer les compétences nécessaires des personnes dont le travail a une incidence sur la performance environnementale et les obligations de conformité, s'assurer de leur compétence, déterminer les besoins de formation et mener des actions pour acquérir les compétences manquantes. Les preuves de compétences doivent être conservées."
             },
             {
-                motsCles: ["sensibilisation environnement", "sensibilisation sme", "conscience environnementale", "personnel sensibilisé environnement", "culture environnementale", "sensibilisation politique environnementale", "sensibilisation aspects significatifs"],
+                motsCles: ["sensibilisation environnement", "sensibilisation sme", "conscience environnementale", "personnel sensibilisé environnement", "culture environnementale", "sensibilisation politique environnementale", "sensibilisation aspects significatifs", "conséquences non-respect"],
                 article: "Art. 7.3",
                 titre: "Sensibilisation",
                 conformite: "Personnel sensibilisé à la politique, aux aspects significatifs et aux obligations",
-                explication: "L'organisme doit s'assurer que les personnes effectuant un travail sous son contrôle sont sensibilisées à la politique environnementale, aux aspects environnementaux significatifs et leurs impacts, à l'importance de leur contribution à l'efficacité du SME et aux répercussions d'un non-respect des exigences du SME et des obligations de conformité."
+                explication: "L'organisme doit s'assurer que les personnes effectuant un travail sous son contrôle sont sensibilisées à la politique environnementale, aux aspects environnementaux significatifs et leurs impacts, à l'importance de leur contribution à l'efficacité du SME et aux répercussions d'un non-respect des exigences du SME."
             },
             {
-                motsCles: ["communication interne environnement", "communication externe environnement", "plan communication sme", "communication sme", "communication parties intéressées", "informations environnementales", "communication obligations conformité"],
+                motsCles: ["communication interne environnement", "communication externe environnement", "plan communication sme", "communication sme", "communication parties intéressées", "informations environnementales", "répondre communication externe"],
                 article: "Art. 7.4",
                 titre: "Communication",
                 conformite: "Processus de communication interne et externe établis et opérationnels",
-                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus de communication interne et externe pertinents pour le SME (sujets, moments, destinataires, canaux), en tenant compte des obligations de conformité et en s'assurant que les informations communiquées sont cohérentes avec le SME et fiables."
+                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus de communication interne et externe pertinents pour le SME (sujets, moments, destinataires, canaux), en tenant compte des obligations de conformité et en s'assurant que les informations sont fiables."
             },
             {
-                motsCles: ["informations documentées sme", "documentation sme", "procédures documentées environnement", "enregistrements environnement", "documents sme", "maîtrise documents environnement", "gestion documentaire sme", "contrôle documents environnement"],
+                motsCles: ["informations documentées sme", "documentation sme", "procédures documentées environnement", "enregistrements environnement", "documents sme", "maîtrise documents environnement", "gestion documentaire sme", "archivage environnement"],
                 article: "Art. 7.5",
                 titre: "Informations documentées",
                 conformite: "Informations documentées du SME créées, mises à jour et maîtrisées",
-                explication: "Le SME doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à son efficacité. Elles doivent être créées avec identification appropriée, révisées et approuvées, puis maîtrisées pour leur disponibilité, protection, distribution, stockage, contrôle des versions et élimination."
+                explication: "Le SME doit inclure les informations documentées exigées par la norme et celles jugées nécessaires à son efficacité. Elles doivent être créées avec identification appropriée, révisées et approuvées, puis maîtrisées pour leur disponibilité et protection."
             },
             {
-                motsCles: ["planification opérationnelle environnement", "maîtrise opérationnelle sme", "critères opérationnels", "maîtrise processus environnement", "cycle de vie maîtrise", "fournisseurs exigences environnementales", "modifications prévues imprévues", "processus externalisés environnement"],
-                article: "Art. 8.1",
-                titre: "Planification et maîtrise opérationnelles",
+                motsCles: ["planification opérationnelle environnement", "maîtrise opérationnelle sme", "critères opérationnels", "maîtrise processus environnement", "contrôles opérationnels", "maîtrise activités impactantes", "maintien conditions"],
+                article: "Art. 8.1.a",
+                titre: "Maîtrise opérationnelle des processus",
                 conformite: "Processus opérationnels du SME planifiés, maîtrisés et documentés",
-                explication: "L'organisme doit établir, mettre en œuvre, maîtriser et tenir à jour les processus nécessaires en établissant des critères opérationnels et en les mettant en œuvre. Dans une perspective de cycle de vie, il doit maîtriser les exigences environnementales en conception, à l'achat, communiquer ses exigences aux fournisseurs externes et informer sur les impacts significatifs potentiels liés à l'utilisation et fin de vie de ses produits et services."
+                explication: "L'organisme doit établir, mettre en œuvre, maîtriser et tenir à jour les processus nécessaires pour satisfaire aux exigences du SME en établissant des critères opérationnels et en mettant en œuvre la maîtrise des processus conformément à ces critères."
             },
             {
-                motsCles: ["situations urgence", "préparation urgence", "réponse urgence", "plan urgence environnement", "accidents environnementaux", "déversements", "incidents environnementaux", "exercices urgence"],
+                motsCles: ["perspective cycle de vie", "conception environnementale", "développement durable conception", "écoconception", "impact cycle de vie", "étapes cycle de vie", "conception produits services environnement"],
+                article: "Art. 8.1.b",
+                titre: "Perspective de cycle de vie en conception",
+                conformite: "Exigences environnementales intégrées à la conception et au développement",
+                explication: "L'organisme doit s'assurer que ses exigences environnementales sont prises en compte dans le processus de conception et de développement du produit ou du service, en considérant chaque étape du cycle de vie."
+            },
+            {
+                motsCles: ["achats environnementaux", "exigences fournisseurs environnement", "maîtrise sous-traitants environnement", "critères achat durable", "communication fournisseurs environnement", "prestataires externes environnement"],
+                article: "Art. 8.1.c",
+                titre: "Maîtrise des achats et prestataires externes",
+                conformite: "Exigences environnementales communiquées aux prestataires et fournisseurs",
+                explication: "L'organisme doit déterminer ses exigences environnementales pour l'achat de produits et services et communiquer ses exigences pertinentes aux fournisseurs externes, y compris les sous-traitants."
+            },
+            {
+                motsCles: ["utilisation fin de vie", "élimination déchets finale", "information impacts utilisation", "transport livraison impacts", "fin de vie produits environnement", "traitement déchets utilisation"],
+                article: "Art. 8.1.d",
+                titre: "Information sur l'utilisation et la fin de vie",
+                conformite: "Informations sur les impacts en fin de vie et utilisation fournies",
+                explication: "L'organisme doit envisager la nécessité de fournir des informations sur les impacts environnementaux potentiels significatifs liés au transport, à la livraison, à l'utilisation, au traitement en fin de vie et à l'élimination finale de ses produits et services."
+            },
+            {
+                motsCles: ["situations urgence", "préparation urgence", "réponse urgence", "plan urgence environnement", "accidents environnementaux", "déversements", "incidents environnementaux", "exercices urgence", "tests réponse urgence"],
                 article: "Art. 8.2",
                 titre: "Préparation et réponse aux situations d'urgence",
                 conformite: "Processus de préparation et réponse aux situations d'urgence établis et testés",
-                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus pour se préparer et répondre aux situations d'urgence potentielles identifiées en 6.1.1, en planifiant des actions préventives, en répondant aux urgences réelles, en testant périodiquement les réponses planifiées et en formant les parties intéressées pertinentes."
+                explication: "L'organisme doit établir, mettre en œuvre et tenir à jour des processus pour se préparer et répondre aux situations d'urgence potentielles identifiées, en planifiant des actions préventives, en testant périodiquement les réponses planifiées et en formant le personnel."
             },
             {
                 motsCles: ["surveillance performance environnementale", "mesure performance sme", "indicateurs performance environnement", "kpi environnement", "évaluation performance sme", "analyse données environnement", "équipements surveillance étalonnés"],
@@ -730,6 +758,24 @@ function analyserNonConformitesCitees(texte, normeId) {
         // Solutions spécifiques par domaine
         if (article.includes("5.2") && (normeId === 'iso45001' || texteLower.includes("politique sst") || texteLower.includes("politique securite"))) {
             return "Rédiger et faire valider par la direction une politique S&ST documentée, l'afficher sur tous les lieux de travail et la communiquer à l'ensemble des travailleurs.";
+        }
+        if (article.includes("5.2") && (normeId === 'iso14001' || texteLower.includes("politique environnementale") || texteLower.includes("politique environnement"))) {
+            return "Rédiger une politique environnementale incluant l'engagement de protection de l'environnement et de prévention de la pollution, la faire valider par la direction et la diffuser.";
+        }
+        if (article.includes("6.1.2") && (normeId === 'iso14001' || texteLower.includes("aspect") || texteLower.includes("impact"))) {
+            return "Réaliser une analyse environnementale complète (inventaire des aspects et impacts), définir des critères de significativité et identifier les Aspects Environnementaux Significatifs (AES).";
+        }
+        if (article.includes("6.1.3") && (normeId === 'iso14001' || texteLower.includes("legal") || texteLower.includes("reglementaire"))) {
+            return "Établir un registre des obligations de conformité environnementales (lois, décrets, arrêtés, permis), évaluer leur applicabilité et mettre en place une veille réglementaire.";
+        }
+        if (article.includes("8.1") && (normeId === 'iso14001' || texteLower.includes("maîtrise opérationnelle") || texteLower.includes("contrôle opérationnel"))) {
+            return "Définir des consignes et critères opérationnels pour les activités à impact environnemental (gestion des déchets, rejets, consommations) et former les opérateurs concernés.";
+        }
+        if (article.includes("8.2") && (normeId === 'iso14001' || texteLower.includes("urgence") || texteLower.includes("accident") || texteLower.includes("déversement"))) {
+            return "Établir un plan d'urgence environnemental (ex: kit antipollution, procédures d'évacuation), former le personnel aux premiers gestes et réaliser un exercice de simulation.";
+        }
+        if (article.includes("9.1.2") && (normeId === 'iso14001' || texteLower.includes("conformité") || texteLower.includes("vérification"))) {
+            return "Réaliser un audit de conformité réglementaire environnementale pour vérifier le respect des exigences légales et des permis, et documenter les résultats.";
         }
         if ((article.includes("6.1.2") || article.includes("6.1.2.2")) && (normeId === 'iso45001' || texteLower.includes("risque") || texteLower.includes("duer"))) {
             return "Mettre à jour le Document Unique d'Évaluation des Risques (DUER), impliquer les travailleurs concernés dans cette mise à jour, dater et signer le document révisé.";
