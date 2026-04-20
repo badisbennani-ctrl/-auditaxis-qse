@@ -11,7 +11,7 @@
     <meta property="og:description" content="Contactez-nous pour vos audits ISO et demandez votre devis gratuit. Accompagnement certification QSE.">
     <meta property="og:url" content="https://auditaxis-qse.com/contact">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://auditaxis-qse.com/og-image.png">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%231e5f8c' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='72' fill='white'%3EAuditAxis QSE%3C/text%3E%3C/svg%3E">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -27,8 +27,6 @@
     <div id="header-placeholder"></div>
     <script src="header.js"></script>
 
-    <script>
-    </script>
 
     <section class="hero" role="main">
         <h1>Contactez-nous</h1>
@@ -142,13 +140,16 @@
     <script>
         // Hide loading bar after page loads
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingBar').classList.add('hidden');
-            }, 500);
+            const loadingBar = document.getElementById('loadingBar');
+            if (loadingBar) {
+                setTimeout(function() {
+                    loadingBar.classList.add('hidden');
+                }, 500);
+            }
         });
 
         // Configuration du backend
-        const API_URL = 'https://auditaxis-backend-v2.onrender.com'; // Utilise le même domaine sur Vercel
+        const API_URL = 'https://auditaxis-backend-4g3g.onrender.com';
 
         // Fonction pour réveiller le serveur (Render free tier s'endort après 15min)
         async function wakeUpBackend() {
@@ -252,7 +253,7 @@
         // Gestion du cooldown
         function startCooldown() {
             const submitBtn = document.getElementById('submitBtn');
-            const cooldownMsg = document.getElementById('cooldownSec');
+            const cooldownSecEl = document.getElementById('cooldownSec');
             const cooldownContainer = document.getElementById('cooldownMsg');
 
             // Sauvegarder le timestamp du dernier envoi
@@ -263,12 +264,12 @@
             submitBtn.disabled = true;
             submitBtn.textContent = `Patienter ${remaining}s...`;
             cooldownContainer.style.display = 'block';
-            cooldownSec.textContent = remaining;
+            cooldownSecEl.textContent = remaining;
 
             const timer = setInterval(() => {
                 remaining--;
                 submitBtn.textContent = `Patienter ${remaining}s...`;
-                cooldownSec.textContent = remaining;
+                cooldownSecEl.textContent = remaining;
 
                 if (remaining <= 0) {
                     clearInterval(timer);
@@ -291,12 +292,12 @@
             if (remaining > 0) {
                 const submitBtn = document.getElementById('submitBtn');
                 const cooldownMsg = document.getElementById('cooldownMsg');
-                const cooldownSec = document.getElementById('cooldownSec');
+                const cooldownSecEl = document.getElementById('cooldownSec');
 
                 submitBtn.disabled = true;
                 submitBtn.textContent = `Patienter ${remaining}s...`;
                 cooldownMsg.style.display = 'block';
-                cooldownSec.textContent = remaining;
+                cooldownSecEl.textContent = remaining;
 
                 const timer = setInterval(() => {
                     const newRemaining = Math.ceil((VALIDATION.COOLDOWN_SEC * 1000 - (Date.now() - parseInt(lastSend, 10))) / 1000);
@@ -308,7 +309,7 @@
                         localStorage.removeItem(COOLDOWN_KEY);
                     } else {
                         submitBtn.textContent = `Patienter ${newRemaining}s...`;
-                        cooldownSec.textContent = newRemaining;
+                        cooldownSecEl.textContent = newRemaining;
                     }
                 }, 1000);
             } else {
@@ -409,8 +410,9 @@
                     startCooldown();
                 } else {
                     const errorData = await response.json();
-                    alert('Erreur: ' + (errorData.message || 'Une erreur est survenue'));
-                    errorMsg.textContent = '❌ ' + (errorData.message || 'Une erreur est survenue lors de l\'envoi.');
+                    const safeMessage = sanitizeInput(errorData.message || 'Une erreur est survenue lors de l\'envoi.');
+                    alert('Erreur: ' + safeMessage);
+                    errorMsg.textContent = '❌ ' + safeMessage;
                     errorMsg.style.display = 'block';
                 }
                 submitBtn.disabled = false;

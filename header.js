@@ -82,11 +82,14 @@
         });
 
         // Fermer le menu quand on clique en dehors du header
-        document.addEventListener('click', function(e) {
+        // Utiliser un seul listener global avec délégation d'événements
+        document.addEventListener('click', function closeMenuOnClickOutside(e) {
             if (!header.contains(e.target)) {
                 header.classList.remove('nav-open');
                 hamburger.setAttribute('aria-expanded', 'false');
                 hamburger.setAttribute('aria-label', 'Ouvrir le menu');
+                // Retirer ce listener après exécution pour éviter les fuites mémoire
+                document.removeEventListener('click', closeMenuOnClickOutside);
             }
         });
     }

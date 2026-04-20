@@ -246,6 +246,13 @@ Two separate repositories:
 
 Commit and push each repo separately.
 
+## Security Notes
+
+- XSS prevention: `escapeHTML()` function in `diagnostic.js` sanitizes backend data before DOM injection
+- Contact form: `sanitizeInput()` removes HTML tags, JS protocols, event handlers
+- CSRF: Honeypot field on contact form blocks basic bots
+- CSP: Content Security Policy headers in `index.html` and `diagnostic.html`
+
 ## Cold Start Handling
 
 Render backend (free tier) sleeps after 15min inactivity. Frontend handles this:

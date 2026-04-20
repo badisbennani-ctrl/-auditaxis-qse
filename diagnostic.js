@@ -6,15 +6,26 @@
 // ============================================
 
 // Configuration API
-const API_BASE = 'https://auditaxis-backend-v2.onrender.com'; // Utilise le même domaine sur Vercel
+const API_BASE = 'https://auditaxis-backend-4g3g.onrender.com';
 const API_RATE_LIMIT_MS = 10000; // 10 secondes entre chaque appel API
 const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 
+// Échappement HTML pour prévenir les XSS
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str;
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // Hide loading bar after page loads
 window.addEventListener('load', function() {
-    setTimeout(function() {
-        document.getElementById('loadingBar').classList.add('hidden');
-    }, 500);
+    const loadingBar = document.getElementById('loadingBar');
+    if (loadingBar) {
+        setTimeout(function() {
+            loadingBar.classList.add('hidden');
+        }, 500);
+    }
 });
 
 // Vérification silencieuse de l'état du serveur au chargement
@@ -2213,6 +2224,13 @@ function displayNonConformites(nonConformites) {
     }
 
     container.innerHTML = nonConformites.map(nc => {
+        // Échapper les données provenant du backend pour prévenir les XSS
+        const safeProbleme = escapeHTML(nc.probleme);
+        const safeExplication = escapeHTML(nc.explication);
+        const safeActionCorrective = escapeHTML(nc.action_corrective);
+        const safeTitre = escapeHTML(nc.titre);
+        const safeArticle = escapeHTML(nc.article);
+
         // Style spécial pour les NC citées par l'utilisateur
         if (nc.estNCCitee) {
             return `
@@ -2222,16 +2240,16 @@ function displayNonConformites(nonConformites) {
                     <span class="gravite-badge ${nc.gravite}" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">${nc.gravite.toUpperCase()}</span>
                 </div>
                 <div style="font-style: italic; color: #7f8c8d; font-size: 1rem; margin: 0.75rem 0; padding: 0.75rem; background: white; border-radius: 8px; border-left: 3px solid #e74c3c;">
-                    "${nc.probleme}"
+                    "${safeProbleme}"
                 </div>
-                <div class="article-reference" style="font-weight: 600; color: #2c3e50;">📋 Référence normative : ${nc.article}</div>
+                <div class="article-reference" style="font-weight: 600; color: #2c3e50;">📋 Référence normative : ${safeArticle}</div>
                 <div class="result-explication" style="margin-top: 0.75rem;">
                     <strong style="color: #2c3e50;">📖 Exigence de la norme :</strong><br>
-                    <span style="color: #555; line-height: 1.6;">${nc.explication}</span>
+                    <span style="color: #555; line-height: 1.6;">${safeExplication}</span>
                 </div>
                 <div class="action-corrective" style="margin-top: 1rem; background: linear-gradient(135deg, #d4edda, #c3e6cb); border-left: 3px solid #28a745;">
                     <div class="action-corrective-label" style="color: #155724; font-weight: 600;">✓ Solution recommandée</div>
-                    <span style="color: #1e7e34;">${nc.action_corrective}</span>
+                    <span style="color: #1e7e34;">${safeActionCorrective}</span>
                 </div>
             </div>
             `;
@@ -2241,18 +2259,18 @@ function displayNonConformites(nonConformites) {
         return `
         <div class="result-item ${nc.gravite}">
             <div class="result-item-header">
-                <span class="result-item-title">${nc.titre}</span>
+                <span class="result-item-title">${safeTitre}</span>
                 <span class="gravite-badge ${nc.gravite}">${nc.gravite.toUpperCase()}</span>
             </div>
-            <div class="article-reference">${nc.article}</div>
-            <div class="result-description">${nc.probleme}</div>
+            <div class="article-reference">${safeArticle}</div>
+            <div class="result-description">${safeProbleme}</div>
             <div class="result-explication">
                 <strong>Pourquoi c'est une non-conformité :</strong><br>
-                ${nc.explication}
+                ${safeExplication}
             </div>
             <div class="action-corrective">
                 <div class="action-corrective-label">✓ Action corrective recommandée</div>
-                ${nc.action_corrective}
+                ${safeActionCorrective}
             </div>
         </div>
     `;
