@@ -30,6 +30,26 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Push content below fixed header */
+        #step1, #step2 {
+            position: relative;
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        .norm-selection {
+            position: relative;
+            z-index: 3;
+        }
+
+        .norm-btn {
+            position: relative;
+            z-index: 4;
+            pointer-events: auto;
         }
 
         .step-section {
