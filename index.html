@@ -30,6 +30,15 @@
             display: inline-block;
         }
 
+        /* Visibility for statistics */
+        .counter-animate {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .counter-animate.visible {
+            opacity: 1;
+        }
+
         /* Hide content initially for animations */
         .hero-subtitle {
             opacity: 0;
@@ -49,7 +58,6 @@
     </style>
 </head>
 <body>
-    <div class="loading-bar" id="loadingBar"></div>
     <div id="header-placeholder"></div>
     <script src="header.js"></script>
 
