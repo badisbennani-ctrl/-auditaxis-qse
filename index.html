@@ -49,6 +49,7 @@
     </style>
 </head>
 <body>
+    <div class="loading-bar" id="loadingBar"></div>
     <div id="header-placeholder"></div>
     <script src="header.js"></script>
 
@@ -188,9 +189,12 @@
 
         // 1. HIDE LOADING BAR
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingBar').classList.add('hidden');
-            }, 500);
+            const loadingBar = document.getElementById('loadingBar');
+            if (loadingBar) {
+                setTimeout(function() {
+                    loadingBar.classList.add('hidden');
+                }, 500);
+            }
         });
 
         // 2. TYPEWRITER EFFECT FOR HERO TITLE

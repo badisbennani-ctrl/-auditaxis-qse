@@ -1546,7 +1546,7 @@ let pendingNorm = null;
 let pendingPourcentage = null;
 let pendingResultat = null;
 
-function ouvrirModaleTexteCourt(situation, norme) {
+function ouvrirModaleTexteCourt(situation, norme, resultatExistant = null) {
     const texteLongueur = situation.trim().length;
 
     // Créer la modale si elle n'existe pas
@@ -1737,24 +1737,26 @@ function ouvrirModaleTexteCourt(situation, norme) {
     // Mettre à jour le contenu
     document.getElementById('modalTextePreview').textContent = situation;
 
-    // Calculer le pourcentage de règles détectées et stocker le résultat
+    // Utiliser le résultat existant (backend) ou recalculer localement
     const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
-    const localResult = analyserTexteLocal(situation, normMap[norme]);
-    const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+    const resultToUse = resultatExistant || analyserTexteLocal(situation, normMap[norme]);
+    
+    const reglesDetectees = resultToUse.conformites.length + resultToUse.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
     const pourcentage = (reglesDetectees / NORMES[normMap[norme]].regles.length) * 100;
 
     document.getElementById('modalCharCounter').textContent = `${texteLongueur} caractère(s) - ${Math.round(pourcentage)}% de règles détectées`;
     document.getElementById('modalPourcentageInfo').innerHTML = `<strong>${Math.round(pourcentage)}% des exigences de la norme sont couvertes.</strong><br>Seuil minimum requis : 20%. Ajoutez plus de détails sur votre système de management pour obtenir une analyse complète.`;
 
     // Stocker le résultat pour éviter un recalcul lors de "Continuer quand même"
-    pendingResultat = localResult;
+    pendingResultat = resultToUse;
 
     // Afficher la modale
     modal.classList.add('active');
 
     // Focus sur le premier bouton pour l'accessibilité
     setTimeout(() => {
-        modal.querySelector('.btn-modal-secondary').focus();
+        const firstBtn = modal.querySelector('.btn-modal-secondary');
+        if (firstBtn) firstBtn.focus();
     }, 100);
 }
 
@@ -1914,30 +1916,54 @@ async function launchDiagnostic() {
         const data = responseData.data || responseData;
         recordApiCall();
 
-        console.log('📊 Données reçues:', data);
+        console.log('📊 Données Fusion QSE reçues:', data);
 
-        // Mapper les données du backend vers le format attendu par le frontend
+        // Mapper les données du backend Fusion QSE vers le format attendu par le frontend
+        const selectedNormKey = selectedNorm.replace('ISO ', '').replace(':', '').replace(' ', '').toLowerCase(); // iso9001, iso14001, iso45001
+        const normIdMap = {
+            'iso9001': 'iso9001',
+            'iso14001': 'iso14001',
+            'iso45001': 'iso45001'
+        };
+        const currentNormFindings = data.details[normIdMap[selectedNormKey]] || [];
+
         const result = {
-            score: data.score,
-            appreciation: getAppreciation(data.score),
-            nonConformites: (data.non_conformites || []).map(nc => ({
-                titre: nc.titre,
-                article: nc.article,
-                gravite: nc.gravite.toLowerCase(),
-                probleme: nc.probleme,
-                explication: nc.explication,
-                action_corrective: nc.action_corrective
-            })),
-            conformites: (data.conformites || []).map(c => ({
-                description: c.description,
-                article: c.article,
-                statut: c.statut.toLowerCase() === 'conforme' ? 'conforme' : 'partiel'
-            })),
-            recommandations: (data.recommandations || []).map(r => ({
-                action: r.action,
-                priorite: mapPriorite(r.priorite),
-                benefice: r.benefice
-            }))
+            // Données Fusion QSE Globales
+            isFusion: true,
+            fusionData: {
+                iso9001: data.iso_9001_score,
+                iso14001: data.iso_14001_score,
+                iso45001: data.iso_45001_score,
+                global: data.global_qse_score,
+                risk: data.risk_level
+            },
+            // Données pour la norme sélectionnée
+            score: data[`${selectedNormKey.replace('iso', 'iso_')}_score`] || data.global_qse_score,
+            appreciation: getAppreciation(data[`${selectedNormKey.replace('iso', 'iso_')}_score`] || data.global_qse_score),
+            nonConformites: currentNormFindings
+                .filter(f => f.status.includes('NON_CONFORM'))
+                .map(f => ({
+                    titre: `Non-conformité ${f.status === 'NON_CONFORM_CRITICAL' ? 'majeure' : 'mineure'}`,
+                    article: f.ruleId.split('-')[1] || f.ruleId,
+                    gravite: f.status === 'NON_CONFORM_CRITICAL' ? 'majeure' : 'mineure',
+                    probleme: f.evidence,
+                    explication: f.explanation,
+                    action_corrective: f.action
+                })),
+            conformites: currentNormFindings
+                .filter(f => f.status === 'COMPLIANT' || f.status === 'OBSERVATION')
+                .map(f => ({
+                    description: f.evidence || f.explanation,
+                    article: f.ruleId.split('-')[1] || f.ruleId,
+                    statut: f.status === 'COMPLIANT' ? 'conforme' : 'partiel'
+                })),
+            recommandations: currentNormFindings
+                .filter(f => f.status.includes('NON_CONFORM') || f.status === 'OBSERVATION')
+                .map(f => ({
+                    action: f.action,
+                    priorite: f.status === 'NON_CONFORM_CRITICAL' ? 'urgent' : (f.status === 'NON_CONFORM_MINOR' ? 'moyen_terme' : 'long_terme'),
+                    benefice: f.explanation
+                }))
         };
 
         // Masquer le message de connexion après succès
@@ -1954,7 +1980,8 @@ async function launchDiagnostic() {
             pendingSituation = situation;
             pendingNorm = selectedNorm;
             pendingPourcentage = pourcentageReglesDetectees;
-            ouvrirModaleTexteCourt(situation, selectedNorm);
+            // Passer le résultat du backend pour éviter le recalcul local
+            ouvrirModaleTexteCourt(situation, selectedNorm, result);
         } else {
             displayResults(result);
         }
@@ -2043,6 +2070,11 @@ function displayResults(result) {
     // Déterminer le nom de la norme
     const normeNom = NORMES[selectedNorm]?.nom || 'QSE';
 
+    // Mise à jour du Dashboard Fusion QSE si présent
+    if (result.isFusion && result.fusionData) {
+        updateQSEDashboard(result.fusionData);
+    }
+
     // Supprimer d'éventuels éléments existants (pour éviter doublons si relance)
     const existingSituation = document.getElementById('situationAnalysee');
     const existingResume = document.getElementById('resumeExecutifContainer');
@@ -2051,6 +2083,7 @@ function displayResults(result) {
 
     // Créer un conteneur pour la situation analysée et le résumé exécutif
     const topContainer = document.createElement('div');
+    topContainer.id = 'resumeExecutifContainer';
     topContainer.style.cssText = 'margin-bottom: 2rem;';
 
     // HTML pour "Situation analysée" + Résumé exécutif
@@ -2066,8 +2099,11 @@ function displayResults(result) {
     ${genererResumeExecutif(result, normeNom)}
     `;
 
-    // Insérer en tout premier dans resultsContainer
-    if (resultsContainer.firstChild) {
+    // Insérer en tout premier dans resultsContainer (après le dashboard s'il existe)
+    const qseDashboard = document.getElementById('qseDashboard');
+    if (qseDashboard) {
+        qseDashboard.after(topContainer);
+    } else if (resultsContainer.firstChild) {
         resultsContainer.insertBefore(topContainer, resultsContainer.firstChild);
     } else {
         resultsContainer.appendChild(topContainer);
@@ -2087,6 +2123,34 @@ function displayResults(result) {
 
     // Scroll vers les résultats
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateQSEDashboard(fusionData) {
+    const qseDashboard = document.getElementById('qseDashboard');
+    if (!qseDashboard) return;
+
+    qseDashboard.style.display = 'block';
+
+    const s9001 = document.getElementById('score9001');
+    const s14001 = document.getElementById('score14001');
+    const s45001 = document.getElementById('score45001');
+    const riskLevel = document.getElementById('globalRiskLevel');
+
+    if (s9001) s9001.textContent = `${fusionData.iso9001}%`;
+    if (s14001) s14001.textContent = `${fusionData.iso14001}%`;
+    if (s45001) s45001.textContent = `${fusionData.iso45001}%`;
+
+    if (riskLevel) {
+        const levels = {
+            'low': { text: 'RISQUE FAIBLE', color: '#27ae60' },
+            'medium': { text: 'RISQUE MODÉRÉ', color: '#f39c12' },
+            'high': { text: 'RISQUE ÉLEVÉ', color: '#e67e22' },
+            'critical': { text: 'RISQUE CRITIQUE', color: '#e74c3c' }
+        };
+        const level = levels[fusionData.risk] || levels['medium'];
+        riskLevel.textContent = level.text;
+        riskLevel.style.color = level.color;
+    }
 }
 
 // ============================================
