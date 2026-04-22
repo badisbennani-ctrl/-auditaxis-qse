@@ -2,18 +2,18 @@
 /* Palette: Bleu/Vert professionnel pour QSE (Qualité, Sécurité, Environnement) */
 
 :root {
-    /* Neural Palette */
-    --primary: #00f2ff;         /* Neon Cyan (Quality) */
-    --secondary: #00ff88;       /* Emerald Neon (Environment) */
-    --accent: #ffaa00;          /* Amber Neon (Safety) */
-    --accent-red: #ff4444;      /* Cyber Red */
-    --dark-bg: #050a15;         /* Deep Space */
-    --dark-card: rgba(16, 25, 45, 0.7); /* Glass Dark */
-    --text-main: #e0e6ed;
-    --text-dim: #94a3b8;
+    /* Soft Neural Palette - Confort Visuel */
+    --primary: #4fc3f7;         /* Soft Cyan */
+    --secondary: #81c784;       /* Soft Green */
+    --accent: #ffb74d;          /* Soft Amber */
+    --accent-red: #ef5350;      /* Soft Red */
+    --dark-bg: #0f172a;         /* Deep Navy */
+    --dark-card: rgba(30, 41, 59, 0.7); /* Slate Glass */
+    --text-main: #f1f5f9;
+    --text-dim: #cbd5e1;
     --white: #ffffff;
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --neon-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --neon-shadow: 0 0 12px rgba(79, 195, 247, 0.2);
 }
 
 * {
@@ -29,8 +29,8 @@ body {
     background-color: var(--dark-bg);
     overflow-x: hidden;
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 20%);
+        radial-gradient(circle at 10% 20%, rgba(79, 195, 247, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(129, 199, 132, 0.03) 0%, transparent 40%);
     background-attachment: fixed;
 }
 
@@ -306,31 +306,47 @@ form {
     border: 1px solid var(--glass-border);
     padding: 3rem;
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
 }
 
 .form-group label {
     color: var(--text-dim);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 input,
 textarea {
-    background: rgba(255, 255, 255, 0.05);
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
     border: 1px solid var(--glass-border);
     color: var(--white);
-    padding: 1rem;
+    padding: 1rem 1.25rem;
     border-radius: 12px;
     transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
 input:focus,
 textarea:focus {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(30, 41, 59, 0.8);
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.15);
+    outline: none;
 }
 
 button.btn {
