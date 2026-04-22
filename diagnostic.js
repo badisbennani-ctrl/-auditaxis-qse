@@ -1639,7 +1639,14 @@ function checkCanLaunch() {
 // Fonction de vérification du rate limiting
 function checkRateLimit() {
     const now = Date.now();
-    const lastCall = localStorage.getItem(LAST_API_CALL_KEY);
+    let lastCall = null;
+
+    try {
+        lastCall = window.localStorage.getItem(LAST_API_CALL_KEY);
+    } catch (error) {
+        debugLog('⚠️ localStorage indisponible, rate limit frontend désactivé');
+        return { allowed: true, remainingSec: 0 };
+    }
 
     if (lastCall) {
         const timeSinceLastCall = now - parseInt(lastCall, 10);
@@ -1654,7 +1661,11 @@ function checkRateLimit() {
 
 // Fonction pour enregistrer l'appel API
 function recordApiCall() {
-    localStorage.setItem(LAST_API_CALL_KEY, Date.now().toString());
+    try {
+        window.localStorage.setItem(LAST_API_CALL_KEY, Date.now().toString());
+    } catch (error) {
+        debugLog('⚠️ Impossible d’enregistrer le rate limit frontend');
+    }
 }
 
 // ============================================
