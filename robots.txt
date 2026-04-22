@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://AUDITQSE.kesug.com/sitemap.xml
+Sitemap: https://auditaxis-qse.com/sitemap.xml

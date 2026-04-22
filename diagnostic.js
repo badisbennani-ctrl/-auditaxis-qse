@@ -1534,29 +1534,28 @@ function selectNorm(element) {
 function initialiserDiagnostic() {
     debugLog('🚀 Initialisation du système de diagnostic...');
 
-    // Délégation d'événements pour les boutons de norme
-    // C'est la méthode la plus robuste qui fonctionne même si le DOM change
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.norm-btn');
-        if (btn) {
+    // Listeners directs : plus fiables sur mobile et navigateurs intégrés
+    document.querySelectorAll('.norm-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
             debugLog('🖱️ Clic détecté sur une norme');
             selectNorm(btn);
-        }
-    });
+        });
 
-    // Support clavier pour l'accessibilité
-    document.addEventListener('keydown', function(e) {
-        const btn = e.target.closest('.norm-btn');
-        if (btn && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
+        btn.addEventListener('pointerup', function() {
             selectNorm(btn);
-        }
+        });
+
+        btn.addEventListener('touchend', function() {
+            selectNorm(btn);
+        }, { passive: true });
     });
 
     // Zone de texte (compteur et validation)
     const situationTextarea = document.getElementById('situation');
     if (situationTextarea) {
         situationTextarea.addEventListener('input', updateCharCounter);
+        situationTextarea.addEventListener('change', updateCharCounter);
+        situationTextarea.addEventListener('keyup', updateCharCounter);
         // Synchroniser l'affichage initial avec la configuration, même si le champ est vide
         updateCharCounter();
     }
