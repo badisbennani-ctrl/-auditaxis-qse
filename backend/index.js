@@ -44,8 +44,8 @@ app.use((req, res, next) => {
 const corsOrigins = [
     'https://auditaxis-qse.com',
     'https://www.auditaxis-qse.com',
-    'https://auditaxisqse.onlinewebshop.net',
-    'https://www.auditaxisqse.onlinewebshop.net',
+    'https://AUDITQSE.kesug.com',
+    'https://auditqse.kesug.com',
     'https://auditaxis-frontend.vercel.app',
     'http://localhost:3000',
     'http://localhost:5500',
