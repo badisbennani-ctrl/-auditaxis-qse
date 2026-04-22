@@ -2031,6 +2031,7 @@ async function launchDiagnostic() {
         recordApiCall();
 
         console.log('📊 Données Fusion QSE reçues:', data);
+        console.log('📋 Norme sélectionnée:', selectedNorm);
 
         // Mapper les données du backend Fusion QSE vers le format attendu par le frontend
         const selectedNormKey = selectedNorm.replace(/\s+/g, '').toLowerCase(); // iso9001, iso14001, iso45001
@@ -2088,17 +2089,17 @@ async function launchDiagnostic() {
         // Calculer le pourcentage de règles détectées pour vérifier si modale nécessaire
         const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
         const reglesDetectees = result.conformites.length + result.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
-        const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
+        const totalRegles = NORMES[normMap[selectedNorm]].regles.length;
+        const pourcentageReglesDetectees = (reglesDetectees / totalRegles) * 100;
 
-        if (pourcentageReglesDetectees < 20) {
-            pendingSituation = situation;
-            pendingNorm = selectedNorm;
-            pendingPourcentage = pourcentageReglesDetectees;
-            // Passer le résultat du backend pour éviter le recalcul local
-            ouvrirModaleTexteCourt(situation, selectedNorm, result);
-        } else {
-            displayResults(result);
-        }
+        console.log(`📊 Règles détectées: ${reglesDetectees}/${totalRegles} (${Math.round(pourcentageReglesDetectees)}%)`);
+        console.log('📋 Conformités:', result.conformites.length);
+        console.log('🔴 Non-conformités:', result.nonConformites.length);
+
+        // Afficher toujours les résultats, même avec peu de données
+        // La modale n'est plus nécessaire car elle bloque l'expérience utilisateur
+        console.log('✅ Affichage des résultats...');
+        displayResults(result);
     } catch (error) {
         // Annuler l'affichage du message si c'était programmé
         if (showConnectionMsg) clearTimeout(showConnectionMsg);
