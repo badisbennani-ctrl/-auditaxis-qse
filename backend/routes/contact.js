@@ -81,8 +81,8 @@ router.post('/',
       </div>
     `;
 
-    const emailTo = process.env.EMAIL_TO || 'badis.bennani@etudiant-issbat.utm.tn';
-    const fromEmail = process.env.EMAIL_USER || 'onboarding@resend.dev';
+    const emailTo = 'badis.bennani@etudiant-issbat.utm.tn';
+    const fromEmail = 'onboarding@resend.dev';
     const client = getResendClient();
 
     if (!client) {
