@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://auditaxis-qse.com/sitemap.xml
+Sitemap: https://auditaxisqse.onlinewebshop.net/sitemap.xml

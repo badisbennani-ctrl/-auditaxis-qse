@@ -9,12 +9,12 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Diagnostic IA ISO 9001 14001 45001 Gratuit | AuditAxis QSE">
     <meta property="og:description" content="Analysez la conformité de votre entreprise aux normes ISO 9001, 14001, 45001 avec notre diagnostic IA.">
-    <meta property="og:url" content="https://auditaxis-qse.com/diagnostic">
+    <meta property="og:url" content="https://auditaxisqse.onlinewebshop.net/diagnostic">
     <meta property="og:type" content="website">
     <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%231e5f8c' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='72' fill='white'%3EAuditAxis QSE%3C/text%3E%3C/svg%3E">
 
     <title>Diagnostic IA ISO 9001 14001 45001 Gratuit | AuditAxis QSE</title>
-    <link rel="canonical" href="https://auditaxis-qse.com/diagnostic">
+    <link rel="canonical" href="https://auditaxisqse.onlinewebshop.net/diagnostic">
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,11 +86,16 @@
         }
 
         .norm-btn {
+            appearance: none;
+            -webkit-appearance: none;
             background: var(--white);
             border: 3px solid var(--gray-light);
             border-radius: 12px;
             padding: 1.5rem;
             cursor: pointer !important;
+            width: 100%;
+            font: inherit;
+            color: inherit;
             transition: all 0.3s ease;
             text-align: center;
             position: relative;
@@ -504,23 +509,23 @@
                 Choisissez la norme ISO
             </h2>
             <div class="norm-selection">
-                <div class="norm-btn" data-norm="ISO 9001" role="button" tabindex="0" aria-label="Sélectionner ISO 9001:2015">
+                <button type="button" class="norm-btn" data-norm="ISO 9001" aria-label="Sélectionner ISO 9001:2015">
                     <div class="norm-icon">📊</div>
                     <div class="norm-code">ISO 9001:2015</div>
                     <div class="norm-name">Management de la qualité</div>
-                </div>
+                </button>
 
-                <div class="norm-btn" data-norm="ISO 14001" role="button" tabindex="0" aria-label="Sélectionner ISO 14001:2015">
+                <button type="button" class="norm-btn" data-norm="ISO 14001" aria-label="Sélectionner ISO 14001:2015">
                     <div class="norm-icon">🌱</div>
                     <div class="norm-code">ISO 14001:2015</div>
                     <div class="norm-name">Management environnemental</div>
-                </div>
+                </button>
 
-                <div class="norm-btn" data-norm="ISO 45001" role="button" tabindex="0" aria-label="Sélectionner ISO 45001:2018">
+                <button type="button" class="norm-btn" data-norm="ISO 45001" aria-label="Sélectionner ISO 45001:2018">
                     <div class="norm-icon">🛡️</div>
                     <div class="norm-code">ISO 45001:2018</div>
                     <div class="norm-name">Santé et sécurité au travail</div>
-                </div>
+                </button>
             </div>
         </div>
 
