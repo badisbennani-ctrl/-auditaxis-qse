@@ -2125,6 +2125,9 @@ async function launchDiagnostic() {
 
         // Fallback vers l'analyse locale sur erreur réseau ou timeout
         try {
+            // Masquer le loader en cas d'erreur
+            document.getElementById('loader').classList.remove('active');
+
             const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
             const localResult = analyserTexteLocal(situation, normMap[selectedNorm]);
             // Vérifier le pourcentage de règles détectées
@@ -2141,6 +2144,15 @@ async function launchDiagnostic() {
         } catch (localError) {
             // Si l'analyse locale échoue aussi, afficher l'erreur sans alert()
             console.error('Erreur API et analyse locale:', error, localError);
+
+            // Masquer le loader
+            document.getElementById('loader').classList.remove('active');
+
+            // Réafficher les étapes
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('launchBtn').style.display = 'block';
+
             const errorDisplay = document.getElementById('rateLimitMsg');
             if (errorDisplay) {
                 errorDisplay.textContent = '❌ L\'analyse a échoué. Veuillez réessayer.';
