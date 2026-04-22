@@ -137,15 +137,22 @@ Rule structure:
 
 ### Design System
 
-**Color Palette** (`style.css`):
+**Color Palette** (`style.css`) - Soft Neural Edition (confort visuel) :
 ```css
 :root {
-    --primary: #1e5f8c;        /* QSE Blue */
-    --secondary: #2e8b57;      /* Environment Green */
-    --accent: #f39c12;         /* Alert Orange */
-    --accent-red: #e74c3c;     /* Safety Red */
+    --primary: #0891b2;        /* Cyan doux - Professionnel */
+    --primary-dark: #0e7490;   /* Cyan foncé */
+    --primary-light: #22d3ee;  /* Cyan clair */
+    --secondary: #10b981;      /* Émeraude doux - Environnement */
+    --accent: #f59e0b;         /* Ambre chaud - Alerts */
+    --accent-red: #ef4444;     /* Rouge doux - Erreurs */
+    --bg-dark: #0f172a;        /* Navy profond */
+    --text-primary: #f8fafc;   /* Blanc cassé */
+    --text-secondary: #cbd5e1; /* Gris bleuté */
 }
 ```
+
+**Style** : Glassmorphism avec bordures subtiles, ombres neon douces, animations fluides (`cubic-bezier`).
 
 **Navigation** (injected by `header.js`):
 ```

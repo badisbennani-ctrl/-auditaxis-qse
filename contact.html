@@ -49,7 +49,7 @@
 
     <div class="container">
         <h2 class="section-title">Formulaire de Contact</h2>
-        <p class="section-subtitle">Remplissez le formulaire ci-dessous, nous vous répondrons dans les 24 heures</p>
+        <p class="section-subtitle">Remplissez le formulaire ci-dessous. Nous vous répondrons sous 24 heures</p>
 
         <div class="contact-wrapper">
             <div id="formStatus" class="form-status" style="display: none;"></div>
@@ -57,30 +57,30 @@
             <form id="contactForm">
                 <div class="form-group">
                     <label for="nom">Nom complet</label>
-                    <input type="text" id="nom" name="nom" placeholder="Votre nom et prénom" required>
+                    <input type="text" id="nom" name="nom" placeholder="Votre nom et prénom" required aria-label="Votre nom complet">
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Adresse email</label>
-                    <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+                    <label for="email">Adresse e-mail</label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com" required aria-label="Votre adresse e-mail">
                 </div>
 
                 <div class="form-group">
                     <label for="sujet">Sujet</label>
-                    <input type="text" id="sujet" name="sujet" placeholder="Demande d'audit ISO 9001" required>
+                    <input type="text" id="sujet" name="sujet" placeholder="Demande d'audit ISO 9001" required aria-label="Le sujet de votre message">
                 </div>
 
                 <div class="form-group">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Décrivez votre besoin en audit QSE..." required></textarea>
+                    <textarea id="message" name="message" rows="5" placeholder="Décrivez votre besoin en audit QSE..." required aria-label="Votre message"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="company">Entreprise / Organisation (optionnel)</label>
-                    <input type="text" id="company" name="company" placeholder="Nom de votre organisation">
+                    <label for="company">Entreprise / Organisation (facultatif)</label>
+                    <input type="text" id="company" name="company" placeholder="Nom de votre organisation" aria-label="Nom de votre entreprise">
                 </div>
 
-                <button type="submit" class="btn" id="submitBtn">Envoyer le Message</button>
+                <button type="submit" class="btn" id="submitBtn">Envoyer le message</button>
             </form>
         </div>
 
@@ -88,18 +88,18 @@
             <h3 style="color: var(--primary); margin-bottom: 1.5rem;">📞 Autres moyens de contact</h3>
             <div class="grid" style="max-width: 800px; margin: 0 auto;">
                 <div class="card">
-                    <h3>📧 Email</h3>
-                    <p>contact@auditaxis-qse.com<br>Support disponible 24/7</p>
+                    <h3>📧 E-mail</h3>
+                    <p>contact@auditaxis-qse.com<br>Support disponible 24h/24 et 7j/7</p>
                 </div>
 
                 <div class="card">
                     <h3>📍 Adresse</h3>
-                    <p>Campus Universitaire<br>Département QSE</p>
+                    <p>Campus universitaire<br>Département QSE</p>
                 </div>
 
                 <div class="card">
                     <h3>🕐 Horaires</h3>
-                    <p>Lun - Ven : 9h - 17h<br>Réponse sous 24h</p>
+                    <p>Lun. - Ven. : 9h - 17h<br>Réponse sous 24 h</p>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    formStatus.textContent = '✅ Votre message a été envoyé avec succès ! Nous vous répondrons sous 24h-48h.';
+                    formStatus.textContent = '✅ Votre message a été envoyé avec succès ! Nous vous répondrons sous 24 à 48 heures.';
                     formStatus.className = 'form-status success';
                     formStatus.style.display = 'block';
                     formStatus.style.color = 'var(--secondary)';

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Glossaire QSE complet - Définitions des termes ISO 9001, ISO 14001, ISO 45001. Lexique qualité sécurité environnement.">
-    <title>Glossaire ISO 9001 14001 45001 - Définitions QSE | AuditAxis QSE</title>
+    <meta name="description" content="Glossaire QSE complet - Définitions et exigences des normes ISO 9001, 14001, 45001. Lexique technique AuditAxis.">
+    <title>Glossaire Technique QSE | AuditAxis Neural Edition</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,53 +12,272 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="/config.js" defer></script>
     <script src="/header.js" defer></script>
-    <script>
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header?.classList.add('scrolled');
-            } else {
-                header?.classList.remove('scrolled');
-            }
-        });
-    </script>
+    <style>
+        .glossaire-hero {
+            padding: 8rem 1rem 4rem;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(79, 195, 247, 0.05) 0%, transparent 70%);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+            background: var(--dark-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            color: var(--white);
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.2);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--dark-card);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--dark-bg);
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+        .glossaire-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .term-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .term-category {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cat-9001 { background: rgba(79, 195, 247, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .cat-14001 { background: rgba(129, 199, 132, 0.1); color: var(--secondary); border: 1px solid var(--secondary); }
+        .cat-45001 { background: rgba(255, 183, 77, 0.1); color: var(--accent); border: 1px solid var(--accent); }
+        .cat-general { background: rgba(255, 255, 255, 0.05); color: var(--text-dim); border: 1px solid var(--glass-border); }
+
+        .term-article {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            opacity: 0.7;
+        }
+
+        .term-definition {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-dim);
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header scroll logic integrated */
+        header.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 0.5rem 0;
+            width: 80%;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
 
-    <section class="hero" role="main">
-        <h1>Glossaire QSE</h1>
-        <p>Comprendre les termes essentiels des systèmes de management QSE</p>
+    <section class="glossaire-hero">
+        <div class="container">
+            <h1 class="section-title">Lexique technique et exigences</h1>
+            <p class="section-subtitle">Maîtrisez le langage des normes ISO et les exigences fondamentales du système de management QSE.</p>
+        </div>
     </section>
 
     <div class="container">
-        <div class="glossaire-letter-section" id="A">
-            <h2 class="glossaire-letter-title">A</h2>
-            <div class="glossaire-term">
-                <h3>Amélioration Continue</h3>
-                <span class="term-category">ISO 9001</span>
-                <p>Activité récurrente visant à améliorer en permanence les performances. Basé sur le cycle PDCA.</p>
-            </div>
-            <div class="glossaire-term">
-                <h3>Audit</h3>
-                <span class="term-category">Général</span>
-                <p>Processus systématique et indépendant pour évaluer la conformité à des critères définis.</p>
-            </div>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="glossaireSearch" class="search-input" placeholder="Rechercher un terme, un article ou une exigence (ex: 4.1, Audit, Risque)...">
         </div>
-        <!-- ... d'autres termes peuvent être ajoutés ici ... -->
+
+        <div class="filter-nav">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="iso9001">ISO 9001</button>
+            <button class="filter-btn" data-filter="iso14001">ISO 14001</button>
+            <button class="filter-btn" data-filter="iso45001">ISO 45001</button>
+            <button class="filter-btn" data-filter="general">Général</button>
+        </div>
+
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
+            <span id="resultsCount">0</span> terme(s) trouvé(s)
+        </p>
+
+        <div class="glossaire-grid" id="glossaireGrid">
+            <!-- Injecté par JavaScript -->
+        </div>
     </div>
 
     <footer></footer>
 
     <script>
-        window.addEventListener('load', function() {
-            const loadingBar = document.getElementById('loadingBar');
-            if (loadingBar) {
-                setTimeout(function() {
-                    loadingBar.classList.add('hidden');
-                }, 500);
+        // Base de données du glossaire (mélange de termes et d'exigences)
+        const GLOSSAIRE_DATA = [
+            // TERMES GÉNÉRAUX
+            { titre: "Audit", cat: "general", def: "Processus méthodique, indépendant et documenté permettant d'obtenir des preuves d'audit et de les évaluer de manière objective pour déterminer dans quelle mesure les critères d'audit sont satisfaits.", art: "" },
+            { titre: "Amélioration continue", cat: "general", def: "Activité récurrente visant à améliorer les performances. Le cycle PDCA (Plan-Do-Check-Act) est l'outil fondamental de cette démarche.", art: "Art. 10.3" },
+            { titre: "Action corrective", cat: "general", def: "Action visant à éliminer la cause d'une non-conformité ou d'un incident et à éviter qu'il ne se reproduise.", art: "Art. 10.2" },
+            { titre: "Information documentée", cat: "general", def: "Information devant être maîtrisée et tenue à jour par un organisme ainsi que le support sur lequel elle figure.", art: "Art. 7.5" },
+            { titre: "Non-conformité", cat: "general", def: "Non-satisfaction d'une exigence spécifiée par une norme ou par le système de management interne.", art: "Art. 10.2" },
+            { titre: "Partie intéressée", cat: "general", def: "Personne ou organisme qui peut avoir une incidence sur une décision ou une activité, être affecté ou se sentir affecté par celles-ci (ex. : clients, État, riverains).", art: "Art. 4.2" },
+            { titre: "Risque", cat: "general", def: "Effet de l'incertitude. Dans le cadre QSE, il s'agit souvent d'un effet négatif potentiel sur la qualité, l'environnement ou la sécurité.", art: "Art. 6.1" },
+
+            // EXIGENCES ISO 9001 (Qualité)
+            { titre: "Orientation client", cat: "iso9001", def: "Exigence fondamentale visant à identifier et satisfaire les besoins des clients pour accroître leur satisfaction.", art: "Art. 5.1.2" },
+            { titre: "Approche processus", cat: "iso9001", def: "Gestion des activités comme des processus corrélés pour obtenir des résultats cohérents et prévisibles.", art: "Art. 4.4" },
+            { titre: "Politique qualité", cat: "iso9001", def: "Orientations et intentions générales d'un organisme concernant la qualité, telles qu'elles sont exprimées formellement par la direction.", art: "Art. 5.2" },
+            { titre: "Maîtrise opérationnelle", cat: "iso9001", def: "Planification et contrôle des processus nécessaires à la réalisation des produits et services.", art: "Art. 8.1" },
+            { titre: "Revue de direction", cat: "iso9001", def: "Évaluation périodique du système de management par la haute direction pour s'assurer de sa pertinence et de son efficacité.", art: "Art. 9.3" },
+
+            // EXIGENCES ISO 14001 (Environnement)
+            { titre: "Aspect environnemental", cat: "iso14001", def: "Élément des activités, produits ou services d'un organisme qui interagit ou peut interagir avec l'environnement.", art: "Art. 6.1.2" },
+            { titre: "Impact environnemental", cat: "iso14001", def: "Modification de l'environnement, négative ou bénéfique, résultant totalement ou partiellement des aspects environnementaux d'un organisme.", art: "Art. 6.1.2" },
+            { titre: "Perspective de cycle de vie", cat: "iso14001", def: "Considération des étapes consécutives et liées d'un système de produit, de l'acquisition des matières premières à l'élimination finale.", art: "Art. 8.1" },
+            { titre: "Prévention de la pollution", cat: "iso14001", def: "Utilisation de processus, pratiques, techniques ou produits pour éviter, réduire ou maîtriser la création d'émissions ou de déchets.", art: "Art. 5.2" },
+            { titre: "Obligation de conformité", cat: "iso14001", def: "Exigences légales qu'un organisme doit respecter et autres exigences qu'il doit ou choisit de respecter.", art: "Art. 6.1.3" },
+
+            // EXIGENCES ISO 45001 (Sécurité)
+            { titre: "Danger", cat: "iso45001", def: "Source susceptible de causer des traumatismes et pathologies (blessures, maladies).", art: "Art. 6.1.2" },
+            { titre: "Consultation et participation", cat: "iso45001", def: "Exigence majeure d'impliquer les travailleurs non-encadrants dans les décisions relatives à la SST.", art: "Art. 5.4" },
+            { titre: "Élimination des dangers", cat: "iso45001", def: "Premier niveau de la hiérarchie des mesures de prévention visant à supprimer totalement une source de risque.", art: "Art. 8.1.2" },
+            { titre: "Lieu de travail", cat: "iso45001", def: "Endroit sous le contrôle de l'organisme où une personne doit se trouver pour les besoins de son travail.", art: "Art. 3.6" },
+            { titre: "Culture de santé et sécurité", cat: "iso45001", def: "Valeurs, attitudes et compétences qui déterminent l'engagement envers le management de la santé et de la sécurité.", art: "Art. 5.1" }
+        ];
+
+        const grid = document.getElementById('glossaireGrid');
+        const searchInput = document.getElementById('glossaireSearch');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderGlossaire(data) {
+            grid.innerHTML = '';
+            document.getElementById('resultsCount').textContent = data.length;
+
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="no-results">Aucun terme ne correspond à votre recherche.</div>';
+                return;
             }
+
+            data.sort((a, b) => a.titre.localeCompare(b.titre)).forEach(term => {
+                const card = document.createElement('div');
+                card.className = 'card term-card';
+                card.innerHTML = `
+                    <div class="term-header">
+                        <span class="term-category cat-${term.cat}">${term.cat === 'general' ? 'Général' : term.cat.toUpperCase()}</span>
+                        ${term.art ? `<span class="term-article">${term.art}</span>` : ''}
+                    </div>
+                    <h3 style="color: var(--primary); font-family: 'Orbitron', sans-serif; font-size: 1.2rem;">${term.titre}</h3>
+                    <p class="term-definition">${term.def}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterData() {
+            const query = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+
+            const filtered = GLOSSAIRE_DATA.filter(item => {
+                const matchesSearch = item.titre.toLowerCase().includes(query) || 
+                                     item.def.toLowerCase().includes(query) || 
+                                     item.art.toLowerCase().includes(query);
+                const matchesFilter = activeFilter === 'all' || item.cat === activeFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            renderGlossaire(filtered);
+        }
+
+        searchInput.addEventListener('input', filterData);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterData();
+            });
+        });
+
+        // Initial render
+        window.addEventListener('load', () => {
+            renderGlossaire(GLOSSAIRE_DATA);
+            
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) header?.classList.add('scrolled');
+                else header?.classList.remove('scrolled');
+            });
         });
     </script>
 </body>

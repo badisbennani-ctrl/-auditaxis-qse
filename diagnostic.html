@@ -485,6 +485,17 @@
         <p>Laissez notre intelligence artificielle analyser la conformité de votre entreprise aux normes ISO</p>
     </section>
 
+    <div class="container" style="padding-top: 2rem;">
+        <div class="card" style="text-align: center; max-width: 800px; margin: 0 auto 3rem;">
+            <p style="color: var(--text-secondary); line-height: 1.8;">
+                <strong>Comment ça marche ?</strong><br>
+                1. Sélectionnez la norme ISO souhaitée<br>
+                2. Décrivez la situation de votre entreprise (minimum 50 caractères)<br>
+                3. L'IA analyse votre description et génère un rapport détaillé avec score de conformité
+            </p>
+        </div>
+    </div>
+
     <div class="diagnostic-container">
         <!-- Étape 1 : Choix de la norme -->
         <div class="step-section" id="step1">
@@ -493,22 +504,22 @@
                 Choisissez la norme ISO
             </h2>
             <div class="norm-selection">
-                <div class="norm-btn" data-norm="ISO 9001" role="button" tabindex="0">
+                <div class="norm-btn" data-norm="ISO 9001" role="button" tabindex="0" aria-label="Sélectionner ISO 9001:2015">
                     <div class="norm-icon">📊</div>
                     <div class="norm-code">ISO 9001:2015</div>
-                    <div class="norm-name">Management de la Qualité</div>
+                    <div class="norm-name">Management de la qualité</div>
                 </div>
 
-                <div class="norm-btn" data-norm="ISO 14001" role="button" tabindex="0">
+                <div class="norm-btn" data-norm="ISO 14001" role="button" tabindex="0" aria-label="Sélectionner ISO 14001:2015">
                     <div class="norm-icon">🌱</div>
                     <div class="norm-code">ISO 14001:2015</div>
-                    <div class="norm-name">Management Environnemental</div>
+                    <div class="norm-name">Management environnemental</div>
                 </div>
 
-                <div class="norm-btn" data-norm="ISO 45001" role="button" tabindex="0">
+                <div class="norm-btn" data-norm="ISO 45001" role="button" tabindex="0" aria-label="Sélectionner ISO 45001:2018">
                     <div class="norm-icon">🛡️</div>
                     <div class="norm-code">ISO 45001:2018</div>
-                    <div class="norm-name">Santé et Sécurité au Travail</div>
+                    <div class="norm-name">Santé et sécurité au travail</div>
                 </div>
             </div>
         </div>
@@ -522,11 +533,12 @@
 
             <div class="description-area">
                 <label for="situation">
-                    Donnez-nous un aperçu de votre organisation, vos processus, vos forces et faiblesses
+                    Donnez-nous un aperçu de votre organisation, de vos processus, de vos forces et de vos faiblesses
                 </label>
                 <textarea
                     id="situation"
                     placeholder="Exemple : Notre entreprise fabrique des pièces mécaniques depuis 10 ans. Nous avons 45 employés et des procédures qualité documentées, mais elles ne sont pas toujours respectées sur le terrain. Nos employés ne sont pas tous formés aux risques professionnels. Nous avons des déchets de production que nous recyclons partiellement..."
+                    aria-label="Description de votre entreprise"
                 ></textarea>
 
                 <div class="char-counter" id="charCounter">0 / 50 caractères minimum</div>
@@ -534,7 +546,7 @@
         </div>
 
         <button class="launch-btn" id="launchBtn" disabled>
-            🚀 Lancer le Diagnostic
+            🚀 Lancer le diagnostic
         </button>
         <div id="rateLimitMsg" style="display: none; color: var(--accent); text-align: center; margin-top: 1rem; font-weight: 500;"></div>
 
@@ -543,7 +555,7 @@
                 <div class="loader-ring"></div>
             </div>
             <p class="loader-text">
-                Analyse en cours par l'IA
+                Analyse en cours par l'intelligence artificielle
                 <span class="loader-dots"></span>
             </p>
         </div>
