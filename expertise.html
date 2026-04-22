@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Expertise Premium AuditAxis QSE - Maîtrise des normes ISO 9001, 14001 et 45001 avec l'intelligence artificielle.">
-    <title>Expertise QSE Premium - AuditAxis | Excellence Normative</title>
+    <title>Expertise QSE Premium | AuditAxis Neural Edition</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,64 +12,203 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="/config.js" defer></script>
     <script src="/header.js" defer></script>
-    <script>
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header?.classList.add('scrolled');
-            } else {
-                header?.classList.remove('scrolled');
-            }
-        });
-    </script>
-    </head>
-        :root {
-            --gradient-poly: linear-gradient(135deg, #1e5f8c 0%, #2e8b57 100%);
-        }
-        .premium-hero {
-            height: 60vh;
+    <style>
+        .expertise-hero {
+            min-height: 50vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--gradient-poly);
-            color: white;
             text-align: center;
-            padding: 0 1rem;
-            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+            padding: 8rem 1rem 4rem;
+            background: radial-gradient(circle at center, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--dark-card);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            padding: 0.8rem 1.5rem;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .expertise-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .skill-bar-container {
+            margin-top: 1rem;
+        }
+
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
             height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px var(--primary);
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* Animation au défilement */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hidden-card {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
 
-    <header class="premium-hero">
+    <section class="expertise-hero">
         <div class="container">
-            <h1 style="font-size: 3.5rem; font-weight: 900;">L'Audit QSE, <br><span style="color: #4ade80;">Augmenté par l'IA</span></h1>
-            <p style="font-size: 1.3rem; opacity: 0.9; margin-top: 1rem;">Transformez vos obligations normatives en un avantage stratégique.</p>
+            <h1 class="section-title">Domaines d'Expertise</h1>
+            <p class="section-subtitle">Une maîtrise complète du cycle de vie QSE, pilotée par la précision algorithmique et l'expérience normative.</p>
         </div>
-    </header>
+    </section>
 
-    <div class="container" style="margin-top: -80px;">
-        <div class="grid">
-            <div class="glass-card">
-                <h3>🎯 Qualité Totale</h3>
-                <p>Optimisez vos performances avec l'ISO 9001. Excellence opérationnelle et satisfaction client.</p>
+    <div class="container">
+        <div class="filter-nav">
+            <button class="filter-btn active" onclick="filterExpertise('all')">Tous</button>
+            <button class="filter-btn" onclick="filterExpertise('qualité')">Qualité</button>
+            <button class="filter-btn" onclick="filterExpertise('sécurité')">Sécurité</button>
+            <button class="filter-btn" onclick="filterExpertise('environnement')">Environnement</button>
+        </div>
+
+        <div class="expertise-grid" id="expertiseGrid">
+            <!-- ISO 9001 -->
+            <div class="card expertise-card reveal" data-category="qualité">
+                <h3>🎯 Management de la Qualité</h3>
+                <div class="iso-code">ISO 9001:2015</div>
+                <p>Expertise pointue dans l'optimisation des processus opérationnels et l'amélioration de la satisfaction client.</p>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Approche Processus</span><span>95%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="95%"></div></div>
+                </div>
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Gestion des Risques</span><span>90%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="90%"></div></div>
+                </div>
+
+                <div class="tag-container">
+                    <span class="tag">Audit Interne</span>
+                    <span class="tag">PDCA</span>
+                    <span class="tag">KPIs</span>
+                </div>
+                <a href="/diagnostic" class="btn" style="padding: 0.8rem; font-size: 0.8rem; margin-top: 1rem;">Lancer Diagnostic Qualité</a>
             </div>
-            <div class="glass-card">
-                <h3>🛡️ Sécurité Humaine</h3>
-                <p>L'ISO 45001 au service de vos équipes. Réduisez les accidents et renforcez l'engagement.</p>
+
+            <!-- ISO 45001 -->
+            <div class="card expertise-card reveal" data-category="sécurité">
+                <h3>🛡️ Santé & Sécurité au Travail</h3>
+                <div class="iso-code" style="color: var(--accent); border-color: var(--accent); background: rgba(255, 183, 77, 0.1);">ISO 45001:2018</div>
+                <p>Mise en place de systèmes de prévention robustes pour garantir l'intégrité physique et mentale des travailleurs.</p>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Évaluation des Dangers</span><span>98%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="98%"></div></div>
+                </div>
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Culture Sécurité</span><span>85%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="85%"></div></div>
+                </div>
+
+                <div class="tag-container">
+                    <span class="tag">DUER</span>
+                    <span class="tag">EPI</span>
+                    <span class="tag">Consultation</span>
+                </div>
+                <a href="/checklist" class="btn" style="padding: 0.8rem; font-size: 0.8rem; margin-top: 1rem;">Checklist Sécurité</a>
             </div>
-            <div class="glass-card">
-                <h3>🌿 Impact Durable</h3>
-                <p>Maîtrisez votre empreinte avec l'ISO 14001. Éco-conception et économie circulaire.</p>
+
+            <!-- ISO 14001 -->
+            <div class="card expertise-card reveal" data-category="environnement">
+                <h3>🌿 Management Environnemental</h3>
+                <div class="iso-code" style="color: var(--secondary); border-color: var(--secondary); background: rgba(129, 199, 132, 0.1);">ISO 14001:2015</div>
+                <p>Réduction de l'empreinte écologique et conformité aux exigences légales environnementales strictes.</p>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Analyse Environnementale</span><span>92%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="92%"></div></div>
+                </div>
+                <div class="skill-bar-container">
+                    <div class="skill-label"><span>Veille Réglementaire</span><span>88%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" data-width="88%"></div></div>
+                </div>
+
+                <div class="tag-container">
+                    <span class="tag">AES</span>
+                    <span class="tag">Cycle de Vie</span>
+                    <span class="tag">Déchets</span>
+                </div>
+                <a href="/diagnostic" class="btn" style="padding: 0.8rem; font-size: 0.8rem; margin-top: 1rem;">Bilan Environnement</a>
             </div>
         </div>
     </div>
@@ -77,13 +216,59 @@
     <footer></footer>
 
     <script>
-        window.addEventListener('load', function() {
-            const loadingBar = document.getElementById('loadingBar');
-            if (loadingBar) {
-                setTimeout(function() {
-                    loadingBar.classList.add('hidden');
-                }, 500);
-            }
+        // Filtrage des expertises
+        function filterExpertise(category) {
+            const cards = document.querySelectorAll('.expertise-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                if(btn.textContent.toLowerCase() === category || (category === 'all' && btn.textContent === 'Tous')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        }
+
+        // Animation des barres de progression et apparition
+        function handleScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('active');
+                    
+                    // Animer les barres de compétence à l'intérieur
+                    const progressBars = reveal.querySelectorAll('.skill-progress');
+                    progressBars.forEach(bar => {
+                        bar.style.width = bar.getAttribute('data-width');
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            handleScroll();
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) header?.classList.add('scrolled');
+                else header?.classList.remove('scrolled');
+            });
         });
     </script>
 </body>
