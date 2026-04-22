@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Content Security Policy (Security) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self' https://auditaxis-backend-4g3g.onrender.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self' https://auditaxis-qse.onrender.com;">
     <meta name="description" content="AuditAxis QSE - Système de gestion des Audits et Inspections QSE. Conformité ISO 9001, ISO 14001, ISO 45001.">
     <meta name="author" content="AuditAxis QSE">
 
@@ -22,45 +22,20 @@
 
     <title>AuditAxis QSE - Audits ISO 9001 14001 45001 | Système de Management QSE</title>
     <link rel="canonical" href="https://auditaxis-qse.com/">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e5f8c' width='100' height='100' rx='10'/%3E%3Ctext x='50' y='70' font-family='sans-serif' font-size='60' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/config.js" defer></script>
+    <script src="/header.js" defer></script>
     <style>
-        /* Typewriter container */
-        .typewriter-container {
-            display: inline-block;
-        }
-
-        /* Visibility for statistics */
-        .counter-animate {
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-        .counter-animate.visible {
-            opacity: 1;
-        }
-
-        /* Hide content initially for animations */
-        .hero-subtitle {
-            opacity: 0;
-        }
-
-        .hero-btn {
-            opacity: 0;
-        }
-
-        /* Animation delay classes */
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-        .delay-5 { animation-delay: 0.5s; }
-        .delay-6 { animation-delay: 0.6s; }
+        .typewriter-container { display: inline-block; }
+        .counter-animate { opacity: 0; transition: opacity 0.8s ease; }
+        .counter-animate.visible { opacity: 1; }
+        .hero-subtitle { opacity: 0; }
+        .hero-btn { opacity: 0; }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script src="header.js"></script>
 
     <section class="hero" role="main">
         <h1 class="typewriter-container"><span id="typewriter-text"></span><span class="cursor">|</span></h1>
@@ -101,102 +76,24 @@
                 <h3>Audit Interne</h3>
                 <p>Évaluation interne des processus pour garantir la conformité aux normes ISO 9001, 14001 et 45001. Identification proactive des non-conformités et axes d'amélioration.</p>
             </div>
-
             <div class="card external card-animate">
                 <h3>Audit Externe</h3>
-                <p>Préparation et accompagnement pour les audits externes par des organismes certificateurs. Revue documentaire et mise en conformité avant certification.</p>
+                <p>Préparation et accompagnement pour les audits externes par des organismes certificateurs.</p>
             </div>
-
             <div class="card certification card-animate">
                 <h3>Audit de Certification</h3>
-                <p>Accompagnement complet dans la démarche de certification ISO. De l'audit initial à l'obtention du certificat, nous vous guidons à chaque étape.</p>
+                <p>Accompagnement complet dans la démarche de certification ISO.</p>
             </div>
-
             <div class="card inspection card-animate">
                 <h3>Inspection Sécurité</h3>
-                <p>Inspections réglementaires des équipements, des lieux de travail et des EPI. Conformité au référentiel ISO 45001 et réglementations locales.</p>
-            </div>
-
-            <div class="card internal card-animate">
-                <h3>Audit Environnemental</h3>
-                <p>Évaluation des impacts environnementaux et conformité ISO 14001. Gestion des déchets, émissions et empreinte écologique de l'organisation.</p>
-            </div>
-
-            <div class="card external card-animate">
-                <h3>Inspection Qualité</h3>
-                <p>Contrôles qualité des produits et processus. Vérification des critères de conformité et respect des spécifications clients.</p>
+                <p>Inspections réglementaires des équipements et des lieux de travail.</p>
             </div>
         </div>
     </div>
 
-    <section class="standards">
-        <div class="container">
-            <h2 class="section-title">Normes ISO QSE</h2>
-            <p class="section-subtitle">Notre méthodologie s'appuie sur les standards internationaux reconnus</p>
-
-            <div class="standards-grid">
-                <div class="standard-card standard-card-3d">
-                    <div class="icon">📋</div>
-                    <span class="iso-code">ISO 9001:2015</span>
-                    <h3>Système de Management de la Qualité</h3>
-                    <p>Norme internationale pour la gestion de la qualité, axée sur la satisfaction client et l'amélioration continue.</p>
-                </div>
-
-                <div class="standard-card standard-card-3d">
-                    <div class="icon">⚠️</div>
-                    <span class="iso-code">ISO 45001:2018</span>
-                    <h3>Système de Management SST</h3>
-                    <p>Santé et sécurité au travail - prévention des risques professionnels et promotion du bien-être des employés.</p>
-                </div>
-
-                <div class="standard-card standard-card-3d">
-                    <div class="icon">🌱</div>
-                    <span class="iso-code">ISO 14001:2015</span>
-                    <h3>Système de Management Environnemental</h3>
-                    <p>Gestion environnementale responsable, réduction des impacts et amélioration de la performance écologique.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer-enriched">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/expertise">Expertise</a></li>
-                    <li><a href="/about">À Propos</a></li>
-                    <li><a href="/checklist">Checklists</a></li>
-                    <li><a href="/glossaire">Glossaire</a></li>
-                    <li><a href="/diagnostic">Diagnostic IA</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contact</h4>
-                <ul>
-                    <li>📧 contact@auditaxis-qse.com</li>
-                    <li>📍 Campus Universitaire</li>
-                    <li>🕐 Lun - Ven : 9h - 17h</li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>AuditAxis QSE</h4>
-                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
-        </div>
-    </footer>
+    <footer></footer>
 
     <script>
-        // ============================================
-        // ANIMATIONS AVANCÉES - AUDITAXIS QSE
-        // ============================================
-
-        // 1. HIDE LOADING BAR
         window.addEventListener('load', function() {
             const loadingBar = document.getElementById('loadingBar');
             if (loadingBar) {
@@ -206,113 +103,28 @@
             }
         });
 
-        // 2. TYPEWRITER EFFECT FOR HERO TITLE
         const titleText = "Gestion des Audits QSE";
         const typewriterElement = document.getElementById('typewriter-text');
-        const cursorElement = document.querySelector('.cursor');
         const heroSubtitle = document.getElementById('heroSubtitle');
         const heroBtn = document.getElementById('heroBtn');
 
         let charIndex = 0;
-        const typingSpeed = 60; // milliseconds per character
-
         function typeWriter() {
             if (charIndex < titleText.length) {
                 typewriterElement.textContent += titleText.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, typingSpeed);
+                setTimeout(typeWriter, 60);
             } else {
-                // Hide cursor when done
-                cursorElement.style.display = 'none';
-                // Show subtitle with fade
                 setTimeout(() => {
                     heroSubtitle.style.transition = 'opacity 1s ease';
                     heroSubtitle.style.opacity = '1';
-
-                    // Show button with bounce after subtitle
                     setTimeout(() => {
-                        heroBtn.style.animation = 'bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
                         heroBtn.style.opacity = '1';
                     }, 600);
                 }, 300);
             }
         }
-
-        // Start typewriter when page loads
-        window.addEventListener('load', () => {
-            setTimeout(typeWriter, 800);
-        });
-
-        // 3. STAGGERED CARD ANIMATIONS (AUDIT CARDS)
-        const auditCards = document.querySelectorAll('.card-animate');
-
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.2,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        auditCards.forEach(card => {
-            cardObserver.observe(card);
-        });
-
-        // 5. CURSOR BLINKING ANIMATION
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes blink {
-                0%, 50% { opacity: 1; }
-                51%, 100% { opacity: 0; }
-            }
-            .cursor {
-                animation: blink 1s infinite;
-                font-weight: 100;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // 6. STATS COUNTER ANIMATION
-        const statItems = document.querySelectorAll('.stat-item.counter-animate');
-
-        const countUp = (element, target, suffix = '') => {
-            const duration = 2000; // 2 seconds
-            const steps = 60;
-            const increment = target / steps;
-            let current = 0;
-            const stepTime = duration / steps;
-
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.floor(current) + suffix;
-            }, stepTime);
-        };
-
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    const target = parseInt(entry.target.dataset.target, 10);
-                    const suffix = entry.target.dataset.suffix || '';
-                    const numberEl = entry.target.querySelector('.stat-number');
-                    countUp(numberEl, target, suffix);
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.5
-        });
-
-        statItems.forEach(item => {
-            statsObserver.observe(item);
-        });
+        window.addEventListener('load', () => { setTimeout(typeWriter, 800); });
     </script>
 </body>
 </html>

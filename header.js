@@ -49,10 +49,54 @@
     </header>
     `;
 
+    // Template du footer
+    const footerHTML = `
+    <footer class="footer-enriched">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/expertise">Expertise</a></li>
+                    <li><a href="/about">À Propos</a></li>
+                    <li><a href="/checklist">Checklists</a></li>
+                    <li><a href="/glossaire">Glossaire</a></li>
+                    <li><a href="/diagnostic">Diagnostic IA</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 contact@auditaxis-qse.com</li>
+                    <li>📍 Campus Universitaire</li>
+                    <li>🕐 Lun - Ven : 9h - 17h</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>AuditAxis QSE</h4>
+                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
+                <div class="social-links">
+                    <!-- Liens réseaux sociaux si besoin -->
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footer-year">${new Date().getFullYear()}</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
+        </div>
+    </footer>
+    `;
+
     // Injecter le header
-    const placeholder = document.getElementById('header-placeholder');
-    if (placeholder) {
-        placeholder.outerHTML = headerHTML;
+    const headerPlaceholder = document.getElementById('header-placeholder');
+    if (headerPlaceholder) {
+        headerPlaceholder.outerHTML = headerHTML;
+    }
+
+    // Injecter le footer
+    const footerPlaceholder = document.querySelector('footer');
+    if (footerPlaceholder) {
+        footerPlaceholder.outerHTML = footerHTML;
     }
 
     // Initialiser le menu hamburger après injection

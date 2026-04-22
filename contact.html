@@ -20,13 +20,13 @@
 
     <title>Contact - Devis Audit ISO 9001 14001 45001 | AuditAxis QSE</title>
     <link rel="canonical" href="https://auditaxis-qse.com/contact">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/config.js" defer></script>
+    <script src="/header.js" defer></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script src="header.js"></script>
-
 
     <section class="hero" role="main">
         <h1>Contactez-nous</h1>
@@ -38,18 +38,12 @@
         <p class="section-subtitle">Remplissez le formulaire ci-dessous, nous vous répondrons dans les 24 heures</p>
 
         <div class="contact-wrapper">
-            <div class="success-msg" id="successMsg">
-                ✅ Message envoyé avec succès ! Nous vous répondrons bientôt.
-            </div>
-
-            <div class="error-msg" id="errorMsg">
-                ❌ Une erreur est survenue lors de l'envoi. Veuillez réessayer.
-            </div>
+            <div id="formStatus" class="form-status" style="display: none;"></div>
 
             <form id="contactForm">
                 <div class="form-group">
-                    <label for="name">Nom complet</label>
-                    <input type="text" id="name" name="name" placeholder="Votre nom et prénom" required>
+                    <label for="nom">Nom complet</label>
+                    <input type="text" id="nom" name="nom" placeholder="Votre nom et prénom" required>
                 </div>
 
                 <div class="form-group">
@@ -58,8 +52,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="subject">Sujet</label>
-                    <input type="text" id="subject" name="subject" placeholder="Demande d'audit ISO 9001" required>
+                    <label for="sujet">Sujet</label>
+                    <input type="text" id="sujet" name="sujet" placeholder="Demande d'audit ISO 9001" required>
                 </div>
 
                 <div class="form-group">
@@ -72,16 +66,7 @@
                     <input type="text" id="company" name="company" placeholder="Nom de votre organisation">
                 </div>
 
-                <!-- Honeypot: champ caché pour bloquer les bots -->
-                <div class="form-group" style="display: none !important; visibility: hidden; position: absolute; left: -9999px;" aria-hidden="true">
-                    <label for="website">Ne pas remplir ce champ</label>
-                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-                </div>
-
                 <button type="submit" class="btn" id="submitBtn">Envoyer le Message</button>
-                <div id="cooldownMsg" style="display: none; color: var(--accent); font-size: 0.9rem; margin-top: 0.5rem;">
-                    ⏱️ Veuillez patienter <span id="cooldownSec">30</span>s avant un nouvel envoi
-                </div>
             </form>
         </div>
 
@@ -106,335 +91,67 @@
         </div>
     </div>
 
-    <footer class="footer-enriched">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/about">À Propos</a></li>
-                    <li><a href="/checklist">Checklists</a></li>
-                    <li><a href="/glossaire">Glossaire</a></li>
-                    <li><a href="/diagnostic">Diagnostic IA</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contact</h4>
-                <ul>
-                    <li>📧 contact@auditaxis-qse.com</li>
-                    <li>📍 Campus Universitaire</li>
-                    <li>🕐 Lun - Ven : 9h - 17h</li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>AuditAxis QSE</h4>
-                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
-        </div>
-    </footer>
+    <footer></footer>
 
     <script>
-        // Hide loading bar after page loads
-        window.addEventListener('load', function() {
-            const loadingBar = document.getElementById('loadingBar');
-            if (loadingBar) {
-                setTimeout(function() {
-                    loadingBar.classList.add('hidden');
-                }, 500);
-            }
-        });
+        const contactForm = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const submitBtn = document.getElementById('submitBtn');
+        const API_URL = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
 
-        // Configuration du backend
-        const API_URL = 'https://auditaxis-backend-4g3g.onrender.com';
-
-        // Fonction pour réveiller le serveur (Render free tier s'endort après 15min)
-        async function wakeUpBackend() {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
-
-            try {
-                const response = await fetch(`${API_URL}/api/health`, {
-                    signal: controller.signal
-                });
-                clearTimeout(timeoutId);
-
-                if (response.ok) {
-                    console.log('✅ Serveur réveillé avec succès');
-                }
-            } catch (error) {
-                // Silencieux - le serveur sera réveillé au premier vrai appel
-                console.log('⏳ Le serveur est en cours de réveil...');
-            }
-        }
-
-        // Réveiller le serveur au chargement
-        document.addEventListener('DOMContentLoaded', wakeUpBackend);
-
-        // Constantes de validation
-        const VALIDATION = {
-            NOM_MIN: 2,
-            NOM_MAX: 100,
-            SUJET_MIN: 5,
-            SUJET_MAX: 200,
-            MESSAGE_MIN: 20,
-            MESSAGE_MAX: 2000,
-            COMPANY_MAX: 100,
-            EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            COOLDOWN_SEC: 30
-        };
-
-        // Fonction de sanitisation des entrées
-        function sanitizeInput(input) {
-            if (!input || typeof input !== 'string') return '';
-            return input
-                .replace(/[<>]/g, '') // Supprime les balises HTML
-                .replace(/javascript:/gi, '') // Supprime les protocoles JS
-                .replace(/on\w+=/gi, '') // Supprime les event handlers
-                .trim();
-        }
-
-        // Fonction de validation complète
-        function validateForm(nom, email, sujet, message, company, honeypot) {
-            const errors = [];
-
-            // Honeypot: si rempli, c'est un bot (bloqué silencieusement)
-            if (honeypot && honeypot.length > 0) {
-                return { valid: false, errors: [], isBot: true };
-            }
-
-            // Validation nom
-            const nomLen = nom.length;
-            if (nomLen < VALIDATION.NOM_MIN) {
-                errors.push(`Le nom doit contenir au moins ${VALIDATION.NOM_MIN} caractères`);
-            } else if (nomLen > VALIDATION.NOM_MAX) {
-                errors.push(`Le nom ne doit pas dépasser ${VALIDATION.NOM_MAX} caractères`);
-            }
-
-            // Validation email
-            if (!email) {
-                errors.push('L\'email est requis');
-            } else if (!VALIDATION.EMAIL_REGEX.test(email)) {
-                errors.push('L\'email n\'est pas valide');
-            } else if (email.length > 254) {
-                errors.push('L\'email est trop long');
-            }
-
-            // Validation sujet
-            const sujetLen = sujet.length;
-            if (sujetLen < VALIDATION.SUJET_MIN) {
-                errors.push(`Le sujet doit contenir au moins ${VALIDATION.SUJET_MIN} caractères`);
-            } else if (sujetLen > VALIDATION.SUJET_MAX) {
-                errors.push(`Le sujet ne doit pas dépasser ${VALIDATION.SUJET_MAX} caractères`);
-            }
-
-            // Validation message
-            const msgLen = message.length;
-            if (msgLen < VALIDATION.MESSAGE_MIN) {
-                errors.push(`Le message doit contenir au moins ${VALIDATION.MESSAGE_MIN} caractères`);
-            } else if (msgLen > VALIDATION.MESSAGE_MAX) {
-                errors.push(`Le message ne doit pas dépasser ${VALIDATION.MESSAGE_MAX} caractères`);
-            }
-
-            // Validation entreprise (optionnel)
-            if (company && company.length > VALIDATION.COMPANY_MAX) {
-                errors.push(`Le nom de l'entreprise ne doit pas dépasser ${VALIDATION.COMPANY_MAX} caractères`);
-            }
-
-            return { valid: errors.length === 0, errors };
-        }
-
-        // Constantes de cooldown
-        const COOLDOWN_KEY = 'contact_last_send';
-
-        // Gestion du cooldown
-        function startCooldown() {
-            const submitBtn = document.getElementById('submitBtn');
-            const cooldownSecEl = document.getElementById('cooldownSec');
-            const cooldownContainer = document.getElementById('cooldownMsg');
-
-            // Sauvegarder le timestamp du dernier envoi
-            localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
-
-            let remaining = VALIDATION.COOLDOWN_SEC;
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = `Patienter ${remaining}s...`;
-            cooldownContainer.style.display = 'block';
-            cooldownSecEl.textContent = remaining;
-
-            const timer = setInterval(() => {
-                remaining--;
-                submitBtn.textContent = `Patienter ${remaining}s...`;
-                cooldownSecEl.textContent = remaining;
-
-                if (remaining <= 0) {
-                    clearInterval(timer);
-                    submitBtn.disabled = false;
-                    submitBtn.removeAttribute('aria-busy');
-                    submitBtn.textContent = 'Envoyer le Message';
-                    cooldownContainer.style.display = 'none';
-                }
-            }, 1000);
-        }
-
-        // Vérifier si un cooldown est actif au chargement
-        function checkCooldownOnLoad() {
-            const lastSend = localStorage.getItem(COOLDOWN_KEY);
-            if (!lastSend) return;
-
-            const elapsed = Date.now() - parseInt(lastSend, 10);
-            const remaining = Math.ceil((VALIDATION.COOLDOWN_SEC * 1000 - elapsed) / 1000);
-
-            if (remaining > 0) {
-                const submitBtn = document.getElementById('submitBtn');
-                const cooldownMsg = document.getElementById('cooldownMsg');
-                const cooldownSecEl = document.getElementById('cooldownSec');
-
-                submitBtn.disabled = true;
-                submitBtn.textContent = `Patienter ${remaining}s...`;
-                cooldownMsg.style.display = 'block';
-                cooldownSecEl.textContent = remaining;
-
-                const timer = setInterval(() => {
-                    const newRemaining = Math.ceil((VALIDATION.COOLDOWN_SEC * 1000 - (Date.now() - parseInt(lastSend, 10))) / 1000);
-                    if (newRemaining <= 0) {
-                        clearInterval(timer);
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Envoyer le Message';
-                        cooldownMsg.style.display = 'none';
-                        localStorage.removeItem(COOLDOWN_KEY);
-                    } else {
-                        submitBtn.textContent = `Patienter ${newRemaining}s...`;
-                        cooldownSecEl.textContent = newRemaining;
-                    }
-                }, 1000);
-            } else {
-                localStorage.removeItem(COOLDOWN_KEY);
-            }
-        }
-
-        // Vérifier le cooldown au chargement
-        checkCooldownOnLoad();
-
-        // Gestion de la soumission du formulaire
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const submitBtn = document.getElementById('submitBtn');
-            const successMsg = document.getElementById('successMsg');
-            const errorMsg = document.getElementById('errorMsg');
+            const formData = {
+                nom: document.getElementById('nom').value,
+                email: document.getElementById('email').value,
+                sujet: document.getElementById('sujet').value,
+                company: document.getElementById('company').value,
+                message: document.getElementById('message').value
+            };
 
-            // Masquer les messages précédents
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-
-            // Désactiver le bouton pendant l'envoi
+            // État de chargement
             submitBtn.disabled = true;
-            submitBtn.setAttribute('aria-busy', 'true');
-            submitBtn.textContent = 'Envoi en cours...';
-
-            // Récupérer et sanitiser les valeurs du formulaire
-            const nom = sanitizeInput(document.getElementById('name').value);
-            const email = sanitizeInput(document.getElementById('email').value).toLowerCase();
-            const sujet = sanitizeInput(document.getElementById('subject').value);
-            const message = sanitizeInput(document.getElementById('message').value);
-            const company = sanitizeInput(document.getElementById('company').value);
-            const honeypot = document.getElementById('website').value; // Honeypot field
-
-            // Validation stricte côté frontend
-            const validation = validateForm(nom, email, sujet, message, company, honeypot);
-
-            // Honeypot: bloqué silencieusement (simuler un succès pour le bot)
-            if (validation.isBot) {
-                console.log('🤖 Bot détecté via honeypot - envoi bloqué silencieusement');
-                successMsg.style.display = 'block';
-                document.getElementById('contactForm').reset();
-                submitBtn.disabled = false;
-                submitBtn.removeAttribute('aria-busy');
-                submitBtn.textContent = 'Envoyer le Message';
-                return;
-            }
-
-            if (!validation.valid) {
-                errorMsg.textContent = '❌ ' + validation.errors.join('. ');
-                errorMsg.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.removeAttribute('aria-busy');
-                submitBtn.textContent = 'Envoyer le Message';
-                return;
-            }
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Envoi en cours...';
+            formStatus.className = 'form-status';
+            formStatus.textContent = '';
+            formStatus.style.display = 'none';
 
             try {
-                console.log('=== ENVOI FORMULAIRE ===');
-                console.log('URL:', `${API_URL}/api/contact`);
-                console.log('Data:', { nom, email, sujet, message, company });
-
-                // Timeout de 30s pour cold start Render
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    controller.abort();
-                    console.log('⏱️ Timeout dépassé (30s)');
-                }, 30000);
-
-                submitBtn.textContent = 'Connexion en cours...';
-
                 const response = await fetch(`${API_URL}/api/contact`, {
                     method: 'POST',
-                    mode: 'cors',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        nom: nom,
-                        email: email,
-                        sujet: sujet,
-                        message: message,
-                        company: company
-                    }),
-                    signal: controller.signal
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
                 });
 
-                clearTimeout(timeoutId);
-                console.log('Réponse reçue:', response.status, response.statusText);
+                const data = await response.json();
 
                 if (response.ok) {
-                    const data = await response.json();
-                    successMsg.style.display = 'block';
-                    document.getElementById('contactForm').reset();
-                    startCooldown();
+                    formStatus.textContent = '✅ Votre message a été envoyé avec succès ! Nous vous répondrons sous 24h-48h.';
+                    formStatus.className = 'form-status success';
+                    formStatus.style.display = 'block';
+                    formStatus.style.color = 'var(--secondary)';
+                    formStatus.style.padding = '1rem';
+                    formStatus.style.marginBottom = '1rem';
+                    formStatus.style.borderRadius = '8px';
+                    formStatus.style.background = 'rgba(46, 139, 87, 0.1)';
+                    contactForm.reset();
                 } else {
-                    const errorData = await response.json();
-                    const safeMessage = sanitizeInput(errorData.message || 'Une erreur est survenue lors de l\'envoi.');
-                    alert('Erreur: ' + safeMessage);
-                    errorMsg.textContent = '❌ ' + safeMessage;
-                    errorMsg.style.display = 'block';
+                    throw new Error(data.message || 'Erreur lors de l\'envoi du message.');
                 }
-                submitBtn.disabled = false;
-                submitBtn.removeAttribute('aria-busy');
-                submitBtn.textContent = 'Envoyer le Message';
             } catch (error) {
-                console.error('=== ERREUR FETCH ===');
-                console.error('Error name:', error.name);
-                console.error('Error message:', error.message);
-                console.error('Error stack:', error.stack);
-
-                if (error.name === 'AbortError') {
-                    alert('Erreur: Le serveur met trop de temps à répondre. Veuillez réessayer.');
-                    errorMsg.textContent = '⏱️ Timeout: Le serveur est trop lent.';
-                } else {
-                    alert('Erreur: ' + error.message);
-                    errorMsg.textContent = '❌ Erreur: ' + error.message;
-                }
-                errorMsg.style.display = 'block';
+                formStatus.textContent = '❌ ' + (error.message || 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer.');
+                formStatus.className = 'form-status error';
+                formStatus.style.display = 'block';
+                formStatus.style.color = 'var(--accent)';
+                formStatus.style.padding = '1rem';
+                formStatus.style.marginBottom = '1rem';
+                formStatus.style.borderRadius = '8px';
+                formStatus.style.background = 'rgba(231, 76, 60, 0.1)';
+            } finally {
                 submitBtn.disabled = false;
-                submitBtn.removeAttribute('aria-busy');
-                submitBtn.textContent = 'Envoyer le Message';
+                submitBtn.innerHTML = originalBtnText;
             }
         });
     </script>

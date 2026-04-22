@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Frontend**: Pure HTML5/CSS3/ES6+ (no frameworks), header dynamically injected via `header.js`
 - **Backend**: Node.js + Express.js with Google Gemini Flash API
 - **AI Services**: Local keyword matching (client-side) + Gemini AI API (server-side)
-- **Deployment**: Netlify (frontend), Render (backend at `auditaxis-backend-4g3g.onrender.com`)
+- **Deployment**: Netlify (frontend), Render (backend at `auditaxis-qse.onrender.com`)
 
 ### Frontend Structure
 ```
@@ -99,7 +99,7 @@ cp .env.example .env
 
 **Note**: Checklist storage is in-memory only (Map). Data lost on server restart.
 
-**API Base URL**: `https://auditaxis-backend-4g3g.onrender.com`
+**API Base URL**: `https://auditaxis-qse.onrender.com`
 
 ### Hybrid AI Diagnostic Architecture
 
@@ -220,7 +220,7 @@ All pages include: `og:title`, `og:description`, `og:url`, `og:type`, `og:image`
 
 **Health check:**
 ```bash
-curl https://auditaxis-backend-4g3g.onrender.com/api/health
+curl https://auditaxis-qse.onrender.com/api/health
 ```
 
 ## File Reference

@@ -40,30 +40,35 @@ app.use((req, res, next) => {
 });
 
 // CORS configuré pour Vercel + domaine personnalisé + fallback dev
-const corsOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()).filter(Boolean)
-    : [
-        'https://auditaxis-qse.vercel.app',
-        'https://auditaxis-qse.com',
-        'http://localhost:3000',
-        'http://localhost:5500',
-        'http://127.0.0.1:5500'
-      ];
+const corsOrigins = [
+    'https://auditaxis-qse.com',
+    'https://www.auditaxis-qse.com',
+    'https://auditaxis-frontend.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500'
+];
+
+// Ajouter dynamiquement CORS_ORIGIN depuis les variables d'env si présent
+if (process.env.CORS_ORIGIN) {
+    process.env.CORS_ORIGIN.split(',').forEach(origin => {
+        const trimmed = origin.trim();
+        if (trimmed && !corsOrigins.includes(trimmed)) {
+            corsOrigins.push(trimmed);
+        }
+    });
+}
 
 app.use(cors({
     origin: function(origin, callback) {
         // Autoriser les requêtes sans origine (comme les apps mobiles ou curl)
         if (!origin) return callback(null, true);
 
-        // Vérification dynamique
+        // Vérification
         const isAllowed = corsOrigins.some(allowedOrigin => {
-            // Support exact match
             if (origin === allowedOrigin) return true;
-            // Support wildcard pour les branches Vercel (ex: auditaxis-*-vercel.app)
-            if (allowedOrigin.includes('*')) {
-                const regex = new RegExp('^' + allowedOrigin.replace(/\*/g, '.*') + '$');
-                return regex.test(origin);
-            }
+            // Autoriser tous les sous-domaines vercel.app pour le projet
+            if (origin.endsWith('.vercel.app') && origin.includes('auditaxis')) return true;
             return false;
         });
 

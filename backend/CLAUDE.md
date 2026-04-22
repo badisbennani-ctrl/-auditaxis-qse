@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **AuditAxis Backend** - Node.js/Express API for QSE (Quality, Safety, Environment) audit diagnostics. Provides hybrid AI analysis using Google Gemini Flash API with local keyword-based fallback.
 
-**Deployment**: Render (https://auditaxis-backend.onrender.com)
+**Deployment**: Render (https://auditaxis-qse.onrender.com)
 
 ## Commands
 

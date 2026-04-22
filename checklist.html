@@ -20,12 +20,13 @@
 
     <title>Checklist ISO 9001 14001 45001 Gratuite | AuditAxis QSE</title>
     <link rel="canonical" href="https://auditaxis-qse.com/checklist">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/config.js" defer></script>
+    <script src="/header.js" defer></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script src="header.js"></script>
 
     <section class="hero" role="main">
         <h1>Checklists d'Audit</h1>
@@ -172,36 +173,7 @@
         </div>
     </div>
 
-    <footer class="footer-enriched">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/about">À Propos</a></li>
-                    <li><a href="/checklist">Checklists</a></li>
-                    <li><a href="/glossaire">Glossaire</a></li>
-                    <li><a href="/diagnostic">Diagnostic IA</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contact</h4>
-                <ul>
-                    <li>📧 contact@auditaxis-qse.com</li>
-                    <li>📍 Campus Universitaire</li>
-                    <li>🕐 Lun - Ven : 9h - 17h</li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>AuditAxis QSE</h4>
-                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
-        </div>
-    </footer>
+    <footer></footer>
 
     <script>
         // Hide loading bar after page loads
@@ -215,7 +187,7 @@
         });
 
         // Configuration du backend
-        const API_URL = 'https://auditaxis-backend-4g3g.onrender.com';
+        const API_URL = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
 
         // Gestion du sessionId
         function getSessionId() {

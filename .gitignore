@@ -1,6 +1,3 @@
-# Exclure le dossier backend (repo git séparé)
-backend/
-
 # Fichiers système Windows
 Thumbs.db
 Desktop.ini

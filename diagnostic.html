@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Content Security Policy (Security) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://auditaxis-backend-4g3g.onrender.com;">
     <meta name="description" content="Diagnostic IA QSE gratuit - Analysez la conformité ISO 9001, ISO 14001, ISO 45001 de votre entreprise avec l'intelligence artificielle.">
     <meta name="author" content="AuditAxis QSE">
 
@@ -15,15 +13,13 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%231e5f8c' width='1200' height='630'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='72' fill='white'%3EAuditAxis QSE%3C/text%3E%3C/svg%3E">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Diagnostic IA ISO 9001 14001 45001 | AuditAxis QSE">
-    <meta name="twitter:description" content="Analysez votre conformité ISO avec l'IA. Résultats instantanés.">
-
     <title>Diagnostic IA ISO 9001 14001 45001 Gratuit | AuditAxis QSE</title>
     <link rel="canonical" href="https://auditaxis-qse.com/diagnostic">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/config.js" defer></script>
+    <script src="/header.js" defer></script>
+    <script src="/diagnostic.js" defer></script>
     <style>
         /* Diagnostic Page Specific Styles */
         .diagnostic-container {
@@ -31,25 +27,7 @@
             margin: 0 auto;
             padding: 2rem;
             position: relative;
-            z-index: 1;
-        }
-
-        /* Push content below fixed header */
-        #step1, #step2 {
-            position: relative;
-            z-index: 2;
-            pointer-events: auto;
-        }
-
-        .norm-selection {
-            position: relative;
-            z-index: 3;
-        }
-
-        .norm-btn {
-            position: relative;
-            z-index: 4;
-            pointer-events: auto;
+            z-index: 1000;
         }
 
         .step-section {
@@ -58,6 +36,8 @@
             padding: 2.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+            z-index: 1001;
         }
 
         .step-title {
@@ -82,12 +62,13 @@
             font-size: 0.9rem;
         }
 
-        /* Norm Selection Buttons */
         .norm-selection {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
+            position: relative;
+            z-index: 1002;
         }
 
         .norm-btn {
@@ -95,10 +76,12 @@
             border: 3px solid var(--gray-light);
             border-radius: 12px;
             padding: 1.5rem;
-            cursor: pointer;
+            cursor: pointer !important;
             transition: all 0.3s ease;
             text-align: center;
             position: relative;
+            z-index: 1003;
+            pointer-events: auto !important;
             overflow: hidden;
         }
 
@@ -147,7 +130,6 @@
             color: var(--gray);
         }
 
-        /* Text Area */
         .description-area {
             margin-top: 1.5rem;
         }
@@ -192,7 +174,6 @@
             color: var(--accent-red);
         }
 
-        /* Launch Button */
         .launch-btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -207,6 +188,7 @@
             margin: 2rem auto 0;
             position: relative;
             overflow: hidden;
+            z-index: 1005;
         }
 
         .launch-btn:hover:not(:disabled) {
@@ -228,7 +210,6 @@
             50% { box-shadow: 0 0 0 15px rgba(30, 95, 140, 0); }
         }
 
-        /* Loader */
         .loader-container {
             display: none;
             text-align: center;
@@ -292,7 +273,6 @@
             75% { content: "..."; }
         }
 
-        /* Results Section */
         .results-container {
             display: none;
             animation: fadeInUp 0.6s ease;
@@ -302,7 +282,6 @@
             display: block;
         }
 
-        /* Score Gauge */
         .score-section {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 16px;
@@ -371,7 +350,6 @@
         .appreciation.bon { background: rgba(46, 139, 87, 0.3); }
         .appreciation.excellent { background: rgba(60, 179, 113, 0.4); }
 
-        /* Result Cards */
         .result-section {
             background: var(--white);
             border-radius: 16px;
@@ -412,10 +390,6 @@
             border-left: 4px solid;
         }
 
-        .result-item:last-child {
-            margin-bottom: 0;
-        }
-
         .result-item.majeure {
             background: #fdf2f2;
             border-left-color: #e74c3c;
@@ -436,118 +410,6 @@
             border-left-color: #3498db;
         }
 
-        .result-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.8rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .result-item-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .result-item.majeure .result-item-title { color: #c0392b; }
-        .result-item.mineure .result-item-title { color: #d68910; }
-        .result-item.conforme .result-item-title { color: #1e8449; }
-        .result-item.recommandation .result-item-title { color: #2874a6; }
-
-        .gravite-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .gravite-badge.majeure {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .gravite-badge.mineure {
-            background: #f39c12;
-            color: white;
-        }
-
-        .priorite-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .priorite-badge.urgent {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .priorite-badge.moyen-terme {
-            background: #f39c12;
-            color: white;
-        }
-
-        .priorite-badge.long-terme {
-            background: #3498db;
-            color: white;
-        }
-
-        .article-reference {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .result-description {
-            color: var(--dark);
-            line-height: 1.7;
-            margin-bottom: 0.8rem;
-        }
-
-        .result-explication {
-            background: rgba(0, 0, 0, 0.03);
-            padding: 1rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            color: var(--gray);
-            margin-top: 0.8rem;
-        }
-
-        .action-corrective {
-            background: rgba(30, 95, 140, 0.08);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 0.8rem;
-            border-left: 3px solid var(--primary);
-        }
-
-        .action-corrective-label {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .benefice {
-            background: rgba(46, 139, 87, 0.08);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-top: 0.8rem;
-            font-size: 0.9rem;
-            color: var(--secondary);
-        }
-
-        .benefice-label {
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 1rem;
@@ -585,19 +447,6 @@
             border: 2px solid var(--primary);
         }
 
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--gray);
-        }
-
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Print styles */
         @media print {
             header, .step-section, .action-buttons, .loader-container {
                 display: none !important;
@@ -616,8 +465,6 @@
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <script src="header.js"></script>
-
 
     <section class="hero" role="main">
         <h1>🔍 Diagnostic IA QSE</h1>
@@ -632,19 +479,19 @@
                 Choisissez la norme ISO
             </h2>
             <div class="norm-selection">
-                <div class="norm-btn" data-norm="ISO 9001" onclick="selectNorm(this)">
+                <div class="norm-btn" data-norm="ISO 9001" role="button" tabindex="0">
                     <div class="norm-icon">📊</div>
                     <div class="norm-code">ISO 9001:2015</div>
                     <div class="norm-name">Management de la Qualité</div>
                 </div>
 
-                <div class="norm-btn" data-norm="ISO 14001" onclick="selectNorm(this)">
+                <div class="norm-btn" data-norm="ISO 14001" role="button" tabindex="0">
                     <div class="norm-icon">🌱</div>
                     <div class="norm-code">ISO 14001:2015</div>
                     <div class="norm-name">Management Environnemental</div>
                 </div>
 
-                <div class="norm-btn" data-norm="ISO 45001" onclick="selectNorm(this)">
+                <div class="norm-btn" data-norm="ISO 45001" role="button" tabindex="0">
                     <div class="norm-icon">🛡️</div>
                     <div class="norm-code">ISO 45001:2018</div>
                     <div class="norm-name">Santé et Sécurité au Travail</div>
@@ -666,21 +513,17 @@
                 <textarea
                     id="situation"
                     placeholder="Exemple : Notre entreprise fabrique des pièces mécaniques depuis 10 ans. Nous avons 45 employés et des procédures qualité documentées, mais elles ne sont pas toujours respectées sur le terrain. Nos employés ne sont pas tous formés aux risques professionnels. Nous avons des déchets de production que nous recyclons partiellement..."
-                    oninput="updateCharCounter()"
                 ></textarea>
 
                 <div class="char-counter" id="charCounter">0 / 50 caractères minimum</div>
             </div>
         </div>
 
-        <!-- Bouton Lancer -->
-        <button class="launch-btn" id="launchBtn" onclick="launchDiagnostic()" disabled>
+        <button class="launch-btn" id="launchBtn" disabled>
             🚀 Lancer le Diagnostic
         </button>
         <div id="rateLimitMsg" style="display: none; color: var(--accent); text-align: center; margin-top: 1rem; font-weight: 500;"></div>
-        <div id="serverStatusMsg" style="display: none;"></div>
 
-        <!-- Loader -->
         <div class="loader-container" id="loader">
             <div class="loader-ai">
                 <div class="loader-ring"></div>
@@ -689,138 +532,46 @@
                 Analyse en cours par l'IA
                 <span class="loader-dots"></span>
             </p>
-            <p style="color: var(--gray); margin-top: 1rem; font-size: 0.9rem;">
-                Notre expert virtuel examine votre situation selon les exigences de la norme
-            </p>
         </div>
 
-        <!-- Résultats -->
         <div class="results-container" id="results">
-            <!-- Dashboard de Fusion QSE -->
-            <div id="qseDashboard" class="step-section" style="margin-bottom: 2rem; border-top: 4px solid var(--primary);">
-                <h3 class="result-section-title" style="color: var(--primary); border-color: var(--primary); justify-content: center;">
-                    🏆 Synthèse de Fusion QSE Finale
-                </h3>
-                
-                <div class="norm-selection" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
-                    <div class="norm-btn" style="cursor: default; border-color: var(--primary-light);">
-                        <div class="norm-icon">📊</div>
-                        <div class="norm-code">ISO 9001</div>
-                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="score9001">0%</div>
-                    </div>
-                    <div class="norm-btn" style="cursor: default; border-color: var(--secondary);">
-                        <div class="norm-icon">🌱</div>
-                        <div class="norm-code">ISO 14001</div>
-                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--secondary);" id="score14001">0%</div>
-                    </div>
-                    <div class="norm-btn" style="cursor: default; border-color: var(--accent-red);">
-                        <div class="norm-icon">🛡️</div>
-                        <div class="norm-code">ISO 45001</div>
-                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-red);" id="score45001">0%</div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; background: var(--light); padding: 1.5rem; border-radius: 12px;">
-                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray);">Niveau de Risque Global</div>
-                    <div id="globalRiskLevel" style="font-size: 1.8rem; font-weight: 900; margin: 0.5rem 0;">ÉVALUATION...</div>
-                    <div id="reliabilityInfo" style="font-size: 0.8rem; color: var(--secondary);">✓ Analyse certifiée anti-hallucination</div>
-                </div>
-            </div>
-
-            <!-- Score Global Circular -->
             <div class="score-section">
                 <h3 class="score-title">📊 Score Global de Conformité</h3>
-
                 <div class="circular-progress">
                     <svg width="150" height="150">
                         <circle class="progress-circle-bg" cx="75" cy="75" r="65"></circle>
-                        <circle
-                            class="progress-circle"
-                            id="progressCircle"
-                            cx="75"
-                            cy="75"
-                            r="65"
-                            stroke-dasharray="408.4"
-                            stroke-dashoffset="408.4"
-                        ></circle>
+                        <circle class="progress-circle" id="progressCircle" cx="75" cy="75" r="65" stroke-dasharray="408.4" stroke-dashoffset="408.4"></circle>
                     </svg>
                     <div class="score-value">
                         <span id="scoreValue">0</span>
                         <span class="score-percent">%</span>
                     </div>
                 </div>
-
                 <div class="appreciation" id="appreciation">En cours d'évaluation...</div>
             </div>
 
-            <!-- Non-Conformités -->
             <div class="result-section non-conformites">
                 <h3 class="result-section-title">🔴 Non-Conformités Détectées</h3>
-                <div id="nonConformitesList">
-                    <!-- Contenu injecté par JS -->
-                </div>
+                <div id="nonConformitesList"></div>
             </div>
 
-            <!-- Points de Conformité -->
             <div class="result-section conformites">
                 <h3 class="result-section-title">✅ Points de Conformité</h3>
-                <div id="conformitesList">
-                    <!-- Contenu injecté par JS -->
-                </div>
+                <div id="conformitesList"></div>
             </div>
 
-            <!-- Recommandations -->
             <div class="result-section recommandations">
                 <h3 class="result-section-title">💡 Recommandations Prioritaires</h3>
-
-                <div id="recommandationsList">
-                    <!-- Contenu injecté par JS -->
-                </div>
+                <div id="recommandationsList"></div>
             </div>
 
-            <!-- Boutons d'action -->
             <div class="action-buttons">
-                <button class="action-btn secondary" onclick="newDiagnostic()">
-                    🔄 Nouveau Diagnostic
-                </button>
-                <button class="action-btn primary" onclick="window.print()">
-                    🖨️ Imprimer le Rapport
-                </button>
+                <button class="action-btn secondary" onclick="newDiagnostic()">🔄 Nouveau Diagnostic</button>
+                <button class="action-btn primary" onclick="window.print()">🖨️ Imprimer le Rapport</button>
             </div>
         </div>
     </div>
 
-    <footer class="footer-enriched">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/about">À Propos</a></li>
-                    <li><a href="/checklist">Checklists</a></li>
-                    <li><a href="/glossaire">Glossaire</a></li>
-                    <li><a href="/diagnostic">Diagnostic IA</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contact</h4>
-                <ul>
-                    <li>📧 contact@auditaxis-qse.com</li>
-                    <li>📍 Campus Universitaire</li>
-                    <li>🕐 Lun - Ven : 9h - 17h</li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>AuditAxis QSE</h4>
-                <p class="footer-slogan">"L'excellence QSE, certifiée et mesurée"</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <span id="footer-year">2025</span> AuditAxis QSE - Projet Académique. Tous droits réservés.</p>
-        </div>
-    </footer>
-
-    <script src="diagnostic.js"></script>
+    <footer></footer>
 </body>
 </html>

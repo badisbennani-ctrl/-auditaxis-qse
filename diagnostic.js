@@ -1,13 +1,13 @@
 // ============================================
 // DIAGNOSTIC IA - AUDITAXIS QSE
 // Analyse via API backend (Gemini)
-// DiagnosticIA v2.5 - fix detecterContradiction phrase-by-phrase
-// Build: 2026-04-13
 // ============================================
 
+console.log('🚀 Script Diagnostic.js en cours de chargement...');
+
 // Configuration API
-const API_BASE = 'https://auditaxis-backend-4g3g.onrender.com';
-const API_RATE_LIMIT_MS = 10000; // 10 secondes entre chaque appel API
+const API_BASE = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
+const API_RATE_LIMIT_MS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.RATE_LIMIT_MS : 10000;
 const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 
 // Échappement HTML pour prévenir les XSS
@@ -18,25 +18,25 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
-// Hide loading bar after page loads
-window.addEventListener('load', function() {
+// Gestion de la barre de chargement
+function hideLoadingBar() {
+    console.log('⌛ Tentative de masquage de la barre de chargement...');
     const loadingBar = document.getElementById('loadingBar');
     if (loadingBar) {
-        setTimeout(function() {
-            loadingBar.classList.add('hidden');
-        }, 500);
+        loadingBar.classList.add('hidden');
+        console.log('✅ Barre de chargement masquée');
     }
-});
+}
 
-// Vérification silencieuse de l'état du serveur au chargement
-document.addEventListener('DOMContentLoaded', function() {
-    wakeUpBackend();
-});
+window.addEventListener('load', hideLoadingBar);
+// Fallback si load est trop lent
+setTimeout(hideLoadingBar, 3000);
 
 // Fonction pour réveiller le serveur (Render free tier s'endort après 15min)
 async function wakeUpBackend() {
+    console.log('📡 Réveil du backend...');
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 8000); 
 
     try {
         const response = await fetch(`${API_BASE}/api/health`, {
@@ -679,11 +679,25 @@ const NORMES = {
                 explication: "L'organisme doit mener des audits pour vérifier que le système SST est conforme aux exigences de la norme et aux objectifs de l'entreprise."
             },
             {
+                motsCles: ["revue de direction", "revue management", "comité direction", "bilan sst"],
+                article: "Art. 9.3",
+                titre: "Revue de direction",
+                conformite: "Revue de direction réalisée pour évaluer l'efficacité du système SST",
+                explication: "La direction doit passer en revue le système de management de la SST à intervalles planifiés pour s'assurer qu'il est toujours approprié, adapté et efficace."
+            },
+            {
                 motsCles: ["non-conformité", "incident", "action corrective", "analyse causes"],
                 article: "Art. 10.2",
                 titre: "Incidents, non-conformités et actions correctives",
                 conformite: "Réaction aux incidents et élimination des causes racines",
                 explication: "Suite à un accident ou incident, l'organisme doit réagir, analyser les causes avec la participation des travailleurs et mettre en place des corrections."
+            },
+            {
+                motsCles: ["amélioration continue", "progrès", "performance sst", "kaizen"],
+                article: "Art. 10.3",
+                titre: "Amélioration continue",
+                conformite: "Démarche d'amélioration continue de la performance SST établie",
+                explication: "L'organisme doit améliorer en continu la pertinence, l'adéquation et l'efficacité du système de management de la SST."
             }
         ]
     }
@@ -1472,8 +1486,10 @@ function genererResumeExecutif(resultat, normeNom) {
 // SÉLECTION DE LA NORME
 // ============================================
 function selectNorm(element) {
-    // Retirer la classe active de tous les boutons
-    document.querySelectorAll('.norm-btn').forEach(btn => {
+    if (!element) return;
+    
+    // Retirer la classe active de tous les boutons de sélection
+    document.querySelectorAll('#step1 .norm-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
@@ -1482,9 +1498,66 @@ function selectNorm(element) {
 
     // Stocker la norme sélectionnée
     selectedNorm = element.getAttribute('data-norm');
+    console.log('Norme sélectionnée:', selectedNorm);
 
     // Vérifier si on peut activer le bouton de lancement
     checkCanLaunch();
+}
+
+// Initialisation ultra-robuste des événements au chargement
+function initialiserDiagnostic() {
+    console.log('🚀 Initialisation du système de diagnostic...');
+
+    // Délégation d'événements pour les boutons de norme
+    // C'est la méthode la plus robuste qui fonctionne même si le DOM change
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.norm-btn');
+        if (btn) {
+            console.log('🖱️ Clic détecté sur une norme');
+            selectNorm(btn);
+        }
+    });
+
+    // Support clavier pour l'accessibilité
+    document.addEventListener('keydown', function(e) {
+        const btn = e.target.closest('.norm-btn');
+        if (btn && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            selectNorm(btn);
+        }
+    });
+
+    // Zone de texte (compteur et validation)
+    const situationTextarea = document.getElementById('situation');
+    if (situationTextarea) {
+        situationTextarea.addEventListener('input', updateCharCounter);
+        // Déclencher une fois au cas où il y a du texte (auto-fill)
+        if (situationTextarea.value.length > 0) updateCharCounter();
+    }
+
+    // Bouton de lancement
+    const launchBtn = document.getElementById('launchBtn');
+    if (launchBtn) {
+        launchBtn.addEventListener('click', launchDiagnostic);
+    }
+
+    // Forcer le style curseur sur tous les boutons de norme existants
+    document.querySelectorAll('.norm-btn').forEach(btn => {
+        btn.style.cursor = 'pointer';
+    });
+    
+    // Initial server wake up
+    wakeUpBackend();
+    
+    console.log('✅ Système de diagnostic prêt et interactif');
+}
+
+// Lancement de l'initialisation selon l'état du DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiserDiagnostic);
+} else {
+    // Si le DOM est déjà prêt (ce qui peut arriver avec defer sur certains navigateurs)
+    initialiserDiagnostic();
 }
 
 // ============================================
@@ -1492,17 +1565,21 @@ function selectNorm(element) {
 // ============================================
 function updateCharCounter() {
     const textarea = document.getElementById('situation');
+    if (!textarea) return;
+    
     const counter = document.getElementById('charCounter');
-    const length = textarea.value.length;
+    const length = textarea.value.trim().length;
 
-    counter.textContent = `${length} / ${MIN_CHARS} caractères minimum`;
+    if (counter) {
+        counter.textContent = `${length} / ${MIN_CHARS} caractères minimum`;
 
-    if (length >= MIN_CHARS) {
-        counter.classList.remove('invalid');
-        counter.classList.add('valid');
-    } else {
-        counter.classList.remove('valid');
-        counter.classList.add('invalid');
+        if (length >= MIN_CHARS) {
+            counter.classList.remove('invalid');
+            counter.classList.add('valid');
+        } else {
+            counter.classList.remove('valid');
+            counter.classList.add('invalid');
+        }
     }
 
     checkCanLaunch();
@@ -1514,8 +1591,13 @@ function updateCharCounter() {
 function checkCanLaunch() {
     const textarea = document.getElementById('situation');
     const launchBtn = document.getElementById('launchBtn');
+    
+    if (!textarea || !launchBtn) return;
 
-    if (selectedNorm && textarea.value.length >= MIN_CHARS) {
+    const hasNorm = selectedNorm !== null;
+    const hasText = textarea.value.trim().length >= MIN_CHARS;
+
+    if (hasNorm && hasText) {
         launchBtn.disabled = false;
         launchBtn.classList.add('animate');
     } else {
@@ -1930,7 +2012,7 @@ async function launchDiagnostic() {
         console.log('📊 Données Fusion QSE reçues:', data);
 
         // Mapper les données du backend Fusion QSE vers le format attendu par le frontend
-        const selectedNormKey = selectedNorm.replace('ISO ', '').replace(':', '').replace(' ', '').toLowerCase(); // iso9001, iso14001, iso45001
+        const selectedNormKey = selectedNorm.replace(/\s+/g, '').toLowerCase(); // iso9001, iso14001, iso45001
         const normIdMap = {
             'iso9001': 'iso9001',
             'iso14001': 'iso14001',

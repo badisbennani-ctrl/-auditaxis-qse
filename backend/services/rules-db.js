@@ -419,10 +419,20 @@ const RULES_DB = {
         title: "Audit interne",
         keywords: ["audit interne", "programme audit", "vérification"]
     },
+    "ISO45001-9.3": {
+        norm: "45001", clause: "9.3", weight: 1, criticality: "low",
+        title: "Revue de direction",
+        keywords: ["revue de direction", "revue management", "comité direction", "bilan sst"]
+    },
     "ISO45001-10.2": {
         norm: "45001", clause: "10.2", weight: 1, criticality: "low",
         title: "Incidents, non-conformités et actions correctives",
         keywords: ["non-conformité", "incident", "action corrective", "analyse causes"]
+    },
+    "ISO45001-10.3": {
+        norm: "45001", clause: "10.3", weight: 1, criticality: "low",
+        title: "Amélioration continue",
+        keywords: ["amélioration continue", "progrès", "performance sst", "kaizen"]
     }
 };
 
