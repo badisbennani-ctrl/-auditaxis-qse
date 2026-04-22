@@ -3,7 +3,7 @@
 // Analyse via API backend (Gemini)
 // ============================================
 
-console.log('🚀 Script Diagnostic.js en cours de chargement...');
+debugLog('🚀 Script Diagnostic.js en cours de chargement...');
 
 // Configuration API
 const API_BASE = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
@@ -12,6 +12,10 @@ const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 
 // État global de l'application
 const AppState = { serverStatus: 'unknown' };
+
+// Flag de débogage — passer à true uniquement en développement
+const DEBUG = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost');
+function debugLog(...args) { if (DEBUG) console.log(...args); }
 
 // Échappement HTML pour prévenir les XSS
 function escapeHTML(str) {
@@ -28,11 +32,11 @@ let loadingBarHidden = false;
 function hideLoadingBar() {
     if (loadingBarHidden) return;
     loadingBarHidden = true;
-    console.log('⌛ Tentative de masquage de la barre de chargement...');
+    debugLog('⌛ Tentative de masquage de la barre de chargement...');
     const loadingBar = document.getElementById('loadingBar');
     if (loadingBar) {
         loadingBar.classList.add('hidden');
-        console.log('✅ Barre de chargement masquée');
+        debugLog('✅ Barre de chargement masquée');
     }
 }
 
@@ -42,7 +46,7 @@ setTimeout(hideLoadingBar, 3000);
 
 // Fonction pour réveiller le serveur (Render free tier s'endort après 15min)
 async function wakeUpBackend() {
-    console.log('📡 Réveil du backend...');
+    debugLog('📡 Réveil du backend...');
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000); 
 
@@ -53,11 +57,11 @@ async function wakeUpBackend() {
         clearTimeout(timeoutId);
 
         if (response.ok) {
-            console.log('✅ Serveur réveillé avec succès');
+            debugLog('✅ Serveur réveillé avec succès');
         }
     } catch (error) {
         // Silencieux - le serveur sera réveillé au premier vrai appel
-        console.log('⏳ Le serveur est en cours de réveil...');
+        debugLog('⏳ Le serveur est en cours de réveil...');
     }
 }
 
@@ -74,19 +78,19 @@ async function checkServerHealth() {
             const data = await response.json();
 
             if (responseTime > 3000) {
-                console.log(`🐌 Serveur froid détecté (${responseTime.toFixed(0)}ms) - Le premier diagnostic prendra plus de temps`);
+                debugLog(`🐌 Serveur froid détecté (${responseTime.toFixed(0)}ms) - Le premier diagnostic prendra plus de temps`);
                 AppState.serverStatus = 'cold';
             } else if (responseTime < 1000) {
-                console.log(`⚡ Serveur chaud (${responseTime.toFixed(0)}ms) - Prêt pour l'analyse`);
+                debugLog(`⚡ Serveur chaud (${responseTime.toFixed(0)}ms) - Prêt pour l'analyse`);
                 AppState.serverStatus = 'hot';
             } else {
-                console.log(`🔄 Serveur en réveil (${responseTime.toFixed(0)}ms)`);
+                debugLog(`🔄 Serveur en réveil (${responseTime.toFixed(0)}ms)`);
                 AppState.serverStatus = 'warming';
             }
         }
     } catch (error) {
         // Silencieux - pas d'erreur affichée à l'utilisateur
-        console.log('🔌 Serveur backend indisponible ou hors ligne');
+        debugLog('🔌 Serveur backend indisponible ou hors ligne');
         AppState.serverStatus = 'offline';
     }
 }
@@ -94,6 +98,20 @@ async function checkServerHealth() {
 // Variables globales
 let selectedNorm = null;
 const MIN_CHARS = 50;
+
+// État de la modale — regroupé pour éviter les désynchronisations
+const modalState = {
+    situation: null,
+    norm: null,
+    pourcentage: null,
+    resultat: null,
+    clear() {
+        this.situation = null;
+        this.norm = null;
+        this.pourcentage = null;
+        this.resultat = null;
+    }
+};
 
 // ============================================
 // BASE DE CONNAISSANCES ISO
@@ -271,7 +289,7 @@ const NORMES = {
                 explication: "L'organisme doit mettre en œuvre les dispositions planifiées pour vérifier que les exigences produits/services sont satisfaites avant libération. La libération ne doit pas intervenir avant l'exécution satisfaisante de toutes les dispositions planifiées, sauf autorisation compétente. Les informations documentées doivent inclure preuves de conformité et traçabilité des autorisations."
             },
             {
-                motsCles: ["non-conformité produit", "produit non conforme", "élément non conforme", "traitement non-conformité", "rebut", "dérogation", "correction produit", "isolement produit non conforme"],
+                motsCles: ["non-conformité produit", "produit non conforme", "élément non conforme", "traitement non-conformité", "rebut", "dérogation", "correction produit", "isolement produit non conforme", "réclamation", "réclamations", "non enregistré", "non tracé", "traitement informel", "sans traçabilité"],
                 article: "Art. 8.7",
                 titre: "Maîtrise des éléments de sortie non conformes",
                 conformite: "Éléments non conformes identifiés, maîtrisés et traités",
@@ -878,6 +896,11 @@ function analyserNonConformitesCitees(texte, normeId) {
 
 // Configuration des secteurs d'activité
 const SECTEURS = {
+    audit_qualite: {
+        motsCles: ["auditeur", "audit", "non-conformité", "non-conformités", "réclamation", "réclamations", "responsable qualité", "smq", "traçabilité", "enregistrement", "service commercial", "causes racines", "action corrective", "constats", "constat", "procédure", "versionné", "excel non", "outil non maîtrisé"],
+        risque: "eleve",
+        label: "Audit Qualité / QSE"
+    },
     industrie: {
         motsCles: ["usine", "production", "machine", "atelier", "industriel", "fabrication", "ligne production", "assemblage"],
         risque: "eleve",
@@ -931,11 +954,15 @@ function determinerGravite(article, contexteTexte) {
     const hasAbsence = MOTS_ABSENCE.some(mot => contexteTexte.includes(mot));
     const hasPlanification = MOTS_PLANIFICATION.some(mot => contexteTexte.includes(mot));
 
-    // Gravité de base selon article
+    // Gravité de base selon article (BUG 1 FIX)
     let graviteBase;
-    if (numArticle >= 4 && numArticle <= 7) {
+    if (numArticle >= 4 && numArticle <= 6) {
         graviteBase = 'majeure';
-    } else if (numArticle >= 8 && numArticle <= 10) {
+    } else if (numArticle === 7) {
+        graviteBase = 'mineure';
+    } else if (numArticle >= 8 && numArticle <= 9) {
+        graviteBase = 'majeure';
+    } else if (numArticle === 10) {
         graviteBase = 'mineure';
     } else {
         graviteBase = 'mineure';
@@ -944,6 +971,11 @@ function determinerGravite(article, contexteTexte) {
     // Ajustement selon contexte
     if (hasCritique || hasAbsence) {
         return 'majeure'; // Forcer MAJEURE pour mots critiques ou absence totale
+    }
+
+    // BUG 1 FIX : Absence sur articles 8-9 → majeure
+    if (hasAbsence && (numArticle === 8 || numArticle === 9)) {
+        return 'majeure';
     }
 
     if (hasPlanification && graviteBase === 'majeure') {
@@ -1210,12 +1242,17 @@ function analyserTexteLocal(texte, normeId) {
     // NIVEAU 3 — NON CONFORME PAR ABSENCE
     // Logique basée sur le pourcentage de règles détectées (pas sur texteLongueur)
     const pourcentageReglesDetectees = (reglesAvecMotCleDetecte / norme.regles.length) * 100;
+    const texteLongueur = texte.trim().length;
 
     // Indicateur d'analyse partielle (20-50% de règles détectées)
     const analysePartielle = pourcentageReglesDetectees >= 20 && pourcentageReglesDetectees < 50;
 
-    if (pourcentageReglesDetectees < 20) {
-        // Moins de 20% de règles détectées → aucune NC d'absence (texte trop partiel)
+    // BUG 2 FIX : Message "Texte insuffisant" uniquement si texte < 80 chars ET totalMotsClesDetectes <= 1
+    // Et JAMAIS si des NC ou conformités ont été trouvées
+    if (texteLongueur < 80 && totalMotsClesDetectes <= 1 && nonConformites.length === 0 && conformites.length === 0) {
+        recommandationsAbsenceMessage = true;
+    } else if (pourcentageReglesDetectees < 20 && nonConformites.length === 0 && conformites.length === 0) {
+        // Moins de 20% de règles détectées ET aucune NC/conformité → aucune NC d'absence (texte trop partiel)
         recommandationsAbsenceMessage = true;
     } else {
         // 20% ou plus de règles détectées → créer des NC d'absence
@@ -1296,22 +1333,21 @@ function analyserTexteLocal(texte, normeId) {
         nonConformites = [...ncCitees, ...nonConformites];
     }
 
-    // Calculer le score avec précision (conforme = 1pt, partiel = 0.5pt)
-    // Diviser uniquement par le nombre de règles effectivement évaluées (mot-clé trouvé dans le texte)
-    const scoreBrut = reglesAvecMotCleDetecte > 0
-        ? Math.round((totalPoints / reglesAvecMotCleDetecte) * 100)
-        : 0;
-    const score = Math.min(scoreBrut, 100); // Plafonner à 100%
+    // Compter les NC majeures et mineures
+    const nbMajeures = nonConformites.filter(nc => nc.gravite === 'majeure').length;
+    const nbMineures = nonConformites.filter(nc => nc.gravite === 'mineure').length;
+
+    // BUG 5 FIX : Score basé sur pénalités (100% de départ, -20 par majeure, -8 par mineure)
+    let score = 100;
+    score -= nbMajeures * 20;
+    score -= nbMineures * 8;
+    score = Math.max(0, score); // Plancher à 0%
 
     // Déterminer l'appréciation
     let appreciation = "Faible";
     if (score >= 75) appreciation = "Excellent";
     else if (score >= 50) appreciation = "Bon";
     else if (score >= 25) appreciation = "Moyen";
-
-    // Compter les NC majeures et mineures
-    const nbMajeures = nonConformites.filter(nc => nc.gravite === 'majeure').length;
-    const nbMineures = nonConformites.filter(nc => nc.gravite === 'mineure').length;
 
     // Générer les recommandations contextualisées
     const recommandations = [];
@@ -1488,7 +1524,7 @@ function selectNorm(element) {
 
     // Stocker la norme sélectionnée
     selectedNorm = element.getAttribute('data-norm');
-    console.log('Norme sélectionnée:', selectedNorm);
+    debugLog('Norme sélectionnée:', selectedNorm);
 
     // Vérifier si on peut activer le bouton de lancement
     checkCanLaunch();
@@ -1496,14 +1532,14 @@ function selectNorm(element) {
 
 // Initialisation ultra-robuste des événements au chargement
 function initialiserDiagnostic() {
-    console.log('🚀 Initialisation du système de diagnostic...');
+    debugLog('🚀 Initialisation du système de diagnostic...');
 
     // Délégation d'événements pour les boutons de norme
     // C'est la méthode la plus robuste qui fonctionne même si le DOM change
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.norm-btn');
         if (btn) {
-            console.log('🖱️ Clic détecté sur une norme');
+            debugLog('🖱️ Clic détecté sur une norme');
             selectNorm(btn);
         }
     });
@@ -1539,7 +1575,7 @@ function initialiserDiagnostic() {
     // Initial server wake up
     wakeUpBackend();
     
-    console.log('✅ Système de diagnostic prêt et interactif');
+    debugLog('✅ Système de diagnostic prêt et interactif');
 }
 
 // Lancement de l'initialisation selon l'état du DOM
@@ -1622,152 +1658,101 @@ function recordApiCall() {
 }
 
 // ============================================
+// STYLES DE LA MODALE — injectés une seule fois dans <head>
+// (évite d'embarquer le CSS dans le JS à chaque ouverture)
+// ============================================
+function injectModalStyles() {
+    if (document.getElementById('auditaxis-modal-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'auditaxis-modal-styles';
+    style.textContent = `
+        #texteCourtModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        #texteCourtModal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), #2c3e50);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { margin: 0; font-size: 1.2rem; }
+        .modal-close {
+            background: none; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; padding: 0;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .modal-close:hover { background: rgba(255, 255, 255, 0.2); }
+        .modal-body { padding: 1.25rem; }
+        .alert-box {
+            background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem; border-radius: 6px; margin-bottom: 1rem;
+        }
+        .alert-box strong, .alert-box p { color: #856404; margin: 0; }
+        .texte-preview {
+            background: #f8f9fa; border: 1px solid #dee2e6;
+            border-radius: 6px; padding: 1rem;
+            max-height: 200px; overflow-y: auto;
+            font-family: inherit; font-size: 0.9rem; line-height: 1.5;
+            color: #495057; white-space: pre-wrap; word-wrap: break-word;
+        }
+        .char-counter { text-align: right; font-size: 0.85rem; color: #6c757d; margin-top: 0.5rem; }
+        .char-counter.warning { color: var(--accent); font-weight: 600; }
+        .modal-footer {
+            padding: 1rem 1.25rem; border-top: 1px solid #dee2e6;
+            display: flex; gap: 0.75rem; justify-content: flex-end;
+        }
+        .btn-modal {
+            padding: 0.625rem 1.25rem; border-radius: 6px;
+            font-size: 0.95rem; font-weight: 500;
+            cursor: pointer; border: none; transition: all 0.2s;
+        }
+        .btn-modal-secondary { background: #6c757d; color: white; }
+        .btn-modal-secondary:hover { background: #5a6268; }
+        .btn-modal-primary { background: var(--primary); color: white; }
+        .btn-modal-primary:hover { background: #1a4a6e; }
+    `;
+    document.head.appendChild(style);
+}
+
+// ============================================
 // MODALE D'AVERTISSEMENT TEXTE COURT
 // ============================================
-let pendingSituation = null;
-let pendingNorm = null;
-let pendingPourcentage = null;
-let pendingResultat = null;
-
 function ouvrirModaleTexteCourt(situation, norme, resultatExistant = null) {
     const texteLongueur = situation.trim().length;
 
     // Créer la modale si elle n'existe pas
     let modal = document.getElementById('texteCourtModal');
     if (!modal) {
+        injectModalStyles();
         modal = document.createElement('div');
         modal.id = 'texteCourtModal';
         modal.setAttribute('role', 'dialog');
         modal.setAttribute('aria-modal', 'true');
         modal.setAttribute('aria-labelledby', 'modalTitle');
         modal.innerHTML = `
-            <style>
-                #texteCourtModal {
-                    display: none;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.6);
-                    z-index: 10000;
-                    justify-content: center;
-                    align-items: center;
-                }
-                #texteCourtModal.active {
-                    display: flex;
-                }
-                .modal-content {
-                    background: white;
-                    border-radius: 12px;
-                    max-width: 600px;
-                    width: 90%;
-                    max-height: 80vh;
-                    overflow-y: auto;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                }
-                .modal-header {
-                    background: linear-gradient(135deg, var(--primary), #2c3e50);
-                    color: white;
-                    padding: 1.25rem;
-                    border-radius: 12px 12px 0 0;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-                .modal-header h2 {
-                    margin: 0;
-                    font-size: 1.2rem;
-                }
-                .modal-close {
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                    padding: 0;
-                    width: 32px;
-                    height: 32px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                }
-                .modal-close:hover {
-                    background: rgba(255, 255, 255, 0.2);
-                }
-                .modal-body {
-                    padding: 1.25rem;
-                }
-                .alert-box {
-                    background: linear-gradient(135deg, #fff3cd, #ffe8a1);
-                    border-left: 4px solid var(--accent);
-                    padding: 1rem;
-                    border-radius: 6px;
-                    margin-bottom: 1rem;
-                }
-                .alert-box strong {
-                    color: #856404;
-                }
-                .alert-box p {
-                    margin: 0;
-                    color: #856404;
-                }
-                .texte-preview {
-                    background: #f8f9fa;
-                    border: 1px solid #dee2e6;
-                    border-radius: 6px;
-                    padding: 1rem;
-                    max-height: 200px;
-                    overflow-y: auto;
-                    font-family: inherit;
-                    font-size: 0.9rem;
-                    line-height: 1.5;
-                    color: #495057;
-                    white-space: pre-wrap;
-                    word-wrap: break-word;
-                }
-                .char-counter {
-                    text-align: right;
-                    font-size: 0.85rem;
-                    color: #6c757d;
-                    margin-top: 0.5rem;
-                }
-                .char-counter.warning {
-                    color: var(--accent);
-                    font-weight: 600;
-                }
-                .modal-footer {
-                    padding: 1rem 1.25rem;
-                    border-top: 1px solid #dee2e6;
-                    display: flex;
-                    gap: 0.75rem;
-                    justify-content: flex-end;
-                }
-                .btn-modal {
-                    padding: 0.625rem 1.25rem;
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    font-weight: 500;
-                    cursor: pointer;
-                    border: none;
-                    transition: all 0.2s;
-                }
-                .btn-modal-secondary {
-                    background: #6c757d;
-                    color: white;
-                }
-                .btn-modal-secondary:hover {
-                    background: #5a6268;
-                }
-                .btn-modal-primary {
-                    background: var(--primary);
-                    color: white;
-                }
-                .btn-modal-primary:hover {
-                    background: #1a4a6e;
-                }
-            </style>
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 id="modalTitle">⚠️ Texte insuffisant</h2>
@@ -1831,7 +1816,7 @@ function ouvrirModaleTexteCourt(situation, norme, resultatExistant = null) {
     document.getElementById('modalPourcentageInfo').innerHTML = `<strong>${Math.round(pourcentage)}% des exigences de la norme sont couvertes.</strong><br>Seuil minimum requis : 20%. Ajoutez plus de détails sur votre système de management pour obtenir une analyse complète.`;
 
     // Stocker le résultat pour éviter un recalcul lors de "Continuer quand même"
-    pendingResultat = resultToUse;
+    modalState.resultat = resultToUse;
 
     // Afficher la modale
     modal.classList.add('active');
@@ -1847,9 +1832,7 @@ function fermerModaleTexteCourt() {
     const modal = document.getElementById('texteCourtModal');
     if (modal) {
         modal.classList.remove('active');
-        pendingSituation = null;
-        pendingNorm = null;
-        pendingPourcentage = null;
+        modalState.clear();
     }
 }
 
@@ -1861,13 +1844,10 @@ function continuerAnalyse() {
 
     // Les résultats ont déjà été calculés dans ouvrirModaleTexteCourt()
     // On utilise le résultat en cache pour éviter un recalcul
-    if (pendingResultat) {
-        displayResults(pendingResultat);
-        pendingResultat = null;
+    if (modalState.resultat) {
+        displayResults(modalState.resultat);
     }
-    pendingSituation = null;
-    pendingNorm = null;
-    pendingPourcentage = null;
+    modalState.clear();
 }
 
 // Fonction pour lancer l'analyse locale (fallback ou après confirmation modale)
@@ -1882,9 +1862,9 @@ function lancerAnalyseLocale(situation, norme, pourcentageReglesDetectees) {
             pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[norme]].regles.length) * 100;
         }
         if (pourcentageReglesDetectees < 20) {
-            pendingSituation = situation;
-            pendingNorm = norme;
-            pendingPourcentage = pourcentageReglesDetectees;
+            modalState.situation = situation;
+            modalState.norm = norme;
+            modalState.pourcentage = pourcentageReglesDetectees;
             ouvrirModaleTexteCourt(situation, norme);
             return;
         }
@@ -2035,8 +2015,8 @@ async function launchDiagnostic() {
 
         recordApiCall();
 
-        console.log('📊 Données Fusion QSE reçues:', data);
-        console.log('📋 Norme sélectionnée:', selectedNorm);
+        debugLog('📊 Données Fusion QSE reçues:', data);
+        debugLog('📋 Norme sélectionnée:', selectedNorm);
 
         // Mapper les données du backend Fusion QSE vers le format attendu par le frontend
         const selectedNormKey = selectedNorm.replace(/\s+/g, '').toLowerCase(); // iso9001, iso14001, iso45001
@@ -2048,8 +2028,8 @@ async function launchDiagnostic() {
         const currentNormFindings = data.details[normIdMap[selectedNormKey]] || [];
 
         // Débogage des clés disponibles
-        console.log('🔑 Clés disponibles dans data:', Object.keys(data));
-        console.log('📋 selectedNormKey:', selectedNormKey);
+        debugLog('🔑 Clés disponibles dans data:', Object.keys(data));
+        debugLog('📋 selectedNormKey:', selectedNormKey);
 
         // Mapping correct des scores
         const scoreMap = {
@@ -2060,7 +2040,18 @@ async function launchDiagnostic() {
 
         const selectedScore = scoreMap[selectedNormKey] || data.global_qse_score || 0;
 
-        console.log('📊 Score pour la norme:', selectedScore);
+        debugLog('📊 Score pour la norme:', selectedScore);
+
+        // Extraction robuste de la référence d'article depuis un ruleId
+        // Supporte : "iso9001-Art.4.1", "Art.4.1", "iso9001-4.1", ou tout autre format
+        function extractArticleRef(ruleId) {
+            if (!ruleId) return '—';
+            const dashIdx = ruleId.indexOf('-');
+            if (dashIdx !== -1 && dashIdx < ruleId.length - 1) {
+                return ruleId.slice(dashIdx + 1);
+            }
+            return ruleId;
+        }
 
         const result = {
             // Données Fusion QSE Globales
@@ -2079,7 +2070,7 @@ async function launchDiagnostic() {
                 .filter(f => f.status.includes('NON_CONFORM'))
                 .map(f => ({
                     titre: `Non-conformité ${f.status === 'NON_CONFORM_CRITICAL' ? 'majeure' : 'mineure'}`,
-                    article: f.ruleId.split('-')[1] || f.ruleId,
+                    article: extractArticleRef(f.ruleId),
                     gravite: f.status === 'NON_CONFORM_CRITICAL' ? 'majeure' : 'mineure',
                     probleme: f.evidence,
                     explication: f.explanation,
@@ -2089,7 +2080,7 @@ async function launchDiagnostic() {
                 .filter(f => f.status === 'COMPLIANT' || f.status === 'OBSERVATION')
                 .map(f => ({
                     description: f.evidence || f.explanation,
-                    article: f.ruleId.split('-')[1] || f.ruleId,
+                    article: extractArticleRef(f.ruleId),
                     statut: f.status === 'COMPLIANT' ? 'conforme' : 'partiel'
                 })),
             recommandations: currentNormFindings
@@ -2112,13 +2103,13 @@ async function launchDiagnostic() {
         const totalRegles = NORMES[normMap[selectedNorm]].regles.length;
         const pourcentageReglesDetectees = (reglesDetectees / totalRegles) * 100;
 
-        console.log(`📊 Règles détectées: ${reglesDetectees}/${totalRegles} (${Math.round(pourcentageReglesDetectees)}%)`);
-        console.log('📋 Conformités:', result.conformites.length);
-        console.log('🔴 Non-conformités:', result.nonConformites.length);
+        debugLog(`📊 Règles détectées: ${reglesDetectees}/${totalRegles} (${Math.round(pourcentageReglesDetectees)}%)`);
+        debugLog('📋 Conformités:', result.conformites.length);
+        debugLog('🔴 Non-conformités:', result.nonConformites.length);
 
         // Afficher toujours les résultats, même avec peu de données
         // La modale n'est plus nécessaire car elle bloque l'expérience utilisateur
-        console.log('✅ Affichage des résultats...');
+        debugLog('✅ Affichage des résultats...');
         displayResults(result);
     } catch (error) {
         // Annuler l'affichage du message si c'était programmé
@@ -2155,9 +2146,9 @@ async function launchDiagnostic() {
             const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
             const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
             if (pourcentageReglesDetectees < 20) {
-                pendingSituation = situation;
-                pendingNorm = selectedNorm;
-                pendingPourcentage = pourcentageReglesDetectees;
+                modalState.situation = situation;
+                modalState.norm = selectedNorm;
+                modalState.pourcentage = pourcentageReglesDetectees;
                 ouvrirModaleTexteCourt(situation, selectedNorm);
             } else {
                 displayResults(localResult);
@@ -2539,4 +2530,5 @@ function resetForm() {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { analyserTexteLocal, NORMES };
 }
+ 
  
