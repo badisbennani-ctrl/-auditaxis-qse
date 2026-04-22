@@ -2042,19 +2042,34 @@ async function launchDiagnostic() {
         };
         const currentNormFindings = data.details[normIdMap[selectedNormKey]] || [];
 
+        // Débogage des clés disponibles
+        console.log('🔑 Clés disponibles dans data:', Object.keys(data));
+        console.log('📋 selectedNormKey:', selectedNormKey);
+
+        // Mapping correct des scores
+        const scoreMap = {
+            'iso9001': data.iso_9001_score,
+            'iso14001': data.iso_14001_score,
+            'iso45001': data.iso_45001_score
+        };
+
+        const selectedScore = scoreMap[selectedNormKey] || data.global_qse_score || 0;
+
+        console.log('📊 Score pour la norme:', selectedScore);
+
         const result = {
             // Données Fusion QSE Globales
             isFusion: true,
             fusionData: {
-                iso9001: data.iso_9001_score,
-                iso14001: data.iso_14001_score,
-                iso45001: data.iso_45001_score,
-                global: data.global_qse_score,
-                risk: data.risk_level
+                iso9001: data.iso_9001_score || 0,
+                iso14001: data.iso_14001_score || 0,
+                iso45001: data.iso_45001_score || 0,
+                global: data.global_qse_score || 0,
+                risk: data.risk_level || 'medium'
             },
             // Données pour la norme sélectionnée
-            score: data[`${selectedNormKey.replace('iso', 'iso_')}_score`] || data.global_qse_score,
-            appreciation: getAppreciation(data[`${selectedNormKey.replace('iso', 'iso_')}_score`] || data.global_qse_score),
+            score: selectedScore,
+            appreciation: getAppreciation(selectedScore),
             nonConformites: currentNormFindings
                 .filter(f => f.status.includes('NON_CONFORM'))
                 .map(f => ({
