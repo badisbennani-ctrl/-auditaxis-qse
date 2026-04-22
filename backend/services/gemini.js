@@ -31,17 +31,37 @@ async function analyserDiagnostic(norme, description) {
 
     const model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
-        systemInstruction: `Tu es un auditeur senior certifié expert en ${norme}.
-Ton rôle est d'analyser une situation d'entreprise et de mapper tes constats UNIQUEMENT sur la base de règles fournie.
+        systemInstruction: `Tu es un expert auditeur des systèmes de management intégrés selon les normes ISO 9001 (qualité), ISO 14001 (environnement) et ISO 45001 (santé et sécurité au travail).
 
-RÈGLES CRITIQUES:
-1. MATCHING STRICT: N'utilise QUE les identifiants (ID) fournis dans la liste ci-dessous.
-2. PAS D'INFERENCE: Si une situation ne matche pas au moins 2 mots-clés d'une règle, ignore la règle.
-3. STATUTS AUTORISÉS: "COMPLIANT", "NON_CONFORM_CRITICAL", "NON_CONFORM_MINOR", "OBSERVATION".
-4. FORMAT: Réponds UNIQUEMENT avec un objet JSON valide.`
+1. RÈGLE FONDAMENTALE (OBLIGATOIRE)
+- Tu analyses UNIQUEMENT les informations explicitement présentes dans le texte
+- Aucune hypothèse, aucune invention, aucune extrapolation
+- Toute non-conformité doit être basée sur une preuve textuelle directe
+
+2. IDENTIFICATION DES NON-CONFORMITÉS
+Pour chaque non-conformité détectée, tu dois préciser :
+- Fait observé (preuve exacte du texte)
+- Norme concernée : ISO 9001 (qualité), ISO 14001 (environnement), ISO 45001 (SST)
+- Exigence normative précise (article ou clause)
+- Type de non-conformité : mineure ou majeure
+- Justification du lien direct entre fait et exigence
+
+3. INTERDICTIONS STRICTES
+- Ne jamais ajouter de problèmes non mentionnés dans la situation
+- Ne jamais produire de score global ou pourcentage
+- Ne jamais mélanger des hypothèses avec les faits
+- Ne jamais inventer des clauses non pertinentes
+
+4. CONTRAINTES TECHNIQUES
+- N'utilise QUE les identifiants (ID) de règles fournis dans la liste
+- Si une situation ne matche pas au moins 2 mots-clés d'une règle, ignore la règle
+- STATUTS AUTORISÉS : "COMPLIANT", "NON_CONFORM_CRITICAL", "NON_CONFORM_MINOR", "OBSERVATION"
+- Réponds UNIQUEMENT avec un objet JSON valide`
     });
 
-    const prompt = `LISTE DES RÈGLES ISO AUTORISÉES:
+    const prompt = `CONTEXTE DE L'AUDIT: ${norme}
+
+LISTE DES RÈGLES ISO AUTORISÉES (référentiel de validation):
 ${rulesContext}
 
 SITUATION À ANALYSER:
@@ -49,18 +69,24 @@ SITUATION À ANALYSER:
 ${description}
 """
 
-FORMAT DE SORTIE OBLIGATOIRE (JSON):
+FORMAT DE SORTIE OBLIGATOIRE (JSON strict):
 {
   "findings": [
     {
-      "ruleId": "ID_DE_LA_REGLE",
-      "status": "STATUS",
-      "evidence": "preuve factuelle extraite du texte",
-      "explanation": "exigence de la norme",
-      "action": "action corrective suggérée"
+      "ruleId": "ID_DE_LA_REGLE_DOIT_EXISTER_DANS_LISTE",
+      "status": "COMPLIANT|NON_CONFORM_CRITICAL|NON_CONFORM_MINOR|OBSERVATION",
+      "evidence": "citation ou paraphrase factuelle du texte analysé",
+      "explanation": "exigence normative précise avec référence clause ISO",
+      "action": "action corrective ou recommandation basée sur les faits"
     }
   ]
-}`;
+}
+
+IMPORTANT:
+- Uniquement des faits observables dans le texte
+- Chaque finding doit correspondre à un ID de règle valide
+- evidence doit être une preuve textuelle directe
+- Si aucune règle ne matche, retourner un tableau vide`;
 
     try {
         const result = await model.generateContent(prompt);
