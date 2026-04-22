@@ -97,7 +97,7 @@ async function checkServerHealth() {
 
 // Variables globales
 let selectedNorm = null;
-const MIN_CHARS = 50;
+const MIN_CHARS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.MIN_CHARS : 50;
 
 // État de la modale — regroupé pour éviter les désynchronisations
 const modalState = {
@@ -1557,8 +1557,8 @@ function initialiserDiagnostic() {
     const situationTextarea = document.getElementById('situation');
     if (situationTextarea) {
         situationTextarea.addEventListener('input', updateCharCounter);
-        // Déclencher une fois au cas où il y a du texte (auto-fill)
-        if (situationTextarea.value.length > 0) updateCharCounter();
+        // Synchroniser l'affichage initial avec la configuration, même si le champ est vide
+        updateCharCounter();
     }
 
     // Bouton de lancement

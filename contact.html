@@ -89,7 +89,7 @@
             <div class="grid" style="max-width: 800px; margin: 0 auto;">
                 <div class="card">
                     <h3>📧 E-mail</h3>
-                    <p>contact@auditaxis-qse.com<br>Support disponible 24h/24 et 7j/7</p>
+                    <p><span data-contact="email">contact@auditaxis-qse.com</span><br><span data-contact="support">Support disponible 24h/24 et 7j/7</span></p>
                 </div>
 
                 <div class="card">
@@ -99,7 +99,7 @@
 
                 <div class="card">
                     <h3>🕐 Horaires</h3>
-                    <p>Lun. - Ven. : 9h - 17h<br>Réponse sous 24 h</p>
+                    <p><span data-contact="hours">Lun. - Ven. : 9h - 17h</span><br><span data-contact="response-time">Réponse sous 24 à 48 heures</span></p>
                 </div>
             </div>
         </div>
@@ -142,7 +142,8 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    formStatus.textContent = '✅ Votre message a été envoyé avec succès ! Nous vous répondrons sous 24 à 48 heures.';
+                    const responseTime = window.AUDITAXIS_CONFIG?.CONTACT?.RESPONSE_TIME || 'Réponse sous 24 à 48 heures';
+                    formStatus.textContent = `✅ Votre message a été envoyé avec succès ! ${responseTime}.`;
                     formStatus.className = 'form-status success';
                     formStatus.style.display = 'block';
                     formStatus.style.color = 'var(--secondary)';

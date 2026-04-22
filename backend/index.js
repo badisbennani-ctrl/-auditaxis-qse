@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Sécurisation des headers HTTP
 app.use(helmet());
@@ -72,11 +73,14 @@ app.use(cors({
             return false;
         });
 
-        if (isAllowed || process.env.NODE_ENV === 'development') {
+        if (isAllowed || !isProduction) {
             callback(null, true);
         } else {
             console.warn(`⚠️ Blocage CORS pour l'origine: ${origin}`);
-            callback(new Error('Not allowed by CORS'));
+            const error = new Error('Not allowed by CORS');
+            error.status = 403;
+            error.code = 'CORS_FORBIDDEN';
+            callback(error);
         }
     },
     methods: ['GET', 'POST', 'OPTIONS'],
@@ -108,20 +112,46 @@ app.get('/', (req, res) => res.json({
 }));
 
 // Health check
-app.get('/api/health', (req, res) => res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    version: process.env.npm_package_version || '1.0.0',
-    env: {
-        NODE_ENV: process.env.NODE_ENV,
-        PORT: process.env.PORT,
-        GEMINI_API_KEY: process.env.GEMINI_API_KEY ? '✅' : '❌',
-        RESEND_API_KEY: process.env.RESEND_API_KEY ? '✅' : '❌',
-        EMAIL_TO: process.env.EMAIL_TO || '❌',
-        CORS_ORIGIN: process.env.CORS_ORIGIN || 'default'
+app.get('/api/health', (req, res) => {
+    const health = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: process.env.npm_package_version || '1.0.0',
+        environment: process.env.NODE_ENV || 'development'
+    };
+
+    if (!isProduction) {
+        health.services = {
+            gemini: process.env.GEMINI_API_KEY ? 'configured' : 'missing',
+            resend: process.env.RESEND_API_KEY ? 'configured' : 'missing',
+            emailTo: process.env.EMAIL_TO ? 'configured' : 'missing',
+            corsOrigin: process.env.CORS_ORIGIN ? 'configured' : 'default'
+        };
     }
-}));
+
+    res.json(health);
+});
+
+// Gestion centralisée des erreurs applicatives
+app.use((err, req, res, next) => {
+    if (err && err.code === 'CORS_FORBIDDEN') {
+        return res.status(err.status || 403).json({
+            error: 'CORS_FORBIDDEN',
+            message: 'Origine non autorisée'
+        });
+    }
+
+    console.error(`❌ Erreur API: ${err?.message || 'Erreur inconnue'}`);
+    if (err?.stack && !isProduction) {
+        console.error(err.stack);
+    }
+
+    return res.status(err?.status || 500).json({
+        error: 'ERREUR_INTERNE',
+        message: 'Une erreur interne est survenue'
+    });
+});
 
 // 404 handler pour routes non trouvées
 app.use((req, res) => {
@@ -138,7 +168,7 @@ const server = app.listen(PORT, () => {
     console.log(`✅ Serveur AuditAxis démarré sur le port ${PORT}`);
     console.log(`📍 Environnement: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔑 GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? '✅ Configurée' : '❌ MANQUANTE'}`);
-    console.log(`📧 EMAIL_USER: ${process.env.EMAIL_USER ? '✅ Configuré' : '⚠️ Non configuré (mode fallback)'}`);
+    console.log(`📧 EMAIL_TO: ${process.env.EMAIL_TO ? '✅ Configuré' : '⚠️ Non configuré'}`);
     console.log(`🌐 CORS Origins: ${corsOrigins.join(', ')}`);
 });
 

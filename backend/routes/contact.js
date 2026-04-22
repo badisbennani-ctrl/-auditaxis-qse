@@ -43,6 +43,9 @@ const getResendClient = () => {
 if (!process.env.RESEND_API_KEY) {
     console.warn('⚠️ [CONFIG] RESEND_API_KEY manquante. Le service de contact retournera une erreur 503.');
 }
+if (!process.env.EMAIL_TO) {
+    console.warn('⚠️ [CONFIG] EMAIL_TO manquante. Le service de contact retournera une erreur 503.');
+}
 
 // === Route de contact avec validation ===
 router.post('/', 
@@ -81,11 +84,11 @@ router.post('/',
       </div>
     `;
 
-    const emailTo = 'badis.bennani@etudiant-issbat.utm.tn';
+    const emailTo = process.env.EMAIL_TO;
     const fromEmail = 'onboarding@resend.dev';
     const client = getResendClient();
 
-    if (!client) {
+    if (!client || !emailTo) {
       // Mode fallback : log uniquement, pas d'envoi
       console.log('📧 Email (fallback - non envoyé):', { de: nom, email, sujet });
       return res.status(503).json({
