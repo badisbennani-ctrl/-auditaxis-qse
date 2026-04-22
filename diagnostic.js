@@ -10,6 +10,9 @@ const API_BASE = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL 
 const API_RATE_LIMIT_MS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.RATE_LIMIT_MS : 10000;
 const LAST_API_CALL_KEY = 'auditaxis_last_api_call';
 
+// État global de l'application
+const AppState = { serverStatus: 'unknown' };
+
 // Échappement HTML pour prévenir les XSS
 function escapeHTML(str) {
     if (typeof str !== 'string') return str;
@@ -18,8 +21,13 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
+// Flag pour éviter le double appel à hideLoadingBar
+let loadingBarHidden = false;
+
 // Gestion de la barre de chargement
 function hideLoadingBar() {
+    if (loadingBarHidden) return;
+    loadingBarHidden = true;
     console.log('⌛ Tentative de masquage de la barre de chargement...');
     const loadingBar = document.getElementById('loadingBar');
     if (loadingBar) {
@@ -67,19 +75,19 @@ async function checkServerHealth() {
 
             if (responseTime > 3000) {
                 console.log(`🐌 Serveur froid détecté (${responseTime.toFixed(0)}ms) - Le premier diagnostic prendra plus de temps`);
-                window.serverStatus = 'cold';
+                AppState.serverStatus = 'cold';
             } else if (responseTime < 1000) {
                 console.log(`⚡ Serveur chaud (${responseTime.toFixed(0)}ms) - Prêt pour l'analyse`);
-                window.serverStatus = 'hot';
+                AppState.serverStatus = 'hot';
             } else {
                 console.log(`🔄 Serveur en réveil (${responseTime.toFixed(0)}ms)`);
-                window.serverStatus = 'warming';
+                AppState.serverStatus = 'warming';
             }
         }
     } catch (error) {
         // Silencieux - pas d'erreur affichée à l'utilisateur
         console.log('🔌 Serveur backend indisponible ou hors ligne');
-        window.serverStatus = 'offline';
+        AppState.serverStatus = 'offline';
     }
 }
 
@@ -907,6 +915,151 @@ const MOTS_POSITIFS = ["bon", "excellent", "satisfaisant", "conforme", "maîtris
 // Mots négatifs pour détection contradictions
 const MOTS_NEGATIFS = ["mauvais", "insuffisant", "défaillant", "absent", "nul", "critique", "problème", "échec", "non conforme"];
 
+// ============================================
+// FONCTIONS UTILITAIRES D'ANALYSE (niveau module)
+// ============================================
+
+// Fonction pour déterminer la gravité en fonction du numéro d'article et du contexte
+function determinerGravite(article, contexteTexte) {
+    const match = article.match(/Art\.\s*(\d+)/);
+    if (!match) return 'mineure';
+
+    const numArticle = parseInt(match[1], 10);
+
+    // Vérifier présence de mots critiques
+    const hasCritique = MOTS_CRITIQUES.some(mot => contexteTexte.includes(mot));
+    const hasAbsence = MOTS_ABSENCE.some(mot => contexteTexte.includes(mot));
+    const hasPlanification = MOTS_PLANIFICATION.some(mot => contexteTexte.includes(mot));
+
+    // Gravité de base selon article
+    let graviteBase;
+    if (numArticle >= 4 && numArticle <= 7) {
+        graviteBase = 'majeure';
+    } else if (numArticle >= 8 && numArticle <= 10) {
+        graviteBase = 'mineure';
+    } else {
+        graviteBase = 'mineure';
+    }
+
+    // Ajustement selon contexte
+    if (hasCritique || hasAbsence) {
+        return 'majeure'; // Forcer MAJEURE pour mots critiques ou absence totale
+    }
+
+    if (hasPlanification && graviteBase === 'majeure') {
+        return 'mineure'; // Downgrade si élément en cours/planifié
+    }
+
+    return graviteBase;
+}
+
+// Fonction pour vérifier si un terme est présent dans le texte
+function contientTerme(termes, texteLower) {
+    return termes.some(terme => texteLower.includes(terme.toLowerCase()));
+}
+
+// Fonction auxiliaire : contientTermeDansContexte
+// Vérifie si un terme existe dans une fenêtre autour du mot-clé de la règle
+function contientTermeDansContexte(termes, regleMotsCles, texteLower, tailleContexte = 150) {
+    const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+        const i = texteLower.indexOf(mot.toLowerCase());
+        return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+    }, -1);
+    if (motCleIndex === -1) return false;
+    const debut = Math.max(0, motCleIndex - tailleContexte);
+    const fin = Math.min(texteLower.length, motCleIndex + tailleContexte);
+    const fenetre = texteLower.substring(debut, fin);
+    return termes.some(terme => fenetre.includes(terme.toLowerCase()));
+}
+
+// Fonction auxiliaire : extraireContexteRegle
+// Extrait une fenêtre de contexte autour du premier mot-clé de la règle
+function extraireContexteRegle(regleMotsCles, texteLower, tailleContexte = 200) {
+    const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+        const i = texteLower.indexOf(mot.toLowerCase());
+        return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+    }, -1);
+    if (motCleIndex === -1) return texteLower;
+    return texteLower.substring(
+        Math.max(0, motCleIndex - tailleContexte),
+        Math.min(texteLower.length, motCleIndex + tailleContexte)
+    );
+}
+
+// Fonction pour détecter si un terme de preuve est précédé d'une négation
+function termeDePreuveAvecNegation(texteLower, termesPreuve, regleMotsCles, NEGATIONS) {
+    const motCleIndex = regleMotsCles.reduce((idx, mot) => {
+        const i = texteLower.indexOf(mot.toLowerCase());
+        return i !== -1 && (idx === -1 || i < idx) ? i : idx;
+    }, -1);
+
+    if (motCleIndex === -1) return false;
+
+    const fenetreDebut = Math.max(0, motCleIndex - 100);
+    const fenetreFin = Math.min(texteLower.length, motCleIndex + 100);
+    const fenetreContexte = texteLower.substring(fenetreDebut, fenetreFin);
+
+    for (const terme of termesPreuve) {
+        const termeLower = terme.toLowerCase();
+        const indexDansFenetre = fenetreContexte.indexOf(termeLower);
+
+        if (indexDansFenetre !== -1) {
+            const debutContexteAvant = Math.max(0, indexDansFenetre - 80);
+            const contexteAvant = fenetreContexte.substring(debutContexteAvant, indexDansFenetre);
+
+            const negationDetectee = NEGATIONS.some(negation => {
+                if (negation.length <= 3) {
+                    const regex = new RegExp(`\\b${negation}\\b`, 'i');
+                    return regex.test(contexteAvant);
+                }
+                return contexteAvant.includes(negation);
+            });
+
+            if (negationDetectee) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Fonction pour compter les occurrences de mots-clés (OPTIMISÉE)
+function compterMotsCles(motsCles, texteLower) {
+    return motsCles.reduce((count, mot) => count + (texteLower.split(mot.toLowerCase()).length - 1), 0);
+}
+
+// Fonction pour détecter contradictions DANS LA MÊME PHRASE que le mot-clé
+function detecterContradiction(regleMotsCles, texte, MOTS_POSITIFS, MOTS_NEGATIFS) {
+    const phrases = texte.split(/[.!?]+/);
+
+    let phraseAvecMotCle = null;
+    for (const phrase of phrases) {
+        const phraseLower = phrase.toLowerCase();
+        const found = regleMotsCles.some(mot =>
+            phraseLower.includes(mot.toLowerCase())
+        );
+        if (found) {
+            phraseAvecMotCle = phraseLower;
+            break;
+        }
+    }
+
+    if (!phraseAvecMotCle) return false;
+
+    const hasPositif = MOTS_POSITIFS.some(mot => phraseAvecMotCle.includes(mot));
+    const hasNegatif = MOTS_NEGATIFS.some(mot => phraseAvecMotCle.includes(mot));
+
+    return hasPositif && hasNegatif;
+}
+
+// Fonction pour calculer le score de confiance
+function calculerScoreConfiance(nombreMotsClesDetectes, texte) {
+    if (nombreMotsClesDetectes > 3) return { score: 85, niveau: 'élevée' };
+    if (nombreMotsClesDetectes >= 1) return { score: 55, niveau: 'moyenne' };
+    if (texte.trim().length < 100) return { score: 30, niveau: 'faible', raison: 'texte trop court' };
+    return { score: 35, niveau: 'faible', raison: 'peu de mots-clés détectés' };
+}
+
 function analyserTexteLocal(texte, normeId) {
     const norme = NORMES[normeId];
     if (!norme) {
@@ -957,45 +1110,6 @@ function analyserTexteLocal(texte, normeId) {
         "ébauche", "projet", "envisagé", "envisagée", "parfois"
     ];
 
-    // Fonction pour déterminer la gravité en fonction du numéro d'article et du contexte
-    function determinerGravite(article, contexteTexte) {
-        const match = article.match(/Art\.\s*(\d+)/);
-        if (!match) return 'mineure';
-
-        const numArticle = parseInt(match[1], 10);
-
-        // Vérifier présence de mots critiques
-        const hasCritique = MOTS_CRITIQUES.some(mot => contexteTexte.includes(mot));
-        const hasAbsence = MOTS_ABSENCE.some(mot => contexteTexte.includes(mot));
-        const hasPlanification = MOTS_PLANIFICATION.some(mot => contexteTexte.includes(mot));
-
-        // Gravité de base selon article
-        let graviteBase;
-        if (numArticle >= 4 && numArticle <= 7) {
-            graviteBase = 'majeure';
-        } else if (numArticle >= 8 && numArticle <= 10) {
-            graviteBase = 'mineure';
-        } else {
-            graviteBase = 'mineure';
-        }
-
-        // Ajustement selon contexte
-        if (hasCritique || hasAbsence) {
-            return 'majeure'; // Forcer MAJEURE pour mots critiques ou absence totale
-        }
-
-        if (hasPlanification && graviteBase === 'majeure') {
-            return 'mineure'; // Downgrade si élément en cours/planifié
-        }
-
-        return graviteBase;
-    }
-
-    // Fonction pour vérifier si un terme est présent dans le texte
-    function contientTerme(termes) {
-        return termes.some(terme => texteLower.includes(terme.toLowerCase()));
-    }
-
     // NÉGATIONS - Liste des mots indiquant une négation
     const NEGATIONS = [
         "pas", "non", "ne sont pas", "pas toutes", "pas encore",
@@ -1004,130 +1118,6 @@ function analyserTexteLocal(texte, normeId) {
         "pas de", "aucune", "ni", "absence de", "manque de",
         "insuffisant", "incomplet", "ne sont plus"
     ];
-
-    // Fonction auxiliaire : contientTermeDansContexte
-    // Vérifie si un terme existe dans une fenêtre autour du mot-clé de la règle
-    function contientTermeDansContexte(termes, regleMotsCles, tailleContexte = 150) {
-        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
-            const i = texteLower.indexOf(mot.toLowerCase());
-            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
-        }, -1);
-        if (motCleIndex === -1) return false;
-        const debut = Math.max(0, motCleIndex - tailleContexte);
-        const fin = Math.min(texteLower.length, motCleIndex + tailleContexte);
-        const fenetre = texteLower.substring(debut, fin);
-        return termes.some(terme => fenetre.includes(terme.toLowerCase()));
-    }
-
-    // Fonction auxiliaire : extraireContexteRegle
-    // Extrait une fenêtre de contexte autour du premier mot-clé de la règle
-    function extraireContexteRegle(regleMotsCles, tailleContexte = 200) {
-        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
-            const i = texteLower.indexOf(mot.toLowerCase());
-            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
-        }, -1);
-        if (motCleIndex === -1) return texteLower;
-        return texteLower.substring(
-            Math.max(0, motCleIndex - tailleContexte),
-            Math.min(texteLower.length, motCleIndex + tailleContexte)
-        );
-    }
-
-    // Fonction pour détecter si un terme de preuve est précédé d'une négation
-    // Version améliorée : vérifie dans le contexte de CHAQUE mot-clé de la règle, pas globalement
-    function termeDePreuveAvecNegation(texteLower, termesPreuve, regleMotsCles) {
-        // Trouver la position du mot-clé de la règle pour contextualiser
-        const motCleIndex = regleMotsCles.reduce((idx, mot) => {
-            const i = texteLower.indexOf(mot.toLowerCase());
-            return i !== -1 && (idx === -1 || i < idx) ? i : idx;
-        }, -1);
-
-        // Si pas de mot-clé trouvé, on ne peut pas contextualiser → retourne false
-        if (motCleIndex === -1) return false;
-
-        // Définir une fenêtre autour du mot-clé (100 chars avant et après)
-        const fenetreDebut = Math.max(0, motCleIndex - 100);
-        const fenetreFin = Math.min(texteLower.length, motCleIndex + 100);
-        const fenetreContexte = texteLower.substring(fenetreDebut, fenetreFin);
-
-        // Chercher les termes de preuve DANS cette fenêtre
-        for (const terme of termesPreuve) {
-            const termeLower = terme.toLowerCase();
-            const indexDansFenetre = fenetreContexte.indexOf(termeLower);
-
-            if (indexDansFenetre !== -1) {
-                // Terme de preuve trouvé dans la fenêtre du mot-clé
-                // Extraire 80 caractères AVANT ce terme (dans la fenêtre)
-                const debutContexteAvant = Math.max(0, indexDansFenetre - 80);
-                const contexteAvant = fenetreContexte.substring(debutContexteAvant, indexDansFenetre);
-
-                // Vérifier les négations avec word boundary pour les termes courts
-                const negationDetectee = NEGATIONS.some(negation => {
-                    if (negation.length <= 3) {
-                        const regex = new RegExp(`\\b${negation}\\b`, 'i');
-                        return regex.test(contexteAvant);
-                    }
-                    return contexteAvant.includes(negation);
-                });
-
-                if (negationDetectee) {
-                    return true; // Terme de preuve nié détecté dans le contexte de la règle
-                }
-            }
-        }
-        return false; // Aucune négation détectée dans le contexte de la règle
-    }
-
-    // Fonction pour compter les occurrences de mots-clés
-    function compterMotsCles(motsCles) {
-        let count = 0;
-        motsCles.forEach(mot => {
-            const regex = new RegExp(mot.toLowerCase(), 'g');
-            const matches = texteLower.match(regex);
-            if (matches) count += matches.length;
-        });
-        return count;
-    }
-
-    // Fonction pour détecter contradictions DANS LA MÊME PHRASE que le mot-clé
-    function detecterContradiction(regleMotsCles) {
-        // Découper le texte en phrases (séparées par . ! ?)
-        const phrases = texte.split(/[.!?]+/);
-
-        // Trouver la phrase qui contient le mot-clé
-        let phraseAvecMotCle = null;
-        for (const phrase of phrases) {
-            const phraseLower = phrase.toLowerCase();
-            const found = regleMotsCles.some(mot =>
-                phraseLower.includes(mot.toLowerCase())
-            );
-            if (found) {
-                phraseAvecMotCle = phraseLower;
-                break;
-            }
-        }
-
-        // Si aucune phrase ne contient le mot-clé, pas de contradiction possible
-        if (!phraseAvecMotCle) return false;
-
-        // Vérifier contradiction DANS LA MÊME PHRASE uniquement
-        const hasPositif = MOTS_POSITIFS.some(mot =>
-            phraseAvecMotCle.includes(mot)
-        );
-        const hasNegatif = MOTS_NEGATIFS.some(mot =>
-            phraseAvecMotCle.includes(mot)
-        );
-
-        return hasPositif && hasNegatif;
-    }
-
-    // Fonction pour calculer le score de confiance
-    function calculerScoreConfiance(nombreMotsClesDetectes, texte) {
-        if (nombreMotsClesDetectes > 3) return { score: 85, niveau: 'élevée' };
-        if (nombreMotsClesDetectes >= 1) return { score: 55, niveau: 'moyenne' };
-        if (texte.trim().length < 100) return { score: 30, niveau: 'faible', raison: 'texte trop court' };
-        return { score: 35, niveau: 'faible', raison: 'peu de mots-clés détectés' };
-    }
 
     // Compteur de mots-clés détectés pour le score de confiance
     let totalMotsClesDetectes = 0;
@@ -1147,17 +1137,17 @@ function analyserTexteLocal(texte, normeId) {
         }
 
         // Détection de contradiction pour cette règle
-        const contradiction = detecterContradiction(regle.motsCles);
+        const contradiction = detecterContradiction(regle.motsCles, texte, MOTS_POSITIFS, MOTS_NEGATIFS);
 
         if (motCleTrouve) {
             // Le mot-clé est trouvé → vérifier les termes de preuve DANS LE CONTEXTE DE LA RÈGLE
-            const hasTermesPreuve = contientTermeDansContexte(termesPreuve, regle.motsCles);
-            const hasTermesPartiel = contientTermeDansContexte(termesPartiel, regle.motsCles);
-            const hasCritique = MOTS_CRITIQUES.some(mot => contientTermeDansContexte([mot], regle.motsCles));
-            const hasAbsence = MOTS_ABSENCE.some(mot => contientTermeDansContexte([mot], regle.motsCles));
+            const hasTermesPreuve = contientTermeDansContexte(termesPreuve, regle.motsCles, texteLower);
+            const hasTermesPartiel = contientTermeDansContexte(termesPartiel, regle.motsCles, texteLower);
+            const hasCritique = MOTS_CRITIQUES.some(mot => contientTermeDansContexte([mot], regle.motsCles, texteLower));
+            const hasAbsence = MOTS_ABSENCE.some(mot => contientTermeDansContexte([mot], regle.motsCles, texteLower));
 
             // Vérifier si un terme de preuve est précédé d'une négation (dans le contexte de la règle)
-            const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve, regle.motsCles);
+            const preuveNiee = termeDePreuveAvecNegation(texteLower, termesPreuve, regle.motsCles, NEGATIONS);
 
             if (hasTermesPreuve && !preuveNiee && !hasTermesPartiel && !contradiction) {
                 // NIVEAU 1 — CONFORME
@@ -1170,7 +1160,7 @@ function analyserTexteLocal(texte, normeId) {
                 totalPoints += 1;
             } else if (preuveNiee) {
                 // PREUVE NIÉE — NON CONFORME (ex: "pas documenté", "non réalisé")
-                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles));
+                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles, texteLower));
                 nonConformites.push({
                     article: regle.article,
                     titre: `Non-conformité ${gravite} - ${regle.titre}`,
@@ -1202,7 +1192,7 @@ function analyserTexteLocal(texte, normeId) {
                 totalPoints += 0.5;
 
                 // Gravité ajustée selon contexte de la règle
-                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles));
+                const gravite = determinerGravite(regle.article, extraireContexteRegle(regle.motsCles, texteLower));
 
                 // Ajouter aussi une non-conformité
                 nonConformites.push({
@@ -2028,6 +2018,21 @@ async function launchDiagnostic() {
 
         // Gérer les deux formats : avec wrapper "data" ou direct
         const data = responseData.data || responseData;
+
+        // VALIDATION API (modification 4)
+        if (!data || typeof data !== 'object') {
+            throw new Error('Réponse API invalide');
+        }
+        if (data.nonConformites !== undefined && !Array.isArray(data.nonConformites)) {
+            throw new Error('nonConformites doit être un tableau');
+        }
+        if (data.conformites !== undefined && !Array.isArray(data.conformites)) {
+            throw new Error('conformites doit être un tableau');
+        }
+        if (data.recommandations !== undefined && !Array.isArray(data.recommandations)) {
+            throw new Error('recommandations doit être un tableau');
+        }
+
         recordApiCall();
 
         console.log('📊 Données Fusion QSE reçues:', data);
@@ -2426,19 +2431,24 @@ function displayConformites(conformites) {
     }
 
     container.innerHTML = conformites.map(c => {
-        const badgeClass = c.statut === 'conforme' ? 'conforme' : 'partiel';
-        const badgeText = c.statut === 'conforme' ? '✓ Conforme' : '⚠ Partiel';
-        const badgeStyle = c.statut === 'conforme'
+        // Échapper les données pour prévenir les XSS (modification 5)
+        const safeDescription = escapeHTML(c.description);
+        const safeArticle = escapeHTML(c.article);
+        const safeStatut = escapeHTML(c.statut);
+
+        const badgeClass = safeStatut === 'conforme' ? 'conforme' : 'partiel';
+        const badgeText = safeStatut === 'conforme' ? '✓ Conforme' : '⚠ Partiel';
+        const badgeStyle = safeStatut === 'conforme'
             ? 'background: linear-gradient(135deg, #2e8b57, #3cb371);'
             : 'background: linear-gradient(135deg, #e67e22, #f39c12);';
 
         return `
-        <div class="result-item ${c.statut === 'conforme' ? 'conforme' : ''}">
+        <div class="result-item ${safeStatut === 'conforme' ? 'conforme' : ''}">
             <div class="result-item-header">
-                <span class="result-item-title">${c.description}</span>
+                <span class="result-item-title">${safeDescription}</span>
                 <span class="gravite-badge" style="${badgeStyle} color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${badgeText}</span>
             </div>
-            <div class="article-reference">Référence : ${c.article}</div>
+            <div class="article-reference">Référence : ${safeArticle}</div>
         </div>
     `;
     }).join('');
@@ -2471,18 +2481,25 @@ function displayRecommandations(recommandations) {
         'long_terme': 'Long terme'
     };
 
-    container.innerHTML = sorted.map(r => `
+    container.innerHTML = sorted.map(r => {
+        // Échapper les données pour prévenir les XSS (modification 5)
+        const safeAction = escapeHTML(r.action);
+        const safeBenefice = escapeHTML(r.benefice);
+        const safePriorite = escapeHTML(r.priorite);
+
+        return `
         <div class="result-item recommandation">
             <div class="result-item-header">
-                <span class="result-item-title">${r.action}</span>
-                <span class="priorite-badge ${r.priorite}">${priorityLabels[r.priorite]}</span>
+                <span class="result-item-title">${safeAction}</span>
+                <span class="priorite-badge ${safePriorite}">${priorityLabels[safePriorite]}</span>
             </div>
             <div class="benefice">
                 <div class="benefice-label">💡 Bénéfice attendu</div>
-                ${r.benefice}
+                ${safeBenefice}
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // ============================================
