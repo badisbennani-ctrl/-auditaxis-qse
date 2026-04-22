@@ -1951,7 +1951,28 @@ async function launchDiagnostic() {
     document.getElementById('step2').style.display = 'none';
     document.getElementById('launchBtn').style.display = 'none';
     const serverStatusMsg = document.getElementById('serverStatusMsg');
-    document.getElementById('loader').classList.add('active');
+    const loader = document.getElementById('loader');
+    loader.classList.add('active');
+
+    // Animation artistique du texte du loader (Neural Scan)
+    const loaderText = loader.querySelector('.loader-text');
+    const scanMessages = [
+        "Initialisation de la matrice ISO...",
+        "Analyse des structures sémantiques...",
+        "Extraction des vecteurs de conformité...",
+        "Interrogation des modèles neuronaux...",
+        "Génération du rapport stratégique..."
+    ];
+    
+    let msgIndex = 0;
+    const msgInterval = setInterval(() => {
+        if (loader.classList.contains('active')) {
+            loaderText.innerHTML = `${scanMessages[msgIndex]}<span class="loader-dots"></span>`;
+            msgIndex = (msgIndex + 1) % scanMessages.length;
+        } else {
+            clearInterval(msgInterval);
+        }
+    }, 1500);
 
     // Configurer l'affichage du message après 3s si la réponse tarde
     let showConnectionMsg = null;
