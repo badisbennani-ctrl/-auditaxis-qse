@@ -81,7 +81,8 @@ router.post('/',
       </div>
     `;
 
-    const emailTo = process.env.EMAIL_TO || process.env.EMAIL_USER || 'contact@auditaxis-qse.com';
+    const emailTo = process.env.EMAIL_TO || 'badis.bennani@etudiant-issbat.utm.tn';
+    const fromEmail = process.env.EMAIL_USER || 'onboarding@resend.dev';
     const client = getResendClient();
 
     if (!client) {
@@ -95,9 +96,10 @@ router.post('/',
 
     try {
       const { data, error } = await client.emails.send({
-        from: `AuditAxis Contact <${process.env.EMAIL_USER || 'onboarding@resend.dev'}>`,
+        from: `AuditAxis <${fromEmail}>`,
         to: [emailTo],
         subject: `📩 [Contact] ${safeSujet}`,
+        reply_to: email, // Permet de répondre directement à l'expéditeur
         html: htmlContent,
       });
 
