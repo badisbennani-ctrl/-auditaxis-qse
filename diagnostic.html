@@ -546,13 +546,14 @@
                     id="situation"
                     placeholder="Exemple : Notre entreprise fabrique des pièces mécaniques depuis 10 ans. Nous avons 45 employés et des procédures qualité documentées, mais elles ne sont pas toujours respectées sur le terrain. Nos employés ne sont pas tous formés aux risques professionnels. Nous avons des déchets de production que nous recyclons partiellement..."
                     aria-label="Description de votre entreprise"
+                    oninput="updateCharCounter(); checkCanLaunch();"
                 ></textarea>
 
                 <div class="char-counter" id="charCounter">0 / 50 caractères minimum</div>
             </div>
         </div>
 
-        <button class="launch-btn" id="launchBtn" disabled>
+        <button class="launch-btn" id="launchBtn" disabled onclick="launchDiagnostic()">
             🚀 Lancer le diagnostic
         </button>
         <div id="rateLimitMsg" style="display: none; color: var(--accent); text-align: center; margin-top: 1rem; font-weight: 500;"></div>
