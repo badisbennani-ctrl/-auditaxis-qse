@@ -3,6 +3,8 @@
 // Analyse via API backend (Gemini)
 // ============================================
 
+debugLog('🚀 Script Diagnostic.js en cours de chargement...');
+
 // Configuration API
 const API_BASE = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
 const API_RATE_LIMIT_MS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.RATE_LIMIT_MS : 10000;
@@ -14,8 +16,6 @@ const AppState = { serverStatus: 'unknown' };
 // Flag de débogage — passer à true uniquement en développement
 const DEBUG = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost');
 function debugLog(...args) { if (DEBUG) console.log(...args); }
-
-debugLog('🚀 Script Diagnostic.js en cours de chargement...');
 
 // Échappement HTML pour prévenir les XSS
 function escapeHTML(str) {
@@ -97,7 +97,6 @@ async function checkServerHealth() {
 
 // Variables globales
 let selectedNorm = null;
-// Use default value, not function - simpler approach
 const MIN_CHARS = 50;
 
 // État de la modale — regroupé pour éviter les désynchronisations
@@ -1514,9 +1513,7 @@ function genererResumeExecutif(resultat, normeNom) {
 // ============================================
 function selectNorm(element) {
     if (!element) return;
-
-    debugLog('🖱️ selectNorm appelée avec element:', element);
-
+    
     // Retirer la classe active de tous les boutons de sélection
     document.querySelectorAll('#step1 .norm-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1527,7 +1524,7 @@ function selectNorm(element) {
 
     // Stocker la norme sélectionnée
     selectedNorm = element.getAttribute('data-norm');
-    debugLog('✅ Norme sélectionnée:', selectedNorm);
+    debugLog('Norme sélectionnée:', selectedNorm);
 
     // Vérifier si on peut activer le bouton de lancement
     checkCanLaunch();
@@ -1537,30 +1534,31 @@ function selectNorm(element) {
 function initialiserDiagnostic() {
     debugLog('🚀 Initialisation du système de diagnostic...');
 
-    // Listeners directs : plus fiables sur mobile et navigateurs intégrés
-    document.querySelectorAll('.norm-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+    // Délégation d'événements pour les boutons de norme
+    // C'est la méthode la plus robuste qui fonctionne même si le DOM change
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.norm-btn');
+        if (btn) {
             debugLog('🖱️ Clic détecté sur une norme');
             selectNorm(btn);
-        });
+        }
+    });
 
-        btn.addEventListener('pointerup', function() {
+    // Support clavier pour l'accessibilité
+    document.addEventListener('keydown', function(e) {
+        const btn = e.target.closest('.norm-btn');
+        if (btn && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
             selectNorm(btn);
-        });
-
-        btn.addEventListener('touchend', function() {
-            selectNorm(btn);
-        }, { passive: true });
+        }
     });
 
     // Zone de texte (compteur et validation)
     const situationTextarea = document.getElementById('situation');
     if (situationTextarea) {
         situationTextarea.addEventListener('input', updateCharCounter);
-        situationTextarea.addEventListener('change', updateCharCounter);
-        situationTextarea.addEventListener('keyup', updateCharCounter);
-        // Synchroniser l'affichage initial avec la configuration, même si le champ est vide
-        updateCharCounter();
+        // Déclencher une fois au cas où il y a du texte (auto-fill)
+        if (situationTextarea.value.length > 0) updateCharCounter();
     }
 
     // Bouton de lancement
@@ -1576,13 +1574,17 @@ function initialiserDiagnostic() {
     
     // Initial server wake up
     wakeUpBackend();
-    checkServerHealth();
     
     debugLog('✅ Système de diagnostic prêt et interactif');
 }
 
-// Lancement de l'initialisation IMMÉDIATEMENT
-initialiserDiagnostic();
+// Lancement de l'initialisation selon l'état du DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiserDiagnostic);
+} else {
+    // Si le DOM est déjà prêt (ce qui peut arriver avec defer sur certains navigateurs)
+    initialiserDiagnostic();
+}
 
 // ============================================
 // COMPTEUR DE CARACTÈRES
@@ -1615,14 +1617,11 @@ function updateCharCounter() {
 function checkCanLaunch() {
     const textarea = document.getElementById('situation');
     const launchBtn = document.getElementById('launchBtn');
-
+    
     if (!textarea || !launchBtn) return;
 
     const hasNorm = selectedNorm !== null;
-    const textLength = textarea.value.trim().length;
-    const hasText = textLength >= MIN_CHARS;
-
-    debugLog('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS);
+    const hasText = textarea.value.trim().length >= MIN_CHARS;
 
     if (hasNorm && hasText) {
         launchBtn.disabled = false;
@@ -1640,14 +1639,7 @@ function checkCanLaunch() {
 // Fonction de vérification du rate limiting
 function checkRateLimit() {
     const now = Date.now();
-    let lastCall = null;
-
-    try {
-        lastCall = window.localStorage.getItem(LAST_API_CALL_KEY);
-    } catch (error) {
-        debugLog('⚠️ localStorage indisponible, rate limit frontend désactivé');
-        return { allowed: true, remainingSec: 0 };
-    }
+    const lastCall = localStorage.getItem(LAST_API_CALL_KEY);
 
     if (lastCall) {
         const timeSinceLastCall = now - parseInt(lastCall, 10);
@@ -1662,11 +1654,7 @@ function checkRateLimit() {
 
 // Fonction pour enregistrer l'appel API
 function recordApiCall() {
-    try {
-        window.localStorage.setItem(LAST_API_CALL_KEY, Date.now().toString());
-    } catch (error) {
-        debugLog('⚠️ Impossible d’enregistrer le rate limit frontend');
-    }
+    localStorage.setItem(LAST_API_CALL_KEY, Date.now().toString());
 }
 
 // ============================================
@@ -1688,7 +1676,7 @@ function injectModalStyles() {
             justify-content: center;
             align-items: center;
         }
-        #texteCourtModal.active { display: flex; z-index: 20000; }
+        #texteCourtModal.active { display: flex; }
         .modal-content {
             background: white;
             border-radius: 12px;
@@ -1893,8 +1881,6 @@ function lancerAnalyseLocale(situation, norme, pourcentageReglesDetectees) {
 
 
 async function launchDiagnostic() {
-    debugLog('🚀 launchDiagnostic appelée, selectedNorm:', selectedNorm);
-    
     const rateLimitMsg = document.getElementById('rateLimitMsg');
 
     if (!selectedNorm) {
@@ -1958,62 +1944,23 @@ async function launchDiagnostic() {
         }
     }, 1500);
 
+    // Configurer l'affichage du message après 3s si la réponse tarde
+    let showConnectionMsg = null;
+    if (serverStatusMsg) {
+        showConnectionMsg = setTimeout(() => {
+            serverStatusMsg.innerHTML = '⏳ Connexion au serveur IA en cours (peut prendre jusqu\'à 30s au premier appel)...';
+            serverStatusMsg.style.display = 'block';
+            serverStatusMsg.style.color = 'var(--primary)';
+            serverStatusMsg.style.padding = '0.8rem';
+            serverStatusMsg.style.borderRadius = '8px';
+            serverStatusMsg.style.backgroundColor = 'rgba(30, 95, 140, 0.1)';
+            serverStatusMsg.style.textAlign = 'center';
+            serverStatusMsg.style.marginTop = '1rem';
+        }, 3000); // Afficher après 3s
+    }
+
     try {
-        // Vérification rapide de la connexion API (timeout court)
-        const healthController = new AbortController();
-        const healthTimeout = setTimeout(() => healthController.abort(), 3000);
-
-        let apiAvailable = false;
-        try {
-            const healthResp = await fetch(`${API_BASE}/api/health`, { signal: healthController.signal });
-            clearTimeout(healthTimeout);
-            apiAvailable = healthResp.ok;
-        } catch (e) {
-            clearTimeout(healthTimeout);
-            apiAvailable = false;
-        }
-
-        // Analyse locale (toujours disponible)
-        const normMap = { 'ISO 9001': 'iso9001', 'ISO 14001': 'iso14001', 'ISO 45001': 'iso45001' };
-        debugLog('🔍 API disponible:', apiAvailable);
-
-        if (!apiAvailable) {
-            // Masquer le loader en mode local
-            loader.classList.remove('active');
-            clearInterval(msgInterval);
-
-            // Mode local uniquement - analyse immédiate
-            const localResult = analyserTexteLocal(situation, normMap[selectedNorm]);
-            const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
-            const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
-
-            if (pourcentageReglesDetectees < 20) {
-                modalState.situation = situation;
-                modalState.norm = selectedNorm;
-                modalState.pourcentage = pourcentageReglesDetectees;
-                ouvrirModaleTexteCourt(situation, selectedNorm);
-            } else {
-                displayResults(localResult);
-            }
-            return;
-        }
-
-        // API disponible - continuer avec l'analyse API
-        // Configurer l'affichage du message après 3s si la réponse tarde
-        let showConnectionMsg = null;
-        if (serverStatusMsg) {
-            showConnectionMsg = setTimeout(() => {
-                serverStatusMsg.innerHTML = '⏳ Connexion au serveur IA en cours (peut prendre jusqu\'à 30s au premier appel)...';
-                serverStatusMsg.style.display = 'block';
-                serverStatusMsg.style.color = 'var(--primary)';
-                serverStatusMsg.style.padding = '0.8rem';
-                serverStatusMsg.style.borderRadius = '8px';
-                serverStatusMsg.style.backgroundColor = 'rgba(30, 95, 140, 0.1)';
-                serverStatusMsg.style.textAlign = 'center';
-                serverStatusMsg.style.marginTop = '1rem';
-            }, 3000);
-        }
-
+        // Timeout global de 60s pour le fetch
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
             controller.abort();
@@ -2043,7 +1990,8 @@ async function launchDiagnostic() {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            throw new Error(`Erreur HTTP ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Erreur HTTP ${response.status}`);
         }
 
         const responseData = await response.json();
@@ -2150,9 +2098,9 @@ async function launchDiagnostic() {
         }
 
         // Calculer le pourcentage de règles détectées pour vérifier si modale nécessaire
-        const normMapKey = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
+        const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
         const reglesDetectees = result.conformites.length + result.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
-        const totalRegles = NORMES[normMapKey[selectedNorm]].regles.length;
+        const totalRegles = NORMES[normMap[selectedNorm]].regles.length;
         const pourcentageReglesDetectees = (reglesDetectees / totalRegles) * 100;
 
         debugLog(`📊 Règles détectées: ${reglesDetectees}/${totalRegles} (${Math.round(pourcentageReglesDetectees)}%)`);
@@ -2582,5 +2530,4 @@ function resetForm() {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { analyserTexteLocal, NORMES };
 }
- 
  
