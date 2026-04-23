@@ -97,7 +97,7 @@ async function checkServerHealth() {
 
 // Variables globales
 let selectedNorm = null;
-const MIN_CHARS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.MIN_CHARS : 50;
+const MIN_CHARS = () => window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.MIN_CHARS : 50;
 
 // État de la modale — regroupé pour éviter les désynchronisations
 const modalState = {
@@ -1599,9 +1599,9 @@ function updateCharCounter() {
     const length = textarea.value.trim().length;
 
     if (counter) {
-        counter.textContent = `${length} / ${MIN_CHARS} caractères minimum`;
+        counter.textContent = `${length} / ${MIN_CHARS()} caractères minimum`;
 
-        if (length >= MIN_CHARS) {
+        if (length >= MIN_CHARS()) {
             counter.classList.remove('invalid');
             counter.classList.add('valid');
         } else {
@@ -1627,9 +1627,9 @@ function checkCanLaunch() {
 
     const hasNorm = selectedNorm !== null;
     const textLength = textarea.value.trim().length;
-    const hasText = textLength >= MIN_CHARS;
+    const hasText = textLength >= MIN_CHARS();
     
-    console.log('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS);
+    console.log('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS());
 
     if (hasNorm && hasText) {
         launchBtn.disabled = false;
@@ -1916,9 +1916,9 @@ async function launchDiagnostic() {
 
     const situation = document.getElementById('situation').value;
 
-    if (situation.length < MIN_CHARS) {
+    if (situation.length < MIN_CHARS()) {
         if (rateLimitMsg) {
-            rateLimitMsg.textContent = `Veuillez décrire votre situation avec au moins ${MIN_CHARS} caractères`;
+            rateLimitMsg.textContent = `Veuillez décrire votre situation avec au moins ${MIN_CHARS()} caractères`;
             rateLimitMsg.style.display = 'block';
         }
         return;
@@ -2571,7 +2571,7 @@ function resetForm() {
 
     // Réinitialiser le textarea
     document.getElementById('situation').value = '';
-    document.getElementById('charCounter').textContent = `0 / ${MIN_CHARS} caractères minimum`;
+    document.getElementById('charCounter').textContent = `0 / ${MIN_CHARS()} caractères minimum`;
     document.getElementById('charCounter').className = 'char-counter';
 
     // Réinitialiser le bouton de lancement
