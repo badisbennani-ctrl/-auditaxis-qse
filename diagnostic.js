@@ -1514,6 +1514,8 @@ function genererResumeExecutif(resultat, normeNom) {
 function selectNorm(element) {
     if (!element) return;
     
+    console.log('🖱️ selectNorm appelée avec element:', element);
+    
     // Retirer la classe active de tous les boutons de sélection
     document.querySelectorAll('#step1 .norm-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1524,7 +1526,8 @@ function selectNorm(element) {
 
     // Stocker la norme sélectionnée
     selectedNorm = element.getAttribute('data-norm');
-    debugLog('Norme sélectionnée:', selectedNorm);
+    console.log('✅ Norme sélectionnée:', selectedNorm);
+    alert('✅ Norme choisie: ' + selectedNorm);
 
     // Vérifier si on peut activer le bouton de lancement
     checkCanLaunch();
@@ -1617,14 +1620,21 @@ function checkCanLaunch() {
     const textarea = document.getElementById('situation');
     const launchBtn = document.getElementById('launchBtn');
     
-    if (!textarea || !launchBtn) return;
+    if (!textarea || !launchBtn) {
+        console.log('⚠️ checkCanLaunch: textarea ou launchBtn non trouvé');
+        return;
+    }
 
     const hasNorm = selectedNorm !== null;
-    const hasText = textarea.value.trim().length >= MIN_CHARS;
+    const textLength = textarea.value.trim().length;
+    const hasText = textLength >= MIN_CHARS;
+    
+    console.log('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS);
 
     if (hasNorm && hasText) {
         launchBtn.disabled = false;
         launchBtn.classList.add('animate');
+        alert('✅ Bouton activé !');
     } else {
         launchBtn.disabled = true;
         launchBtn.classList.remove('animate');
@@ -1891,6 +1901,9 @@ function lancerAnalyseLocale(situation, norme, pourcentageReglesDetectees) {
 
 
 async function launchDiagnostic() {
+    console.log('🚀 launchDiagnostic appelée, selectedNorm:', selectedNorm);
+    alert('🚀 Diagnostic lancé ! selectedNorm=' + selectedNorm);
+    
     const rateLimitMsg = document.getElementById('rateLimitMsg');
 
     if (!selectedNorm) {
