@@ -1954,23 +1954,62 @@ async function launchDiagnostic() {
         }
     }, 1500);
 
-    // Configurer l'affichage du message après 3s si la réponse tarde
-    let showConnectionMsg = null;
-    if (serverStatusMsg) {
-        showConnectionMsg = setTimeout(() => {
-            serverStatusMsg.innerHTML = '⏳ Connexion au serveur IA en cours (peut prendre jusqu\'à 30s au premier appel)...';
-            serverStatusMsg.style.display = 'block';
-            serverStatusMsg.style.color = 'var(--primary)';
-            serverStatusMsg.style.padding = '0.8rem';
-            serverStatusMsg.style.borderRadius = '8px';
-            serverStatusMsg.style.backgroundColor = 'rgba(30, 95, 140, 0.1)';
-            serverStatusMsg.style.textAlign = 'center';
-            serverStatusMsg.style.marginTop = '1rem';
-        }, 3000); // Afficher après 3s
-    }
-
     try {
-        // Timeout global de 60s pour le fetch
+        // Vérification rapide de la connexion API (timeout court)
+        const healthController = new AbortController();
+        const healthTimeout = setTimeout(() => healthController.abort(), 3000);
+
+        let apiAvailable = false;
+        try {
+            const healthResp = await fetch(`${API_BASE}/api/health`, { signal: healthController.signal });
+            clearTimeout(healthTimeout);
+            apiAvailable = healthResp.ok;
+        } catch (e) {
+            clearTimeout(healthTimeout);
+            apiAvailable = false;
+        }
+
+        // Analyse locale (toujours disponible)
+        const normMap = { 'ISO 9001': 'iso9001', 'ISO 14001': 'iso14001', 'ISO 45001': 'iso45001' };
+        debugLog('🔍 API disponible:', apiAvailable);
+
+        if (!apiAvailable) {
+            // Masquer le loader en mode local
+            loader.classList.remove('active');
+            clearInterval(msgInterval);
+
+            // Mode local uniquement - analyse immédiate
+            const localResult = analyserTexteLocal(situation, normMap[selectedNorm]);
+            const reglesDetectees = localResult.conformites.length + localResult.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
+            const pourcentageReglesDetectees = (reglesDetectees / NORMES[normMap[selectedNorm]].regles.length) * 100;
+
+            if (pourcentageReglesDetectees < 20) {
+                modalState.situation = situation;
+                modalState.norm = selectedNorm;
+                modalState.pourcentage = pourcentageReglesDetectees;
+                ouvrirModaleTexteCourt(situation, selectedNorm);
+            } else {
+                displayResults(localResult);
+            }
+            return;
+        }
+
+        // API disponible - continuer avec l'analyse API
+        // Configurer l'affichage du message après 3s si la réponse tarde
+        let showConnectionMsg = null;
+        if (serverStatusMsg) {
+            showConnectionMsg = setTimeout(() => {
+                serverStatusMsg.innerHTML = '⏳ Connexion au serveur IA en cours (peut prendre jusqu\'à 30s au premier appel)...';
+                serverStatusMsg.style.display = 'block';
+                serverStatusMsg.style.color = 'var(--primary)';
+                serverStatusMsg.style.padding = '0.8rem';
+                serverStatusMsg.style.borderRadius = '8px';
+                serverStatusMsg.style.backgroundColor = 'rgba(30, 95, 140, 0.1)';
+                serverStatusMsg.style.textAlign = 'center';
+                serverStatusMsg.style.marginTop = '1rem';
+            }, 3000);
+        }
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
             controller.abort();
@@ -2000,8 +2039,7 @@ async function launchDiagnostic() {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `Erreur HTTP ${response.status}`);
+            throw new Error(`Erreur HTTP ${response.status}`);
         }
 
         const responseData = await response.json();
@@ -2108,9 +2146,9 @@ async function launchDiagnostic() {
         }
 
         // Calculer le pourcentage de règles détectées pour vérifier si modale nécessaire
-        const normMap = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
+        const normMapKey = {'ISO 9001':'iso9001','ISO 14001':'iso14001','ISO 45001':'iso45001'};
         const reglesDetectees = result.conformites.length + result.nonConformites.filter(nc => !nc.probleme?.includes('Absence totale')).length;
-        const totalRegles = NORMES[normMap[selectedNorm]].regles.length;
+        const totalRegles = NORMES[normMapKey[selectedNorm]].regles.length;
         const pourcentageReglesDetectees = (reglesDetectees / totalRegles) * 100;
 
         debugLog(`📊 Règles détectées: ${reglesDetectees}/${totalRegles} (${Math.round(pourcentageReglesDetectees)}%)`);
