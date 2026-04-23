@@ -3,8 +3,6 @@
 // Analyse via API backend (Gemini)
 // ============================================
 
-debugLog('🚀 Script Diagnostic.js en cours de chargement...');
-
 // Configuration API
 const API_BASE = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.API_BASE_URL : 'https://auditaxis-qse.onrender.com';
 const API_RATE_LIMIT_MS = window.AUDITAXIS_CONFIG ? window.AUDITAXIS_CONFIG.DIAGNOSTIC.RATE_LIMIT_MS : 10000;
@@ -16,6 +14,8 @@ const AppState = { serverStatus: 'unknown' };
 // Flag de débogage — passer à true uniquement en développement
 const DEBUG = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost');
 function debugLog(...args) { if (DEBUG) console.log(...args); }
+
+debugLog('🚀 Script Diagnostic.js en cours de chargement...');
 
 // Échappement HTML pour prévenir les XSS
 function escapeHTML(str) {
@@ -1514,9 +1514,9 @@ function genererResumeExecutif(resultat, normeNom) {
 // ============================================
 function selectNorm(element) {
     if (!element) return;
-    
-    console.log('🖱️ selectNorm appelée avec element:', element);
-    
+
+    debugLog('🖱️ selectNorm appelée avec element:', element);
+
     // Retirer la classe active de tous les boutons de sélection
     document.querySelectorAll('#step1 .norm-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1527,8 +1527,7 @@ function selectNorm(element) {
 
     // Stocker la norme sélectionnée
     selectedNorm = element.getAttribute('data-norm');
-    console.log('✅ Norme sélectionnée:', selectedNorm);
-    alert('✅ Norme choisie: ' + selectedNorm);
+    debugLog('✅ Norme sélectionnée:', selectedNorm);
 
     // Vérifier si on peut activer le bouton de lancement
     checkCanLaunch();
@@ -1577,6 +1576,7 @@ function initialiserDiagnostic() {
     
     // Initial server wake up
     wakeUpBackend();
+    checkServerHealth();
     
     debugLog('✅ Système de diagnostic prêt et interactif');
 }
@@ -1615,37 +1615,18 @@ function updateCharCounter() {
 function checkCanLaunch() {
     const textarea = document.getElementById('situation');
     const launchBtn = document.getElementById('launchBtn');
-    
-    if (!textarea || !launchBtn) {
-        alert('⚠️ Elements non trouvés - textarea: ' + !!textarea + ' launchBtn: ' + !!launchBtn);
-        return;
-    }
+
+    if (!textarea || !launchBtn) return;
 
     const hasNorm = selectedNorm !== null;
     const textLength = textarea.value.trim().length;
     const hasText = textLength >= MIN_CHARS;
-    
-    alert('🔍 selectedNorm: ' + selectedNorm + ' | length: ' + textLength + ' | MIN: ' + MIN_CHARS);
+
+    debugLog('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS);
 
     if (hasNorm && hasText) {
         launchBtn.disabled = false;
         launchBtn.classList.add('animate');
-    } else {
-        launchBtn.disabled = true;
-        launchBtn.classList.remove('animate');
-    }
-}
-
-    const hasNorm = selectedNorm !== null;
-    const textLength = textarea.value.trim().length;
-    const hasText = textLength >= MIN_CHARS;
-    
-    console.log('🔍 checkCanLaunch - selectedNorm:', selectedNorm, 'textLength:', textLength, 'MIN_CHARS:', MIN_CHARS);
-
-    if (hasNorm && hasText) {
-        launchBtn.disabled = false;
-        launchBtn.classList.add('animate');
-        alert('✅ Bouton activé !');
     } else {
         launchBtn.disabled = true;
         launchBtn.classList.remove('animate');
@@ -1912,8 +1893,7 @@ function lancerAnalyseLocale(situation, norme, pourcentageReglesDetectees) {
 
 
 async function launchDiagnostic() {
-    console.log('🚀 launchDiagnostic appelée, selectedNorm:', selectedNorm);
-    alert('🚀 Diagnostic lancé ! selectedNorm=' + selectedNorm);
+    debugLog('🚀 launchDiagnostic appelée, selectedNorm:', selectedNorm);
     
     const rateLimitMsg = document.getElementById('rateLimitMsg');
 
