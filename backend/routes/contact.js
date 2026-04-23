@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-// Fonction simple pour échapper le HTML et prévenir les injections dans les mails
 function escapeHTML(str) {
   if (!str) return '';
   return str.replace(/[&<>"']/g, function(m) {
@@ -19,7 +18,6 @@ function escapeHTML(str) {
   });
 }
 
-// === Limiter les envois ===
 const contactLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 3,
@@ -31,23 +29,28 @@ const contactLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Initialisation lazy pour éviter le crash si RESEND_API_KEY est manquante
-const getResendClient = () => {
-    if (!process.env.RESEND_API_KEY) {
-        return null;
+const getTransporter = () => {
+  const emailUser = process.env.EMAIL_USER || 'badis.bennani@gmail.com';
+  const emailPass = process.env.EMAIL_PASS;
+  
+  if (!emailPass) {
+    console.warn('⚠️ [CONFIG] EMAIL_PASS manquante. Le service de contact retournera une erreur 503.');
+    return null;
+  }
+  
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: emailUser,
+      pass: emailPass
     }
-    return new Resend(process.env.RESEND_API_KEY);
+  });
 };
 
-// Log de configuration au démarrage
-if (!process.env.RESEND_API_KEY) {
-    console.warn('⚠️ [CONFIG] RESEND_API_KEY manquante. Le service de contact retournera une erreur 503.');
-}
 if (!process.env.EMAIL_TO) {
-    console.warn('⚠️ [CONFIG] EMAIL_TO manquante. Le service de contact retournera une erreur 503.');
+  console.warn('⚠️ [CONFIG] EMAIL_TO manquante.');
 }
 
-// === Route de contact avec validation ===
 router.post('/', 
   contactLimiter,
   [
@@ -65,7 +68,6 @@ router.post('/',
 
     const { nom, email, sujet, message, company } = req.body;
 
-    // === Préparation de l'email (Échappé) ===
     const safeNom = escapeHTML(nom);
     const safeSujet = escapeHTML(sujet);
     const safeMessage = escapeHTML(message).replace(/\n/g, '<br>');
@@ -85,12 +87,10 @@ router.post('/',
     `;
 
     const emailTo = process.env.EMAIL_TO;
-    const fromEmail = 'onboarding@resend.dev';
-    const client = getResendClient();
+    const transporter = getTransporter();
 
-    if (!client || !emailTo) {
-      // Mode fallback : log uniquement, pas d'envoi
-      console.log('📧 Email (fallback - non envoyé):', { de: nom, email, sujet });
+    if (!transporter || !emailTo) {
+      console.log('📧 Email (fallback):', { de: nom, email, sujet });
       return res.status(503).json({
         success: false,
         message: 'Service email temporairement indisponible'
@@ -98,23 +98,18 @@ router.post('/',
     }
 
     try {
-      const { data, error } = await client.emails.send({
-        from: `AuditAxis <${fromEmail}>`,
-        to: [emailTo],
+      const info = await transporter.sendMail({
+        from: `"AuditAxis QSE" <badis.bennani@gmail.com>`,
+        to: emailTo,
+        replyTo: email,
         subject: `📩 [Contact] ${safeSujet}`,
-        reply_to: email, // Permet de répondre directement à l'expéditeur
         html: htmlContent,
       });
 
-      if (error) {
-        console.error('❌ Erreur API Resend:', error);
-        return res.status(500).json({ error: 'ERREUR_RESEND', message: error.message });
-      }
-
-      console.log('✅ Email envoyé avec succès:', data.id);
+      console.log('✅ Email envoyé:', info.messageId);
       res.status(200).json({ success: true, message: 'Message envoyé avec succès' });
     } catch (error) {
-      console.error('❌ Erreur technique envoi email:', error.message);
+      console.error('❌ Erreur envoi email:', error.message);
       res.status(500).json({ error: 'ERREUR_ENVOI', message: 'Le service de messagerie est temporairement indisponible.' });
     }
 });
