@@ -1980,7 +1980,7 @@ async function launchDiagnostic() {
         // Analyse locale (toujours disponible)
         const normMap = { 'ISO 9001': 'iso9001', 'ISO 14001': 'iso14001', 'ISO 45001': 'iso45001' };
         debugLog('🔍 API disponible:', apiAvailable);
-        let showConnectionMsg = null;
+        showConnectionMsg = null;
 
         if (!apiAvailable) {
             // Masquer le loader en mode local
