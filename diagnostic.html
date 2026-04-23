@@ -41,7 +41,7 @@
             margin: 0 auto;
             padding: 2rem;
             position: relative;
-            z-index: 100;
+            z-index: 1;
         }
 
         .step-section {
@@ -51,7 +51,7 @@
             margin-bottom: 2rem;
             box-shadow: 0 4px 15px var(--shadow);
             position: relative;
-            z-index: 101;
+            z-index: 1;
         }
 
         .step-title {
@@ -76,31 +76,31 @@
             font-size: 0.9rem;
         }
 
-        .norm-selection {
+.norm-selection {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
             position: relative;
-            z-index: 102;
+            z-index: 2;
         }
 
-.norm-btn {
+        .norm-btn {
             appearance: none;
             -webkit-appearance: none;
             background: var(--white);
             border: 3px solid var(--gray-light);
             border-radius: 12px;
             padding: 1.5rem;
-            cursor: pointer !important;
+            cursor: pointer;
             width: 100%;
             font: inherit;
             color: inherit;
             transition: all 0.3s ease;
             text-align: center;
             position: relative;
-            z-index: 103;
-            pointer-events: auto !important;
+            z-index: 1001;
+            pointer-events: auto;
             overflow: hidden;
         }
 
@@ -511,19 +511,19 @@
                 Choisissez la norme ISO
             </h2>
             <div class="norm-selection">
-                <button type="button" class="norm-btn" data-norm="ISO 9001" aria-label="Sélectionner ISO 9001:2015">
+<button type="button" class="norm-btn" data-norm="ISO 9001" aria-label="Sélectionner ISO 9001:2015" onclick="selectNorm(this)">
                     <div class="norm-icon">📊</div>
                     <div class="norm-code">ISO 9001:2015</div>
                     <div class="norm-name">Management de la qualité</div>
                 </button>
 
-                <button type="button" class="norm-btn" data-norm="ISO 14001" aria-label="Sélectionner ISO 14001:2015">
+                <button type="button" class="norm-btn" data-norm="ISO 14001" aria-label="Sélectionner ISO 14001:2015" onclick="selectNorm(this)">
                     <div class="norm-icon">🌱</div>
                     <div class="norm-code">ISO 14001:2015</div>
                     <div class="norm-name">Management environnemental</div>
                 </button>
 
-                <button type="button" class="norm-btn" data-norm="ISO 45001" aria-label="Sélectionner ISO 45001:2018">
+                <button type="button" class="norm-btn" data-norm="ISO 45001" aria-label="Sélectionner ISO 45001:2018" onclick="selectNorm(this)">
                     <div class="norm-icon">🛡️</div>
                     <div class="norm-code">ISO 45001:2018</div>
                     <div class="norm-name">Santé et sécurité au travail</div>
