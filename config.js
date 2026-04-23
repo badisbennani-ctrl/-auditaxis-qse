@@ -12,7 +12,7 @@
 
         // URL du backend — bascule automatiquement local ↔ production
         API_BASE_URL: isLocal
-            ? 'http://localhost:3000'
+            ? 'http://localhost:3001'
             : 'https://auditaxis-qse.onrender.com',
 
         // Paramètres du diagnostic
