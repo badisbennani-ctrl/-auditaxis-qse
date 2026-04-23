@@ -1686,7 +1686,7 @@ function injectModalStyles() {
             justify-content: center;
             align-items: center;
         }
-        #texteCourtModal.active { display: flex; }
+        #texteCourtModal.active { display: flex; z-index: 20000; }
         .modal-content {
             background: white;
             border-radius: 12px;
