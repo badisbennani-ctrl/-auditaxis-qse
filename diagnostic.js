@@ -1580,13 +1580,8 @@ function initialiserDiagnostic() {
     debugLog('✅ Système de diagnostic prêt et interactif');
 }
 
-// Lancement de l'initialisation selon l'état du DOM
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initialiserDiagnostic);
-} else {
-    // Si le DOM est déjà prêt (ce qui peut arriver avec defer sur certains navigateurs)
-    initialiserDiagnostic();
-}
+// Lancement de l'initialisation IMMÉDIATEMENT
+initialiserDiagnostic();
 
 // ============================================
 // COMPTEUR DE CARACTÈRES
