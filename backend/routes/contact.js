@@ -38,8 +38,12 @@ const getTransporter = () => {
     return null;
   }
   
+  console.log('📧 Configuration email:', { user: emailUser, passSet: !!emailPass });
+  
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
       user: emailUser,
       pass: emailPass
@@ -99,7 +103,7 @@ router.post('/',
 
     try {
       const info = await transporter.sendMail({
-        from: `"AuditAxis QSE" <badis.bennani@gmail.com>`,
+        from: `"AuditAxis QSE" <${process.env.EMAIL_USER || 'badis.bennani@gmail.com'}>`,
         to: emailTo,
         replyTo: email,
         subject: `📩 [Contact] ${safeSujet}`,
@@ -109,8 +113,8 @@ router.post('/',
       console.log('✅ Email envoyé:', info.messageId);
       res.status(200).json({ success: true, message: 'Message envoyé avec succès' });
     } catch (error) {
-      console.error('❌ Erreur envoi email:', error.message);
-      res.status(500).json({ error: 'ERREUR_ENVOI', message: 'Le service de messagerie est temporairement indisponible.' });
+      console.error('❌ Erreur envoi email:', error.message, error.stack);
+      res.status(500).json({ error: 'ERREUR_ENVOI', message: error.message });
     }
 });
 
