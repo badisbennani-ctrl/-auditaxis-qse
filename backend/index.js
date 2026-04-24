@@ -92,11 +92,12 @@ app.use(cors({
 const diagnosticRoutes = require('./routes/diagnostic');
 const checklistRoutes = require('./routes/checklist');
 const contactRoutes = require('./routes/contact');
-
+const procedureRoutes = require('./routes/procedure');
 // Enregistrement des routes avec préfixe /api
 app.use('/api/diagnostic', diagnosticRoutes);
 app.use('/api/checklist', checklistRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/procedure', procedureRoutes);
 
 // Route racine (pour éviter 404 sur /)
 app.get('/', (req, res) => res.json({
