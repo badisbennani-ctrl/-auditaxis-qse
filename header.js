@@ -17,6 +17,7 @@
         { href: '/checklist', label: 'Checklists ISO interactives', text: 'Checklists' },
         { href: '/glossaire', label: 'Glossaire des termes QSE', text: 'Glossaire' },
         { href: '/diagnostic', label: 'Diagnostic IA gratuit', text: 'Diagnostic IA' },
+        { href: '/procedure', label: 'Générateur de procédures ISO', text: 'Générateur' },
         { href: '/contact', label: 'Contactez-nous', text: 'Contact' }
     ];
 
@@ -62,6 +63,7 @@
                     <li><a href="/checklist">Checklists</a></li>
                     <li><a href="/glossaire">Glossaire</a></li>
                     <li><a href="/diagnostic">Diagnostic IA</a></li>
+                    <li><a href="/procedure">Générateur</a></li>
                     <li><a href="/contact">Contact</a></li>
                 </ul>
             </div>

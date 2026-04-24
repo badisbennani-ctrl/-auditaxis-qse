@@ -126,4 +126,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (launchBtn) {
         launchBtn.addEventListener('click', startDiagnostic);
     }
-});S
+// --- AJOUT DES FONCTIONS MANQUANTES POUR LE HTML ---
+
+/**
+ * Cette fonction fait le lien avec l'événement 'oninput' de votre HTML
+ * qui cherche "checkCanLaunch()"
+ */
+function checkCanLaunch() {
+    debugLog("Vérification de l'état du bouton de lancement...");
+    // On appelle la fonction de validation existante
+    if (typeof validateForm === "function") {
+        validateForm();
+    }
+}
+
+/**
+ * Sécurité pour la variable 'S' si c'était une erreur de copier-coller
+ * ou un résidu de bibliothèque.
+ */
+var S = S || {};
+// --- CORRECTIFS FINAUX ---
+
+// 1. Correction pour l'erreur checkCanLaunch appelée par le HTML
+function checkCanLaunch() {
+    // Cette fonction appelle simplement votre logique de validation existante
+    if (typeof validateForm === "function") {
+        validateForm();
+    }
+}
+
+// 2. Correction pour l'erreur "S is not defined" au cas où elle est nécessaire ailleurs
+var S = S || {}; 
+
+debugLog("Correctifs de compatibilité chargés.");
