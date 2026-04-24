@@ -57,7 +57,7 @@ Pour chaque non-conformité détectée, tu dois préciser :
 - Si une situation ne matche pas au moins 2 mots-clés d'une règle, ignore la règle
 - STATUTS AUTORISÉS : "COMPLIANT", "NON_CONFORM_CRITICAL", "NON_CONFORM_MINOR", "OBSERVATION"
 - Réponds UNIQUEMENT avec un objet JSON valide`
-    });
+    }, { apiVersion: 'v1' });
 
     const prompt = `CONTEXTE DE L'AUDIT: ${norme}
 

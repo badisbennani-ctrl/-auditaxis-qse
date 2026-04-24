@@ -189,9 +189,10 @@ router.post('/', procedureLimiter, async (req, res, next) => {
             });
         }
 
-        // Appel Gemini
+        // Appel Gemini avec version d'API forcée
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        // Utilisation de la version stable v1 pour éviter le 404 de la v1beta sur certains environnements
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }, { apiVersion: 'v1' });
 
         const prompt = buildSystemPrompt(norme, nomProcessus, description, secteur, taille, elements);
 
