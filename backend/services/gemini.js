@@ -11,82 +11,52 @@ if (!genAI) {
 }
 
 /**
- * Analyse un diagnostic QSE avec Gemini Flash
- * Utilise les instructions système pour chaque domaine (9001, 14001, 45001)
- * Retourne un tableau vide si genAI n'est pas initialisé
+ * Analyse un diagnostic QSE avec Gemini
+ * Utilise gemini-pro pour une compatibilité maximale
  */
 async function analyserDiagnostic(norme, description) {
     if (!genAI) {
         console.warn(`⚠️ Gemini non initialisé - analyse locale pour ${norme}`);
-        return []; // Retourne vide, le fallback local prendra le relais
+        return [];
     }
 
-    const normId = norme.replace(':2015', '').replace(':2018', '').replace(' ', ''); // ex: ISO9001
+    const normId = norme.replace(':2015', '').replace(':2018', '').replace(' ', '');
 
-    // Extraire les règles pertinentes pour cette norme pour le contexte de l'IA
     const rulesContext = Object.entries(RULES_DB)
         .filter(([id, rule]) => id.startsWith(normId))
         .map(([id, rule]) => `- ID: ${id} | Titre: ${rule.title} | Mots-clés: ${rule.keywords.join(', ')}`)
         .join('\n');
 
-    const model = genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
-        systemInstruction: `Tu es un expert auditeur des systèmes de management intégrés selon les normes ISO 9001 (qualité), ISO 14001 (environnement) et ISO 45001 (santé et sécurité au travail).
+    // gemini-pro ne supporte pas toujours systemInstruction de la même manière selon la version
+    // On passe donc les instructions directement dans le prompt pour plus de stabilité
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-1. RÈGLE FONDAMENTALE (OBLIGATOIRE)
-- Tu analyses UNIQUEMENT les informations explicitement présentes dans le texte
-- Aucune hypothèse, aucune invention, aucune extrapolation
-- Toute non-conformité doit être basée sur une preuve textuelle directe
+    const prompt = `Tu es un expert auditeur QSE. Analyse la situation suivante pour la norme ${norme}.
 
-2. IDENTIFICATION DES NON-CONFORMITÉS
-Pour chaque non-conformité détectée, tu dois préciser :
-- Fait observé (preuve exacte du texte)
-- Norme concernée : ISO 9001 (qualité), ISO 14001 (environnement), ISO 45001 (SST)
-- Exigence normative précise (article ou clause)
-- Type de non-conformité : mineure ou majeure
-- Justification du lien direct entre fait et exigence
+CONSIGNES:
+1. Analyse UNIQUEMENT les faits présents.
+2. Identifie les non-conformités (majeure/mineure).
+3. Utilise UNIQUEMENT les IDs de règles fournis ci-dessous.
+4. Réponds UNIQUEMENT en JSON.
 
-3. INTERDICTIONS STRICTES
-- Ne jamais ajouter de problèmes non mentionnés dans la situation
-- Ne jamais produire de score global ou pourcentage
-- Ne jamais mélanger des hypothèses avec les faits
-- Ne jamais inventer des clauses non pertinentes
-
-4. CONTRAINTES TECHNIQUES
-- N'utilise QUE les identifiants (ID) de règles fournis dans la liste
-- Si une situation ne matche pas au moins 2 mots-clés d'une règle, ignore la règle
-- STATUTS AUTORISÉS : "COMPLIANT", "NON_CONFORM_CRITICAL", "NON_CONFORM_MINOR", "OBSERVATION"
-- Réponds UNIQUEMENT avec un objet JSON valide`
-    }, { apiVersion: 'v1' });
-
-    const prompt = `CONTEXTE DE L'AUDIT: ${norme}
-
-LISTE DES RÈGLES ISO AUTORISÉES (référentiel de validation):
+RÈGLES ISO AUTORISÉES:
 ${rulesContext}
 
-SITUATION À ANALYSER:
-"""
-${description}
-"""
+SITUATION:
+"${description}"
 
-FORMAT DE SORTIE OBLIGATOIRE (JSON strict):
+FORMAT JSON ATTENDU:
 {
   "findings": [
     {
-      "ruleId": "ID_DE_LA_REGLE_DOIT_EXISTER_DANS_LISTE",
+      "ruleId": "ID",
       "status": "COMPLIANT|NON_CONFORM_CRITICAL|NON_CONFORM_MINOR|OBSERVATION",
-      "evidence": "citation ou paraphrase factuelle du texte analysé",
-      "explanation": "exigence normative précise avec référence clause ISO",
-      "action": "action corrective ou recommandation basée sur les faits"
+      "evidence": "preuve",
+      "explanation": "explication",
+      "action": "recommandation"
     }
   ]
-}
-
-IMPORTANT:
-- Uniquement des faits observables dans le texte
-- Chaque finding doit correspondre à un ID de règle valide
-- evidence doit être une preuve textuelle directe
-- Si aucune règle ne matche, retourner un tableau vide`;
+}`;
 
     try {
         const result = await model.generateContent(prompt);
@@ -94,8 +64,6 @@ IMPORTANT:
         content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
         const parsedResult = JSON.parse(content);
-
-        // Post-validation : s'assurer que les IDs existent dans RULES_DB
         parsedResult.findings = parsedResult.findings.filter(f => RULES_DB[f.ruleId]);
 
         return parsedResult.findings;
@@ -105,20 +73,15 @@ IMPORTANT:
     }
 }
 
-/**
- * Génère un vecteur (embedding) pour un texte donné
- * Retourne null si la clé API n'est pas configurée ou si le modèle n'est pas disponible
- */
 async function getEmbedding(text) {
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
-        return null; // API key non configurée
+        return null;
     }
     try {
-        const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+        const model = genAI.getGenerativeModel({ model: "embedding-001" });
         const result = await model.embedContent(text);
         return result.embedding.values;
     } catch (error) {
-        // Silencieux - le fallback keywords prendra le relais
         return null;
     }
 }
