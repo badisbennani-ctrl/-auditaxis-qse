@@ -1,161 +1,175 @@
 /**
- * DIAGNOSTIC.JS - Version Corrigée
- * Les constantes ont été déplacées en haut pour éviter les erreurs d'initialisation.
+ * DIAGNOSTIC.JS - AuditAxis QSE
+ * Moteur de diagnostic QSE Hybrid (IA + Local)
  */
 
-// 1. DÉCLARATION DES VARIABLES GLOBALES ET CONSTANTES
-const DEBUG = true;
-const MIN_CHARS = 50;
-const MAX_CHARS = 1000;
-let selectedNorm = null;
+(function() {
+    const DEBUG = true;
+    let selectedNorm = null;
+    const MIN_CHARS = 50;
 
-// 2. FONCTIONS DE LOGGING
-function debugLog(...args) {
-    if (DEBUG) {
-        console.log(...args);
-    }
-}
-
-// Premier log d'initialisation (ne causera plus d'erreur)
-debugLog("Initialisation du script diagnostic...");
-
-// 3. GESTION DES NORMES (ISO)
-function selectNorm(normId) {
-    debugLog("Norme sélectionnée :", normId);
-    
-    // Retirer la classe active de tous les boutons
-    document.querySelectorAll('.norm-card').forEach(card => {
-        card.classList.remove('active', 'border-primary');
-    });
-
-    // Ajouter la classe active au bouton sélectionné
-    const selectedCard = document.querySelector(`[onclick="selectNorm('${normId}')"]`);
-    if (selectedCard) {
-        selectedCard.classList.add('active', 'border-primary');
+    function debugLog(...args) {
+        if (DEBUG) console.log("[Diagnostic]", ...args);
     }
 
-    selectedNorm = normId;
-    validateForm();
-}
+    // 1. GESTION DES NORMES
+    window.selectNorm = function(element) {
+        const norm = element.getAttribute('data-norm');
+        debugLog("Norme sélectionnée :", norm);
 
-// 4. GESTION DU COMPTEUR DE CARACTÈRES
-function updateCharCounter() {
-    const textarea = document.getElementById('companyDescription');
-    const counter = document.getElementById('charCounter');
-    
-    if (!textarea || !counter) return;
+        // UI Update
+        document.querySelectorAll('.norm-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
 
-    const length = textarea.value.length;
-    counter.innerText = `${length} / ${MIN_CHARS} caractères minimum`;
-
-    if (length < MIN_CHARS) {
-        counter.style.color = 'red';
-    } else if (length > MAX_CHARS) {
-        counter.style.color = 'orange';
-        counter.innerText = `${length} / ${MAX_CHARS} caractères maximum`;
-    } else {
-        counter.style.color = 'green';
-    }
-    
-    validateForm();
-}
-
-// 5. VALIDATION DU FORMULAIRE
-function validateForm() {
-    const textarea = document.getElementById('companyDescription');
-    const launchBtn = document.getElementById('launchDiagnostic');
-    
-    if (!textarea || !launchBtn) return;
-
-    const isLengthValid = textarea.value.length >= MIN_CHARS && textarea.value.length <= MAX_CHARS;
-    const isNormSelected = selectedNorm !== null;
-
-    if (isLengthValid && isNormSelected) {
-        launchBtn.disabled = false;
-        launchBtn.style.opacity = "1";
-        launchBtn.style.cursor = "pointer";
-    } else {
-        launchBtn.disabled = true;
-        launchBtn.style.opacity = "0.5";
-        launchBtn.style.cursor = "not-allowed";
-    }
-}
-
-// 6. LANCEMENT DU DIAGNOSTIC
-async function startDiagnostic() {
-    if (!selectedNorm) {
-        alert("Veuillez sélectionner une norme.");
-        return;
-    }
-
-    const description = document.getElementById('companyDescription').value;
-    
-    const diagnosticData = {
-        norme: selectedNorm,
-        description: description,
-        timestamp: new Date().toISOString()
+        selectedNorm = norm;
+        checkCanLaunch();
     };
 
-    debugLog("Envoi des données :", diagnosticData);
-    
-    // Simulation de chargement
-    const btn = document.getElementById('launchDiagnostic');
-    btn.innerText = "Analyse en cours...";
-    btn.disabled = true;
+    // 2. COMPTEUR DE CARACTÈRES
+    window.updateCharCounter = function() {
+        const textarea = document.getElementById('situation');
+        const counter = document.getElementById('charCounter');
+        if (!textarea || !counter) return;
 
-    // Redirection ou appel API ici
-    setTimeout(() => {
-        alert("Diagnostic lancé avec succès pour " + selectedNorm);
-        btn.innerText = "Lancer le diagnostic";
-        btn.disabled = false;
-    }, 2000);
-}
+        const length = textarea.value.trim().length;
+        counter.textContent = `${length} / ${MIN_CHARS} caractères minimum`;
 
-// 7. INITIALISATION AU CHARGEMENT DE LA PAGE
-document.addEventListener('DOMContentLoaded', () => {
-    debugLog("DOM chargé, configuration des écouteurs d'événements.");
-    
-    const textarea = document.getElementById('companyDescription');
-    if (textarea) {
-        textarea.addEventListener('input', updateCharCounter);
-        // Appel initial pour mettre le compteur à 0/50
+        if (length < MIN_CHARS) {
+            counter.style.color = '#ef4444'; // Red
+        } else {
+            counter.style.color = '#10b981'; // Green
+        }
+    };
+
+    // 3. VALIDATION DU BOUTON
+    window.checkCanLaunch = function() {
+        const textarea = document.getElementById('situation');
+        const btn = document.getElementById('launchBtn');
+        if (!textarea || !btn) return;
+
+        const isLengthValid = textarea.value.trim().length >= MIN_CHARS;
+        const isNormSelected = selectedNorm !== null;
+
+        btn.disabled = !(isLengthValid && isNormSelected);
+    };
+
+    // 4. LANCEMENT DU DIAGNOSTIC
+    window.launchDiagnostic = async function() {
+        const textarea = document.getElementById('situation');
+        const loader = document.getElementById('loader');
+        const results = document.getElementById('results');
+        const btn = document.getElementById('launchBtn');
+        const config = window.AUDITAXIS_CONFIG;
+
+        if (!textarea || !selectedNorm || !config) return;
+
+        // UI States
+        btn.disabled = true;
+        loader.style.display = 'flex';
+        results.style.display = 'none';
+        window.scrollTo({ top: loader.offsetTop - 100, behavior: 'smooth' });
+
+        try {
+            const response = await fetch(`${config.API_BASE_URL}/api/diagnostic`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    norme: selectedNorm,
+                    description: textarea.value.trim()
+                })
+            });
+
+            const resultData = await response.json();
+
+            if (!response.ok) {
+                throw new Error(resultData.message || "Erreur lors de l'analyse.");
+            }
+
+            displayResults(resultData.data);
+
+        } catch (error) {
+            console.error("Erreur Diagnostic:", error);
+            alert("Une erreur est survenue : " + error.message);
+            btn.disabled = false;
+        } finally {
+            loader.style.display = 'none';
+        }
+    };
+
+    // 5. AFFICHAGE DES RÉSULTATS
+    function displayResults(data) {
+        const results = document.getElementById('results');
+        const scoreValue = document.getElementById('scoreValue');
+        const progressCircle = document.getElementById('progressCircle');
+        const appreciation = document.getElementById('appreciation');
+        const nonConformitesList = document.getElementById('nonConformitesList');
+        const conformitesList = document.getElementById('conformitesList');
+        const recommandationsList = document.getElementById('recommandationsList');
+
+        // Score
+        const score = data.global_qse_score;
+        scoreValue.textContent = score;
+        
+        // Progress Circle (dasharray 408.4)
+        const offset = 408.4 - (408.4 * score / 100);
+        progressCircle.style.strokeDashoffset = offset;
+
+        // Appreciation
+        if (score >= 80) appreciation.textContent = "Excellente conformité";
+        else if (score >= 50) appreciation.textContent = "Conformité partielle - Améliorations requises";
+        else appreciation.textContent = "Conformité critique - Actions immédiates nécessaires";
+
+        // Lists
+        renderList(nonConformitesList, data.details, 'NON_CONFORM');
+        renderList(conformitesList, data.details, 'COMPLIANT');
+        renderList(recommandationsList, data.details, 'OBSERVATION');
+
+        results.style.display = 'block';
+        window.scrollTo({ top: results.offsetTop - 100, behavior: 'smooth' });
+    }
+
+    function renderList(container, details, type) {
+        container.innerHTML = '';
+        let count = 0;
+
+        // details is { iso9001: [], iso14001: [], iso45001: [] }
+        Object.values(details).forEach(findings => {
+            findings.forEach(finding => {
+                if (finding.status.includes(type) || (type === 'NON_CONFORM' && finding.status.includes('NON_CONFORM'))) {
+                    count++;
+                    const item = document.createElement('div');
+                    item.className = `result-item ${type.toLowerCase().includes('non_conform') ? 'majeure' : type.toLowerCase()}`;
+                    item.innerHTML = `
+                        <strong>${finding.ruleId} : ${finding.explanation}</strong>
+                        <p>${finding.evidence}</p>
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+                            💡 <em>Action conseillée : ${finding.action}</em>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                }
+            });
+        });
+
+        if (count === 0) {
+            container.innerHTML = '<p style="opacity: 0.6; font-style: italic;">Aucun élément détecté dans cette catégorie.</p>';
+        }
+    }
+
+    window.newDiagnostic = function() {
+        document.getElementById('situation').value = '';
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('launchBtn').disabled = true;
+        document.querySelectorAll('.norm-btn').forEach(btn => btn.classList.remove('active'));
+        selectedNorm = null;
         updateCharCounter();
-    }
-    
-    const launchBtn = document.getElementById('launchDiagnostic');
-    if (launchBtn) {
-        launchBtn.addEventListener('click', startDiagnostic);
-    }
-// --- AJOUT DES FONCTIONS MANQUANTES POUR LE HTML ---
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-/**
- * Cette fonction fait le lien avec l'événement 'oninput' de votre HTML
- * qui cherche "checkCanLaunch()"
- */
-function checkCanLaunch() {
-    debugLog("Vérification de l'état du bouton de lancement...");
-    // On appelle la fonction de validation existante
-    if (typeof validateForm === "function") {
-        validateForm();
-    }
-}
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        debugLog("Prêt.");
+        updateCharCounter();
+    });
 
-/**
- * Sécurité pour la variable 'S' si c'était une erreur de copier-coller
- * ou un résidu de bibliothèque.
- */
-var S = S || {};
-// --- CORRECTIFS FINAUX ---
-
-// 1. Correction pour l'erreur checkCanLaunch appelée par le HTML
-function checkCanLaunch() {
-    // Cette fonction appelle simplement votre logique de validation existante
-    if (typeof validateForm === "function") {
-        validateForm();
-    }
-}
-
-// 2. Correction pour l'erreur "S is not defined" au cas où elle est nécessaire ailleurs
-var S = S || {}; 
-
-debugLog("Correctifs de compatibilité chargés.");
+})();
