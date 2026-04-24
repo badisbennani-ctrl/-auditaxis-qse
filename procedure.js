@@ -63,7 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Erreur:", error);
-            alert("Erreur: " + error.message);
+            // Affichage plus propre de l'erreur
+            procedureOutput.innerHTML = `<div style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #ef4444;">
+                <strong>Erreur :</strong> ${error.message}<br><br>
+                <em>Veuillez vérifier votre connexion ou réessayer avec une description différente.</em>
+            </div>`;
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth' });
         } finally {
             loading.style.display = 'none';
         }

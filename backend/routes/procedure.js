@@ -220,8 +220,29 @@ router.post('/', procedureLimiter, async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error('Erreur génération procédure:', error.message);
-        next(error);
+        console.error('❌ [PROCEDURE_ERROR]:', error.message);
+        
+        // Gestion spécifique des erreurs Gemini
+        if (error.message.includes('safety') || error.message.includes('blocked')) {
+            return res.status(400).json({
+                error: 'CONTENU_BLOQUE',
+                message: 'Le contenu a été bloqué par les filtres de sécurité de l\'IA. Veuillez reformuler votre description.'
+            });
+        }
+
+        if (error.message.includes('quota') || error.message.includes('429')) {
+            return res.status(429).json({
+                error: 'QUOTA_ATTEINT',
+                message: 'Limite de quota atteinte pour l\'IA. Veuillez réessayer plus tard.'
+            });
+        }
+
+        // Si ce n'est pas une erreur spécifique connue, on passe au handler global
+        // mais on peut aussi renvoyer un message un peu plus précis si on veut
+        res.status(500).json({
+            error: 'ERREUR_GENERATION',
+            message: `Erreur lors de la génération: ${error.message}`
+        });
     }
 });
 
