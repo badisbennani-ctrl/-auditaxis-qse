@@ -1,18 +1,18 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { RULES_DB } = require('./rules-db');
 
-// Initialisation sécurisée de Gemini
-const genAI = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here'
-    ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    : null;
+// Nettoyage de la clé API
+const rawKey = process.env.GEMINI_API_KEY;
+const apiKey = (rawKey && rawKey !== 'your_gemini_api_key_here') ? rawKey.trim() : null;
+
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 if (!genAI) {
-    console.warn('⚠️ GEMINI_API_KEY non configurée — le diagnostic IA utilisera le mode local uniquement');
+    console.warn('⚠️ GEMINI_API_KEY non configurée ou invalide');
 }
 
 /**
  * Analyse un diagnostic QSE avec Gemini
- * Utilise gemini-pro pour une compatibilité maximale
  */
 async function analyserDiagnostic(norme, description) {
     if (!genAI) {
@@ -27,9 +27,8 @@ async function analyserDiagnostic(norme, description) {
         .map(([id, rule]) => `- ID: ${id} | Titre: ${rule.title} | Mots-clés: ${rule.keywords.join(', ')}`)
         .join('\n');
 
-    // gemini-pro ne supporte pas toujours systemInstruction de la même manière selon la version
-    // On passe donc les instructions directement dans le prompt pour plus de stabilité
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    // Utilisation de gemini-1.5-flash sur v1 (stable)
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }, { apiVersion: 'v1' });
 
     const prompt = `Tu es un expert auditeur QSE. Analyse la situation suivante pour la norme ${norme}.
 
@@ -74,11 +73,9 @@ FORMAT JSON ATTENDU:
 }
 
 async function getEmbedding(text) {
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
-        return null;
-    }
+    if (!apiKey) return null;
     try {
-        const model = genAI.getGenerativeModel({ model: "embedding-001" });
+        const model = genAI.getGenerativeModel({ model: "text-embedding-004" }, { apiVersion: 'v1' });
         const result = await model.embedContent(text);
         return result.embedding.values;
     } catch (error) {

@@ -189,9 +189,19 @@ router.post('/', procedureLimiter, async (req, res, next) => {
             });
         }
 
-        // Utilisation du modèle gemini-pro pour une compatibilité maximale
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        // Initialisation propre avec nettoyage de la clé
+        const apiKey = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.trim() : null;
+        
+        if (!apiKey) {
+            return res.status(503).json({
+                error: 'CLE_MANQUANTE',
+                message: 'La clé API Gemini est manquante ou mal configurée.'
+            });
+        }
+
+        const genAI = new GoogleGenerativeAI(apiKey);
+        // Utilisation de gemini-1.5-flash sur l'API v1 (stable)
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }, { apiVersion: 'v1' });
 
         const prompt = buildSystemPrompt(norme, nomProcessus, description, secteur, taille, elements);
 
